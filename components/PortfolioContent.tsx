@@ -1,20 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useScroll } from '../hooks/useScroll';
 import { useLenis } from 'lenis/react';
 import { 
   ArrowDown, 
-  ArrowUpRight, 
-  Code2, 
-  Palette, 
-  Zap, 
-  Layers, 
   Mail, 
   MessageSquare, 
   Briefcase,
-  ExternalLink,
   ChevronRight,
   Send,
   Sparkles,
@@ -192,6 +186,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     // Force scroll to top on page reload/refresh
     if ('scrollRestoration' in history) {
@@ -200,15 +195,19 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
     window.scrollTo(0, 0);
   }, []);
 
+  const scrollResetRef = useRef(false);
+
   useEffect(() => {
-    if (mounted && lenis) {
+    if (mounted && lenis && !scrollResetRef.current) {
       lenis.scrollTo(0, { immediate: true });
+      scrollResetRef.current = true;
     }
   }, [mounted, lenis]);
 
   const scrollToFrame = (frame: number) => {
     if (!lenis) return;
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    // Calculate maxScroll mathematically based on 1500vh page height
+    const maxScroll = 14 * window.innerHeight;
     const targetY = (frame / totalFrames) * maxScroll;
     lenis.scrollTo(targetY, { duration: 1.5 });
   };
@@ -220,17 +219,15 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
   // Section visibility conditions based on frames (Bypassed portal, 502 total frames)
   // Blackhole: 1-250 | Globe: 251-502
-  const showHero = currentFrame >= 15 && currentFrame <= 100;
-  const showAbout = currentFrame >= 101 && currentFrame <= 200;
-  const showProjects = currentFrame >= 201 && currentFrame <= 300;
-  const projectPage = currentFrame > 250 ? 1 : 0;
-  const showServices = currentFrame >= 301 && currentFrame <= 477;
+  const showHero = currentFrame >= 26 && currentFrame <= 135;
+  const showAbout = currentFrame >= 136 && currentFrame <= 245;
+  const showProjects = currentFrame >= 246 && currentFrame <= 355;
+  const projectPage = currentFrame > 300 ? 1 : 0;
+  const showServices = currentFrame >= 356 && currentFrame <= 477;
   const showContact = currentFrame >= 478 && currentFrame <= 502;
 
   if (!mounted) return null;
 
-  // Timeline Scroll Progress (0 to 1) during the timeline section
-  const timelineProgress = Math.max(0, Math.min(1, (currentFrame - 301) / (477 - 301)));
 
   // Text Reveal Variants
   const containerVariants = {
@@ -482,7 +479,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   const isInteractive = showHero || showAbout || showProjects || showServices || showContact;
 
   return (
-    <div className={`fixed inset-0 z-40 selection:bg-white/20 selection:text-white ${isInteractive ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+    <div className={`fixed inset-0 z-40 overflow-hidden selection:bg-white/20 selection:text-white ${isInteractive ? 'pointer-events-auto' : 'pointer-events-none'}`}>
       
       {/* ----------------- HERO SECTION ----------------- */}
       <motion.section 
@@ -531,7 +528,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           animate={{ opacity: showHero ? 1 : 0, y: showHero ? 0 : 20 }}
           transition={{ delay: 0.6 }}
           className="absolute bottom-24 flex flex-col items-center text-white cursor-pointer group" 
-          onClick={() => scrollToFrame(150)}
+          onClick={() => scrollToFrame(190)}
         >
           <span className="text-[10px] uppercase tracking-[0.3em] mb-4 text-white/60 group-hover:text-white transition-colors font-medium">
             Scroll to discover
@@ -561,7 +558,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       >
 
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-7xl w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-7xl w-full max-h-[85vh] overflow-y-auto lg:max-h-none lg:overflow-visible custom-scrollbar px-2 py-4">
           {/* Bio statement */}
           <div className="lg:col-span-5 text-white bg-black/75 p-8 md:p-10 rounded-[2rem] backdrop-blur-[4px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
             <div className="flex items-center gap-2 mb-4">
@@ -687,11 +684,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.35, ease: "easeInOut" }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-6 pointer-events-auto"
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 pointer-events-auto max-h-[62vh] md:max-h-none overflow-y-auto md:overflow-visible custom-scrollbar pr-2 py-2"
             >
               {projectsData
                 .slice(projectPage * 6, (projectPage + 1) * 6)
-                .map((project, i) => (
+                .map((project) => (
                   <motion.div 
                     key={project.name} 
                     className="group relative min-h-[240px] md:min-h-[260px] rounded-3xl bg-black/75 backdrop-blur-[4px] border border-white/10 hover:border-purple-400/40 overflow-hidden p-6 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto"
@@ -746,7 +743,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
         <div className="w-full max-w-5xl text-white">
           {/* Unified Card Container Wrapper */}
-          <div className="bg-black/75 border border-white/10 p-6 md:p-8 rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] backdrop-blur-[4px]">
+          <div className="bg-black/75 border border-white/10 p-6 md:p-8 rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] backdrop-blur-[4px] max-h-[82vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar">
             {/* Main Title - Inside the card */}
             <div className="text-center mb-5">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter mb-2 bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Services We Provide</h2>
@@ -861,7 +858,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       >
 
 
-        <div className="text-white bg-black/75 p-8 md:p-12 lg:p-14 rounded-[2.5rem] backdrop-blur-[4px] border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch justify-center">
+        <div className="text-white bg-black/75 p-6 md:p-12 lg:p-14 rounded-[2.5rem] backdrop-blur-[4px] border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch justify-center max-h-[85vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar">
           
           {/* Left panel - details */}
           <div className="md:col-span-5 flex flex-col justify-between py-2 text-left">
@@ -870,10 +867,10 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 <span className="text-xs font-semibold uppercase tracking-wider text-pink-400">Get in Touch</span>
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-4 leading-none">
-                Let's<br />Talk.
+                Let&apos;s<br />Talk.
               </h2>
               <p className="text-xs md:text-sm text-white/70 leading-relaxed max-w-sm mb-6 font-normal">
-                Let's team up to engineer interactive websites, dynamic applications, or unique scrolling stories.
+                Let&apos;s team up to engineer interactive websites, dynamic applications, or unique scrolling stories.
               </p>
             </div>
 

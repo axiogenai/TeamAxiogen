@@ -1,43 +1,83 @@
-import { useState, useEffect } from 'react';
+'use client';
 
-interface ScrollProgress {
+import { useSyncExternalStore } from 'react';
+
+// --------------------------------------------------------------------------
+// Scroll Store — uses useSyncExternalStore which is specifically designed
+// for subscribing to external data sources in React 18+.
+// This CANNOT cause "Maximum update depth exceeded" because:
+//   1. State lives OUTSIDE React (module-level variables)
+//   2. React only re-renders when getSnapshot() returns a new reference
+//   3. We only create a new snapshot object when values actually change
+// --------------------------------------------------------------------------
+
+interface ScrollSnapshot {
   scrollProgress: number;
   scrollY: number;
 }
 
-export function useScroll(): ScrollProgress {
-  const [scrollData, setScrollData] = useState<ScrollProgress>({ scrollProgress: 0, scrollY: 0 });
+// Module-level state — lives outside React's render cycle
+let currentSnapshot: ScrollSnapshot = { scrollProgress: 0, scrollY: 0 };
+const listeners = new Set<() => void>();
 
-  useEffect(() => {
-    let ticking = false;
+function subscribe(listener: () => void): () => void {
+  listeners.add(listener);
 
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollY = window.scrollY;
-          const windowHeight = window.innerHeight;
-          const documentHeight = document.documentElement.scrollHeight;
-          
-          // Calculate progress (0 to 100)
-          const maxScroll = documentHeight - windowHeight;
-          const progress = maxScroll > 0 ? (scrollY / maxScroll) * 100 : 0;
-          
-          setScrollData({
-            scrollProgress: Math.min(Math.max(progress, 0), 100),
-            scrollY,
-          });
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
+  // Lazily attach the scroll listener on first subscription
+  if (listeners.size === 1 && typeof window !== 'undefined') {
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // Fire once to capture initial scroll position
+    computeSnapshot();
+  }
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    // Initialize
-    handleScroll();
+  return () => {
+    listeners.delete(listener);
+    if (listeners.size === 0 && typeof window !== 'undefined') {
+      window.removeEventListener('scroll', onScroll);
+    }
+  };
+}
 
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+function onScroll() {
+  // Compute directly — no rAF needed. This is just math (no DOM reads),
+  // and passive scroll events are already frame-aligned by the browser.
+  computeSnapshot();
+}
 
-  return scrollData;
+function computeSnapshot() {
+  const scrollY = Math.round(window.scrollY);
+  const windowHeight = window.innerHeight;
+  // 1500vh page → maxScroll = 14 × viewport height
+  const maxScroll = 14 * windowHeight;
+  const raw = maxScroll > 0 ? (scrollY / maxScroll) * 100 : 0;
+  const scrollProgress = Math.min(Math.max(raw, 0), 100);
+
+  // Only create a new object (and notify) when values actually changed
+  if (
+    currentSnapshot.scrollY !== scrollY ||
+    currentSnapshot.scrollProgress !== scrollProgress
+  ) {
+    currentSnapshot = { scrollProgress, scrollY };
+    listeners.forEach((l) => l());
+  }
+}
+
+function getSnapshot(): ScrollSnapshot {
+  return currentSnapshot;
+}
+
+// Must be a stable reference — React will infinite-loop if this creates a new object each call
+const SERVER_SNAPSHOT: ScrollSnapshot = { scrollProgress: 0, scrollY: 0 };
+
+function getServerSnapshot(): ScrollSnapshot {
+  return SERVER_SNAPSHOT;
+}
+
+/**
+ * Zero-rerender-loop scroll hook.
+ * Uses React 18's useSyncExternalStore — no useState, no useEffect,
+ * no setTimeout, no chance of infinite render loops.
+ */
+export function useScroll(): ScrollSnapshot {
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

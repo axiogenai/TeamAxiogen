@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useScroll } from '../hooks/useScroll';
 
 interface DynamicBlurProps {
@@ -8,6 +8,14 @@ interface DynamicBlurProps {
   thresholdFrame: number;
 }
 
+/**
+ * DynamicBlur — pre-rendered blur layer that fades out via opacity only.
+ * 
+ * IMPORTANT: We do NOT animate `backdrop-filter` because it forces the GPU
+ * to recomposite every visible pixel on every frame change. Instead, we
+ * apply a fixed backdrop-filter and only animate `opacity` + `visibility`,
+ * which are compositor-only properties (zero layout/paint cost).
+ */
 export const DynamicBlur: React.FC<DynamicBlurProps> = ({ totalFrames, thresholdFrame }) => {
   const { scrollProgress } = useScroll();
   
@@ -16,16 +24,23 @@ export const DynamicBlur: React.FC<DynamicBlurProps> = ({ totalFrames, threshold
     Math.min(totalFrames, Math.ceil((scrollProgress / 100) * totalFrames))
   );
 
-  // If we are past the threshold, remove the blur. Otherwise, 4px blur.
-  const blurAmount = currentFrame > thresholdFrame ? 0 : 4;
+  const isBlurred = currentFrame <= thresholdFrame;
+
+  // Memoize the static style to avoid creating new objects on every render
+  const blurStyle = useMemo(() => ({
+    backdropFilter: 'blur(4px)',
+    WebkitBackdropFilter: 'blur(4px)',
+  }), []);
 
   return (
     <div 
       className="fixed inset-0 pointer-events-none z-10"
       style={{ 
-        backdropFilter: `blur(${blurAmount}px)`, 
-        WebkitBackdropFilter: `blur(${blurAmount}px)`,
-        transition: 'backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease' 
+        ...blurStyle,
+        opacity: isBlurred ? 1 : 0,
+        visibility: isBlurred ? 'visible' as const : 'hidden' as const,
+        transition: 'opacity 0.7s ease-in-out, visibility 0.7s ease-in-out',
+        willChange: 'opacity',
       }}
     />
   );

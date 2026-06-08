@@ -12,6 +12,7 @@ export const Navbar = () => {
   const totalFrames = 502;
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -22,26 +23,27 @@ export const Navbar = () => {
 
   const scrollToFrame = (frame: number) => {
     if (!lenis) return;
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    // Calculate maxScroll mathematically based on 1500vh page height
+    const maxScroll = 14 * window.innerHeight;
     const targetY = (frame / totalFrames) * maxScroll;
     lenis.scrollTo(targetY, { duration: 1.5 });
   };
 
   // Determine active section based on frame depth
   const getActiveSection = () => {
-    if (currentFrame <= 100) return 'hero';
-    if (currentFrame > 100 && currentFrame <= 200) return 'about';
-    if (currentFrame > 200 && currentFrame <= 300) return 'work';
-    if (currentFrame > 300 && currentFrame <= 477) return 'services';
+    if (currentFrame <= 135) return 'hero';
+    if (currentFrame > 135 && currentFrame <= 245) return 'about';
+    if (currentFrame > 245 && currentFrame <= 355) return 'work';
+    if (currentFrame > 355 && currentFrame <= 477) return 'services';
     return 'contact';
   };
 
   const activeSection = getActiveSection();
 
   const navItems = [
-    { id: 'about', label: 'About', frame: 150 },
-    { id: 'work', label: 'Work', frame: 250 },
-    { id: 'services', label: 'Services', frame: 389 },
+    { id: 'about', label: 'About', frame: 190 },
+    { id: 'work', label: 'Work', frame: 300 },
+    { id: 'services', label: 'Services', frame: 416 },
     { id: 'contact', label: 'Contact', frame: 490 },
   ];
 
@@ -50,7 +52,7 @@ export const Navbar = () => {
   return (
     <>
       {/* Brand Logo - Top Left */}
-      <div className="fixed top-6 left-8 z-50 pointer-events-auto select-none">
+      <div className="fixed top-6 left-4 md:left-8 z-50 pointer-events-auto select-none hidden sm:block">
         <button 
           onClick={() => scrollToFrame(0)}
           className="text-sm font-black tracking-tighter text-white uppercase bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent hover:opacity-85 transition-opacity cursor-pointer"
@@ -73,17 +75,12 @@ export const Navbar = () => {
               <button
                 key={item.id}
                 onClick={() => scrollToFrame(item.frame)}
-                className={`relative px-4 py-2 text-xs uppercase tracking-widest font-bold rounded-full transition-colors cursor-pointer select-none ${
-                  isActive ? 'text-black' : 'text-white/75 hover:text-white'
+                className={`relative px-2.5 md:px-4 py-1.5 md:py-2 text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest cursor-pointer select-none transition-all duration-300 ${
+                  isActive 
+                    ? 'text-cyan-400 font-extrabold filter drop-shadow-[0_0_6px_rgba(34,211,238,0.6)] scale-105' 
+                    : 'text-white/50 hover:text-white/80 font-medium'
                 }`}
               >
-                {isActive && (
-                  <motion.div
-                    layoutId="active-pill"
-                    className="absolute inset-0 bg-white rounded-full -z-10 shadow-[0_0_20px_rgba(255,255,255,0.4)]"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
                 <span className="mr-[-0.1em]">{item.label}</span>
               </button>
             );
@@ -91,12 +88,12 @@ export const Navbar = () => {
         </motion.div>
       </div>
 
-      <div className="fixed top-6 right-8 z-50 pointer-events-auto">
+      <div className="fixed top-6 right-4 md:right-8 z-50 pointer-events-auto hidden sm:block">
         <button 
           onClick={() => scrollToFrame(490)}
           className="px-5 py-2.5 bg-white/10 border border-white/20 rounded-full text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-md hover:bg-white hover:text-black hover:border-white transition-all shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
         >
-          Let's Talk
+          Let&apos;s Talk
         </button>
       </div>
     </>

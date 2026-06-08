@@ -4,16 +4,12 @@ import React from 'react';
 import { useScroll } from '../hooks/useScroll';
 
 interface ScrollProgressProps {
-  totalFrames: number;
+  totalFrames?: number;
 }
 
-export const ScrollProgress: React.FC<ScrollProgressProps> = ({ totalFrames }) => {
+export const ScrollProgress: React.FC<ScrollProgressProps> = () => {
   const { scrollProgress } = useScroll();
   
-  const currentFrame = Math.max(
-    1,
-    Math.min(totalFrames, Math.ceil((scrollProgress / 100) * totalFrames))
-  );
 
   return (
     <div className="fixed top-6 right-6 z-50 font-outfit text-white mix-blend-difference flex items-center gap-4">
