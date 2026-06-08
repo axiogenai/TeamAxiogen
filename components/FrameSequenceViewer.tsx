@@ -187,14 +187,28 @@ export const FrameSequenceViewer: React.FC<FrameSequenceViewerProps> = () => {
       <canvas
         ref={canvas1Ref}
         className="fixed inset-0 w-full h-full pointer-events-none"
-        style={{ opacity: 1, visibility: 'visible', transition: 'opacity 0.3s ease-out' }}
+        style={{ 
+          opacity: 1, 
+          visibility: 'visible', 
+          transition: 'opacity 0.3s ease-out',
+          backgroundImage: "url('/frames/background1/frame_000.webp')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
       />
       
       {/* Canvas 2 */}
       <canvas
         ref={canvas2Ref}
         className="fixed inset-0 w-full h-full pointer-events-none"
-        style={{ opacity: 0, visibility: 'hidden', transition: 'opacity 0.3s ease-out' }}
+        style={{ 
+          opacity: 0, 
+          visibility: 'hidden', 
+          transition: 'opacity 0.3s ease-out',
+          backgroundImage: "url('/frames/background2/frame_000.webp')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
       />
     </div>
   );
