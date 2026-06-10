@@ -383,16 +383,14 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       category: 'Cybersecurity AI',
       year: '2026',
       desc: 'Real-time ransomware detection and response engine powered by watchdog traps, entropy analysis, and an ML ensemble.',
-      tech: ['Python', 'Flask', 'XGBoost', 'Socket.IO', 'SQLite'],
-      link: 'https://github.com/axiogenai/ransomguard-ai'
+      tech: ['Python', 'Flask', 'XGBoost', 'Socket.IO', 'SQLite']
     },
     {
       name: 'OmniDx',
       category: 'Digital Health AI',
       year: '2026',
       desc: 'Advanced medical X-ray pathology classification using DenseNet121 and Grad-CAM visual heatmaps for explainability.',
-      tech: ['PyTorch', 'Next.js', 'FastAPI', 'PostgreSQL', 'Docker'],
-      link: 'https://github.com/axiogenai/omnidx'
+      tech: ['PyTorch', 'Next.js', 'FastAPI', 'PostgreSQL', 'Docker']
     },
     {
       name: 'Blockchain Forge',
@@ -431,24 +429,21 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       category: 'Digital Health AI',
       year: '2026',
       desc: 'Conversational patient explainer tool translating complex medical charts into simple patient-friendly reports.',
-      tech: ['React', 'TypeScript', 'FastAPI', 'LLM Agents'],
-      link: 'https://github.com/axiogenai/patient-ai-explainer'
+      tech: ['React', 'TypeScript', 'FastAPI', 'LLM Agents']
     },
     {
       name: 'Shivsai 360',
       category: 'Virtual Reality Web',
       year: '2025',
       desc: 'Immersive 360-degree virtual tour and panoramic walkthrough engine for real estate properties.',
-      tech: ['Three.js', 'React Three Fiber', 'WebGL', 'CSS3D'],
-      link: 'https://github.com/axiogenai/shivsai-360'
+      tech: ['Three.js', 'React Three Fiber', 'WebGL', 'CSS3D']
     },
     {
       name: 'OpenRouter Chatbot',
       category: 'Developer Tools',
       year: '2025',
       desc: 'Optimized multi-model chatbot sandbox integrating the openrouter API for low-latency code generation.',
-      tech: ['Next.js', 'TypeScript', 'API Routing', 'TailwindCSS'],
-      link: 'https://github.com/axiogenai/openrouter-chatbot'
+      tech: ['Next.js', 'TypeScript', 'API Routing', 'TailwindCSS']
     }
   ];
 
@@ -683,43 +678,50 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
              >
                {projectsData
                  .slice(projectPage * 6, (projectPage + 1) * 6)
-                 .map((project) => (
-                   <motion.a 
-                     key={project.name} 
-                     href={project.link}
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     className="group shrink-0 min-w-[82vw] md:min-w-0 snap-center relative min-h-[190px] md:min-h-[260px] rounded-2xl md:rounded-3xl bg-black/75 border border-white/10 hover:border-purple-400/40 overflow-hidden p-4 md:p-6 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto cursor-pointer block"
-                     whileHover={{ scale: 1.03, y: -6 }}
-                     transition={{ type: 'spring' as const, stiffness: 300, damping: 20 }}
-                   >
-                     {/* Glow effect blob behind card on hover */}
-                     <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/15 via-indigo-500/10 to-pink-500/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
+                 .map((project) => {
+                   const CardComponent = project.link ? motion.a : motion.div;
+                   const linkProps = project.link ? {
+                     href: project.link,
+                     target: '_blank',
+                     rel: 'noopener noreferrer'
+                   } : {};
 
-                     <div className="flex justify-between items-start z-10">
-                       <span className="px-3 py-1 md:px-3.5 md:py-1.5 rounded-full border border-white/10 text-[9px] md:text-[10px] tracking-widest uppercase font-bold bg-white/5 text-white/80 group-hover:border-purple-500/30 group-hover:text-purple-300 transition-colors">
-                         {project.category}
-                       </span>
-                       <span className="opacity-60 text-[10px] md:text-xs bg-white/5 px-2 py-0.5 md:px-2.5 md:py-1 rounded-lg border border-white/5 font-medium">{project.year}</span>
-                     </div>
-                     
-                     <div className="z-10 mt-auto">
-                       <h3 className="text-xl md:text-3xl font-black tracking-tight mb-1.5 md:mb-3 group-hover:-translate-y-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-purple-200 group-hover:to-pink-300 transition-all duration-500 leading-tight">
-                         {project.name}
-                       </h3>
-                       <p className="text-xs text-white/60 mb-4 md:mb-6 group-hover:text-white/80 transition-colors leading-relaxed">
-                        {project.desc}
-                      </p>
-                      
-                      {/* Tech tags */}
-                      <div className="flex flex-wrap gap-1.5 opacity-70 group-hover:opacity-100 transition-opacity">
-                        {project.tech.map((tag, tIndex) => (
-                          <span key={tIndex} className="text-[10px] bg-white/5 border border-white/10 rounded px-2 py-0.5 font-medium">{tag}</span>
-                        ))}
+                   return (
+                     <CardComponent 
+                       key={project.name} 
+                       {...linkProps}
+                       className={`group shrink-0 min-w-[82vw] md:min-w-0 snap-center relative min-h-[190px] md:min-h-[260px] rounded-2xl md:rounded-3xl bg-black/75 border border-white/10 hover:border-purple-400/40 overflow-hidden p-4 md:p-6 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto block ${project.link ? 'cursor-pointer' : 'select-none'}`}
+                       whileHover={project.link ? { scale: 1.03, y: -6 } : {}}
+                       transition={{ type: 'spring' as const, stiffness: 300, damping: 20 }}
+                     >
+                       {/* Glow effect blob behind card on hover */}
+                       <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/15 via-indigo-500/10 to-pink-500/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
+
+                       <div className="flex justify-between items-start z-10">
+                         <span className="px-3 py-1 md:px-3.5 md:py-1.5 rounded-full border border-white/10 text-[9px] md:text-[10px] tracking-widest uppercase font-bold bg-white/5 text-white/80 group-hover:border-purple-500/30 group-hover:text-purple-300 transition-colors">
+                           {project.category}
+                         </span>
+                         <span className="opacity-60 text-[10px] md:text-xs bg-white/5 px-2 py-0.5 md:px-2.5 md:py-1 rounded-lg border border-white/5 font-medium">{project.year}</span>
+                       </div>
+                       
+                       <div className="z-10 mt-auto">
+                         <h3 className="text-xl md:text-3xl font-black tracking-tight mb-1.5 md:mb-3 group-hover:-translate-y-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-purple-200 group-hover:to-pink-300 transition-all duration-500 leading-tight">
+                           {project.name}
+                         </h3>
+                         <p className="text-xs text-white/60 mb-4 md:mb-6 group-hover:text-white/80 transition-colors leading-relaxed">
+                          {project.desc}
+                        </p>
+                        
+                        {/* Tech tags */}
+                        <div className="flex flex-wrap gap-1.5 opacity-70 group-hover:opacity-100 transition-opacity">
+                          {project.tech.map((tag, tIndex) => (
+                            <span key={tIndex} className="text-[10px] bg-white/5 border border-white/10 rounded px-2 py-0.5 font-medium">{tag}</span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  </motion.a>
-              ))}
+                    </CardComponent>
+                  );
+                })}
             </motion.div>
           </AnimatePresence>
         </div>
