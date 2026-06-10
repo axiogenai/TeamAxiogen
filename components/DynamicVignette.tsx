@@ -1,24 +1,25 @@
 'use client';
 
-import { useScroll } from '../hooks/useScroll';
+import { useVignetteOpacity } from '../hooks/useScroll';
 
-export const DynamicVignette = ({ totalFrames }: { totalFrames: number }) => {
-  const { scrollProgress } = useScroll();
-  const currentFrame = Math.max(
-    1,
-    Math.min(totalFrames, Math.ceil((scrollProgress / 100) * totalFrames))
-  );
-
-  // Pulse effect based on frame transitions
-  const isTransitioning = currentFrame > 235 && currentFrame < 265;
-  const opacity = isTransitioning ? 0.9 : 0.6;
+/**
+ * DynamicVignette — only re-renders at frame 235 and 265 boundaries.
+ *
+ * Previously re-rendered on every scroll pixel via useScroll().
+ * Now uses useVignetteOpacity() which returns a stable number.
+ */
+export const DynamicVignette = ({ totalFrames: _totalFrames }: { totalFrames: number }) => {
+  const opacity = useVignetteOpacity();
 
   return (
-    <div 
-      className="fixed inset-0 pointer-events-none z-30 transition-opacity duration-1000"
+    <div
+      className="fixed inset-0 pointer-events-none z-30"
       style={{
         opacity,
-        background: 'radial-gradient(circle, rgba(0,0,0,0) 30%, rgba(0,0,0,1) 100%)'
+        background:
+          'radial-gradient(circle, rgba(0,0,0,0) 30%, rgba(0,0,0,1) 100%)',
+        transition: 'opacity 1s ease-in-out',
+        willChange: 'opacity',
       }}
     />
   );

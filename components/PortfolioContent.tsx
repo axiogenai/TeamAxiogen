@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useScroll } from '../hooks/useScroll';
+import { useSectionVisibility, getStableHeight } from '../hooks/useScroll';
 import { useLenis } from 'lenis/react';
 import { 
   ArrowDown, 
   Mail, 
+  Phone,
   MessageSquare, 
   Briefcase,
   ChevronRight,
@@ -179,7 +180,7 @@ const SkillIcon = ({ name }: { name: string }) => {
 
 export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   const [mounted, setMounted] = useState(false);
-  const { scrollProgress } = useScroll();
+  const { showHero, showAbout, showProjects, projectPage, showServices, showContact } = useSectionVisibility();
   const lenis = useLenis();
   const [activeTab, setActiveTab] = useState<'languages' | 'mobile' | 'web' | 'systems'>('languages');
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -207,24 +208,14 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   const scrollToFrame = (frame: number) => {
     if (!lenis) return;
     // Calculate maxScroll mathematically based on 1500vh page height
-    const maxScroll = 14 * window.innerHeight;
+    const maxScroll = 14 * getStableHeight();
     const targetY = (frame / totalFrames) * maxScroll;
     lenis.scrollTo(targetY, { duration: 1.5 });
   };
 
-  const currentFrame = Math.max(
-    1,
-    Math.min(totalFrames, Math.ceil((scrollProgress / 100) * totalFrames))
-  );
-
-  // Section visibility conditions based on frames (Bypassed portal, 502 total frames)
-  // Blackhole: 1-250 | Globe: 251-502
-  const showHero = currentFrame >= 26 && currentFrame <= 135;
-  const showAbout = currentFrame >= 136 && currentFrame <= 245;
-  const showProjects = currentFrame >= 246 && currentFrame <= 355;
-  const projectPage = currentFrame > 300 ? 1 : 0;
-  const showServices = currentFrame >= 356 && currentFrame <= 477;
-  const showContact = currentFrame >= 478 && currentFrame <= 502;
+  // Section visibility is now computed in the useSectionVisibility() hook.
+  // The hook only triggers re-renders when a section boundary is crossed,
+  // reducing re-renders from ~thousands to ~15 across the entire scroll range.
 
   if (!mounted) return null;
 
@@ -385,7 +376,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       year: '2026',
       desc: 'Core neural network training workspace powering predictive analytics and cognitive assistant agents.',
       tech: ['Python', 'FastAPI', 'PyTorch', 'Docker'],
-      link: 'https://github.com/axiogenai/axiogen-ai'
+      link: 'https://axiogen.in'
     },
     {
       name: 'RansomGuard AI',
@@ -409,7 +400,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       year: '2025',
       desc: 'High-performance cryptographic sandbox tool for generating, mining, and auditing distributed chains.',
       tech: ['TypeScript', 'Node.js', 'Framer Motion', 'TailwindCSS'],
-      link: 'https://github.com/axiogenai/blockchainforge'
+      link: 'https://blockchainforge.vercel.app'
     },
     {
       name: 'NAAC Platform',
@@ -417,7 +408,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       year: '2025',
       desc: 'Advanced academic accreditation suite streamlining documentation, criteria metrics, and reporting.',
       tech: ['Next.js', 'TypeScript', 'Prisma ORM', 'PostgreSQL'],
-      link: 'https://github.com/axiogenai/naac'
+      link: 'https://naac-nine.vercel.app'
     },
     {
       name: 'SessionWarden',
@@ -425,7 +416,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       year: '2025',
       desc: 'Active session protection agent intercepting hijack attempts and managing token rotation in real-time.',
       tech: ['JavaScript', 'Express', 'JWT Security', 'TailwindCSS'],
-      link: 'https://github.com/axiogenai/sessionwarden'
+      link: 'https://sessionwarden.in'
     },
     {
       name: 'Lumina Backgrounds',
@@ -433,7 +424,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       year: '2025',
       desc: 'Library of fluid particle simulations and interactive canvas shaders built for premium web graphics.',
       tech: ['WebGL', 'GLSL', 'Canvas API', 'Vanilla CSS'],
-      link: 'https://github.com/axiogenai/luminabackgrounds'
+      link: 'https://luminabackgrounds.vercel.app'
     },
     {
       name: 'Patient AI Explainer',
@@ -500,13 +491,13 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           className="mb-6"
         >
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] leading-none">
-            {"CREATIVE".split("").map((char, index) => (
+            {"TEAM".split("").map((char, index) => (
               <motion.span key={index} variants={charVariants} className="inline-block">
                 {char}
               </motion.span>
             ))}
             <br />
-            {"ENGINEERS".split("").map((char, index) => (
+            {"AXIOGEN".split("").map((char, index) => (
               <motion.span key={index} variants={charVariants} className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400">
                 {char}
               </motion.span>
@@ -518,7 +509,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           variants={fadeUpVariants}
           initial="hidden"
           animate={showHero ? "visible" : "hidden"}
-          className="text-lg md:text-xl text-white/80 font-medium max-w-2xl drop-shadow-2xl bg-black/75 p-6 rounded-3xl backdrop-blur-[4px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] leading-relaxed"
+          className="text-lg md:text-xl text-white/80 font-medium max-w-2xl drop-shadow-2xl bg-black/75 p-6 rounded-3xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] leading-relaxed"
         >
           Axiogen builds everything — AI models, mobile apps, cinematic web experiences, cloud infrastructure, and deep research systems.
         </motion.p>
@@ -536,7 +527,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center bg-black/65 backdrop-blur-[4px] group-hover:border-white/50 transition-colors shadow-lg"
+            className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center bg-black/65 group-hover:border-white/50 transition-colors shadow-lg"
           >
             <ArrowDown className="w-4 h-4 text-white/80 group-hover:text-white" />
           </motion.div>
@@ -558,47 +549,50 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       >
 
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-7xl w-full max-h-[85vh] overflow-y-auto lg:max-h-none lg:overflow-visible custom-scrollbar px-2 py-4">
+        <div 
+          data-lenis-prevent
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-7xl w-full max-h-[85vh] overflow-y-auto lg:max-h-none lg:overflow-visible custom-scrollbar px-2 py-4"
+        >
           {/* Bio statement */}
-          <div className="lg:col-span-5 text-white bg-black/75 p-8 md:p-10 rounded-[2rem] backdrop-blur-[4px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
+          <div className="lg:col-span-5 text-white bg-black/75 p-5 md:p-10 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            <div className="flex items-center gap-2 mb-2.5">
+              <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 leading-none">
+            <h2 className="text-3xl md:text-6xl font-black tracking-tighter mb-4 md:mb-6 leading-none">
               TEAM<br />AXIOGEN.
             </h2>
-            <p className="text-sm md:text-base text-white/80 font-normal leading-relaxed mb-6">
-              We believe digital experiences should feel like a cinematic environment. Our work bridges the gap between clean database architectures, custom AI systems, and fluid pixel animations.
+            <p className="text-xs md:text-base text-white/80 font-normal leading-relaxed mb-4 md:mb-6">
+              We are a full-cycle software engineering team delivering end-to-end digital solutions. Our expertise spans web and mobile development, bespoke AI integration, scalable cloud architecture, and immersive user experiences.
             </p>
-            <p className="text-sm md:text-base text-white/60 font-normal leading-relaxed mb-8">
-              Focusing heavily on performant GPU-accelerated graphics, structured architectures, and elegant micro-interactions.
+            <p className="text-xs md:text-base text-white/60 font-normal leading-relaxed mb-5 md:mb-8">
+              From high-performance databases and automated research systems to advanced voice synthesis, document intelligence, and GPU-accelerated interfaces, we craft solutions tailored for both academic innovation and enterprise scale.
             </p>
             <div className="flex gap-4">
               <a 
                 href="https://www.instagram.com/axiogen.in?igsh=OGQ5ZDc2ODk2ZA==" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="px-6 py-3 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-2 font-bold text-xs uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(255,255,255,0.25)] hover:scale-105"
+                className="px-5 py-2.5 md:px-6 md:py-3 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-2 font-bold text-[10px] md:text-xs uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(255,255,255,0.25)] hover:scale-105"
               >
-                <BookOpen className="w-4 h-4" />
+                <BookOpen className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 <span>View Profile</span>
               </a>
             </div>
           </div>
           
           {/* Tech switcher block */}
-          <div className="lg:col-span-7 flex flex-col bg-black/75 p-8 rounded-[2rem] backdrop-blur-[4px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[420px]">
+          <div className="lg:col-span-7 flex flex-col bg-black/75 p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[300px] md:min-h-[420px]">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-sm font-bold uppercase tracking-wider text-white">Skills</h3>
             </div>
 
             {/* Selector tabs */}
-            <div className="flex flex-wrap gap-2 mb-8 bg-white/5 p-1 rounded-2xl border border-white/5 pointer-events-auto">
+            <div className="flex flex-wrap gap-1 mb-4 md:mb-6 bg-white/5 p-1 rounded-xl md:rounded-2xl border border-white/5 pointer-events-auto">
               {(['languages', 'mobile', 'web', 'systems'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-2 rounded-xl text-xs uppercase tracking-widest font-bold transition-all duration-200 cursor-pointer pointer-events-auto select-none ${
+                  className={`px-3 py-1.5 md:px-4 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs uppercase tracking-widest font-bold transition-all duration-200 cursor-pointer pointer-events-auto select-none ${
                     activeTab === tab 
                       ? 'bg-white text-black shadow-[0_4px_15px_rgba(255,255,255,0.2)]' 
                       : 'text-white/60 hover:text-white hover:bg-white/5'
@@ -610,7 +604,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </div>
 
             {/* List with animated switcher */}
-            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTab}
@@ -618,24 +612,24 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2, ease: 'easeOut' }}
-                  className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4"
+                  className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3"
                 >
                   {techData[activeTab].map((skill, index) => (
                     <div 
                       key={index}
-                      className="p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/10 flex flex-col justify-center shadow-lg group relative overflow-hidden"
+                      className="p-3 md:p-5 rounded-xl md:rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/10 flex items-center md:flex-col md:justify-center gap-3 md:gap-0 shadow-lg group relative overflow-hidden"
                     >
                       {/* Glow outline hover effect */}
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
                       
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-3">
+                      <div className="flex items-center justify-between md:mb-2 w-full">
+                        <div className="flex items-center gap-2.5">
                           <SkillIcon name={skill.name} />
-                          <span className="font-bold text-sm text-white group-hover:text-purple-300 transition-colors">{skill.name}</span>
+                          <span className="font-bold text-xs md:text-sm text-white group-hover:text-purple-300 transition-colors">{skill.name}</span>
                         </div>
-                        <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-60 group-hover:translate-x-0 transition-all text-purple-300" />
+                        <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-60 group-hover:translate-x-0 transition-all text-purple-300 hidden md:block" />
                       </div>
-                      <p className="text-xs text-white/60 leading-relaxed font-normal">{skill.desc}</p>
+                      <p className="text-xs text-white/60 leading-relaxed font-normal hidden md:block">{skill.desc}</p>
                     </div>
                   ))}
                 </motion.div>
@@ -679,37 +673,41 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           
           <AnimatePresence mode="wait">
             <motion.div 
-              key={projectPage}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.35, ease: "easeInOut" }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-6 pointer-events-auto max-h-[62vh] md:max-h-none overflow-y-auto md:overflow-visible custom-scrollbar pr-2 py-2"
-            >
-              {projectsData
-                .slice(projectPage * 6, (projectPage + 1) * 6)
-                .map((project) => (
-                  <motion.div 
-                    key={project.name} 
-                    className="group relative min-h-[240px] md:min-h-[260px] rounded-3xl bg-black/75 backdrop-blur-[4px] border border-white/10 hover:border-purple-400/40 overflow-hidden p-6 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto"
-                    whileHover={{ scale: 1.03, y: -6 }}
-                    transition={{ type: 'spring' as const, stiffness: 300, damping: 20 }}
-                  >
-                    {/* Glow effect blob behind card on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/15 via-indigo-500/10 to-pink-500/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
+               key={projectPage}
+               initial={{ opacity: 0, y: 15 }}
+               animate={{ opacity: 1, y: 0 }}
+               exit={{ opacity: 0, y: -15 }}
+               transition={{ duration: 0.35, ease: "easeInOut" }}
+               data-lenis-prevent
+               className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 pointer-events-auto max-h-[62vh] md:max-h-none overflow-x-auto md:overflow-x-visible overflow-y-hidden md:overflow-y-visible pr-2 py-2 snap-x snap-mandatory custom-scrollbar"
+             >
+               {projectsData
+                 .slice(projectPage * 6, (projectPage + 1) * 6)
+                 .map((project) => (
+                   <motion.a 
+                     key={project.name} 
+                     href={project.link}
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     className="group shrink-0 min-w-[82vw] md:min-w-0 snap-center relative min-h-[190px] md:min-h-[260px] rounded-2xl md:rounded-3xl bg-black/75 border border-white/10 hover:border-purple-400/40 overflow-hidden p-4 md:p-6 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto cursor-pointer block"
+                     whileHover={{ scale: 1.03, y: -6 }}
+                     transition={{ type: 'spring' as const, stiffness: 300, damping: 20 }}
+                   >
+                     {/* Glow effect blob behind card on hover */}
+                     <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/15 via-indigo-500/10 to-pink-500/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
 
-                    <div className="flex justify-between items-start z-10">
-                      <span className="px-3.5 py-1.5 rounded-full border border-white/10 text-[10px] tracking-widest uppercase font-bold bg-white/5 text-white/80 group-hover:border-purple-500/30 group-hover:text-purple-300 transition-colors">
-                        {project.category}
-                      </span>
-                      <span className="opacity-60 text-xs bg-white/5 px-2.5 py-1 rounded-lg border border-white/5 font-medium">{project.year}</span>
-                    </div>
-                    
-                    <div className="z-10 mt-auto">
-                      <h3 className="text-3xl font-black tracking-tight mb-3 group-hover:-translate-y-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-purple-200 group-hover:to-pink-300 transition-all duration-500 leading-tight">
-                        {project.name}
-                      </h3>
-                      <p className="text-xs text-white/60 mb-6 group-hover:text-white/80 transition-colors leading-relaxed">
+                     <div className="flex justify-between items-start z-10">
+                       <span className="px-3 py-1 md:px-3.5 md:py-1.5 rounded-full border border-white/10 text-[9px] md:text-[10px] tracking-widest uppercase font-bold bg-white/5 text-white/80 group-hover:border-purple-500/30 group-hover:text-purple-300 transition-colors">
+                         {project.category}
+                       </span>
+                       <span className="opacity-60 text-[10px] md:text-xs bg-white/5 px-2 py-0.5 md:px-2.5 md:py-1 rounded-lg border border-white/5 font-medium">{project.year}</span>
+                     </div>
+                     
+                     <div className="z-10 mt-auto">
+                       <h3 className="text-xl md:text-3xl font-black tracking-tight mb-1.5 md:mb-3 group-hover:-translate-y-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-purple-200 group-hover:to-pink-300 transition-all duration-500 leading-tight">
+                         {project.name}
+                       </h3>
+                       <p className="text-xs text-white/60 mb-4 md:mb-6 group-hover:text-white/80 transition-colors leading-relaxed">
                         {project.desc}
                       </p>
                       
@@ -720,7 +718,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                         ))}
                       </div>
                     </div>
-                  </motion.div>
+                  </motion.a>
               ))}
             </motion.div>
           </AnimatePresence>
@@ -743,32 +741,35 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
         <div className="w-full max-w-5xl text-white">
           {/* Unified Card Container Wrapper */}
-          <div className="bg-black/75 border border-white/10 p-6 md:p-8 rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] backdrop-blur-[4px] max-h-[82vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar">
+          <div 
+            data-lenis-prevent
+            className="bg-black/75 border border-white/10 p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[82vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar"
+          >
             {/* Main Title - Inside the card */}
-            <div className="text-center mb-5">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter mb-2 bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Services We Provide</h2>
-              <p className="text-[9px] uppercase tracking-[0.25em] font-semibold text-white/50">
+            <div className="text-center mb-3.5 md:mb-5">
+              <h2 className="text-2xl md:text-4xl lg:text-5xl font-black tracking-tighter mb-1 bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Services We Provide</h2>
+              <p className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/50">
                 AI, Web, Mobile, Cloud & Intelligent Systems
               </p>
             </div>
 
             {/* Description & Badges */}
-            <div className="text-center mb-6">
-              <p className="text-xs text-white/70 max-w-2xl mx-auto leading-relaxed font-normal mb-4">
+            <div className="text-center mb-4 md:mb-6">
+              <p className="text-[11px] md:text-xs text-white/70 max-w-2xl mx-auto leading-relaxed font-normal mb-3 md:mb-4">
                 From research to deployment — we build powerful, intelligent digital products for enterprises, startups &amp; students. You envision it, we engineer it.
               </p>
               
               {/* Trust Badges */}
-              <div className="flex flex-wrap gap-2.5 justify-center text-[10px] pointer-events-auto">
-                <div className="flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
+              <div className="flex flex-wrap gap-1.5 md:gap-2.5 justify-center text-[8px] md:text-[10px] pointer-events-auto">
+                <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
                   Production-Grade Code
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
+                <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.8)]" />
                   On-Time Delivery
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
+                <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
                   <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
                   Affordable Pricing
                 </div>
@@ -776,7 +777,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </div>
 
             {/* Services Grid (8 Services) */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 max-w-4xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3.5 max-w-4xl mx-auto">
               {servicesData.map((item, index) => {
                 const IconComponent = item.icon;
                 return (
@@ -784,18 +785,18 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     key={index}
                     className="relative group pointer-events-auto"
                   >
-                    <div className="relative overflow-hidden p-4 rounded-xl bg-black/40 border border-white/10 hover:border-white/20 transition-all hover:bg-black/60 flex flex-col h-full justify-between shadow-md">
+                    <div className="relative overflow-hidden p-3.5 rounded-xl bg-black/40 border border-white/10 hover:border-white/20 transition-all hover:bg-black/60 flex flex-col h-full justify-between shadow-md">
                       {/* Glow effect blob inside card on hover */}
                       <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/5 via-transparent to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
                       
                       <div className="relative z-10">
-                        <div className="flex items-center gap-2 mb-2">
-                          <IconComponent className="w-4 h-4 text-white/70 group-hover:text-purple-300 transition-colors" />
-                          <h3 className="text-xs font-black text-white group-hover:text-purple-300 transition-colors leading-tight">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <IconComponent className="w-3.5 h-3.5 text-white/70 group-hover:text-purple-300 transition-colors" />
+                          <h3 className="text-[11px] md:text-xs font-black text-white group-hover:text-purple-300 transition-colors leading-tight">
                             {item.title}
                           </h3>
                         </div>
-                        <p className="text-[10px] leading-relaxed text-white/50 font-normal">
+                        <p className="text-[9px] md:text-[10px] leading-relaxed text-white/50 font-normal line-clamp-2 md:line-clamp-none">
                           {item.desc}
                         </p>
                       </div>
@@ -806,24 +807,24 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </div>
 
             {/* Divider */}
-            <div className="bg-gradient-to-r from-transparent via-white/10 to-transparent h-[1px] my-5 w-full max-w-4xl mx-auto" />
+            <div className="bg-gradient-to-r from-transparent via-white/10 to-transparent h-[1px] my-4 w-full max-w-4xl mx-auto" />
 
             {/* Perfect For Section */}
             <div className="max-w-4xl mx-auto w-full">
-              <div className="text-center mb-3">
-                <span className="text-[9px] uppercase tracking-[0.25em] font-semibold text-white/40">Perfect Solutions For</span>
+              <div className="text-center mb-2.5">
+                <span className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/40">Perfect Solutions For</span>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pointer-events-auto">
+              <div className="grid grid-cols-3 md:grid-cols-3 gap-2 md:gap-3 pointer-events-auto">
                 {perfectForData.map((item, index) => {
                   const IconComponent = item.icon;
                   return (
-                    <div key={index} className="p-4 bg-black/40 border border-white/10 rounded-xl flex gap-3.5 items-start hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
-                      <div className={`p-2 rounded-lg shrink-0 ${item.color}`}>
-                        <IconComponent className="w-4 h-4" />
+                    <div key={index} className="p-2 md:p-4 bg-black/40 border border-white/10 rounded-xl flex flex-col md:flex-row gap-2 md:gap-3.5 items-center md:items-start text-center md:text-left hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
+                      <div className={`p-1.5 md:p-2 rounded-lg shrink-0 ${item.color}`}>
+                        <IconComponent className="w-3.5 h-3.5 md:w-4 md:h-4" />
                       </div>
                       <div>
-                        <h4 className="text-xs font-black text-white leading-tight mb-1">{item.title}</h4>
-                        <p className="text-[10px] text-white/50 leading-relaxed font-normal">{item.desc}</p>
+                        <h4 className="text-[10px] md:text-xs font-black text-white leading-tight md:mb-1">{item.title}</h4>
+                        <p className="text-[10px] text-white/50 leading-relaxed font-normal hidden md:block">{item.desc}</p>
                       </div>
                     </div>
                   );
@@ -832,10 +833,10 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </div>
 
             {/* Tech Stack Row */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mt-5 text-[9px] uppercase tracking-wider font-semibold text-white/30 max-w-4xl mx-auto pointer-events-auto">
+            <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold text-white/30 max-w-4xl mx-auto pointer-events-auto">
               <span>Tech Stack :</span>
               {['Python', 'React', 'Node.js', 'Next.js', 'Java', 'TensorFlow', 'AWS / GCP', 'PostgreSQL', '.NET'].map((tech) => (
-                <span key={tech} className="px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full text-white/60 font-medium">
+                <span key={tech} className="px-2 py-0.5 bg-white/5 border border-white/10 rounded-full text-white/60 font-medium">
                   {tech}
                 </span>
               ))}
@@ -858,66 +859,83 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       >
 
 
-        <div className="text-white bg-black/75 p-6 md:p-12 lg:p-14 rounded-[2.5rem] backdrop-blur-[4px] border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch justify-center max-h-[85vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar">
+        <div 
+          data-lenis-prevent
+          className="text-white bg-black/75 p-5 md:p-10 lg:p-14 rounded-[1.5rem] md:rounded-[2.5rem] border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-8 items-stretch justify-center max-h-[85vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar"
+        >
           
           {/* Left panel - details */}
-          <div className="md:col-span-5 flex flex-col justify-between py-2 text-left">
+          <div className="md:col-span-5 flex flex-col justify-between py-1 md:py-2 text-left">
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-xs font-semibold uppercase tracking-wider text-pink-400">Get in Touch</span>
+              <div className="flex items-center gap-2 mb-2 md:mb-4">
+                <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-pink-400">Get in Touch</span>
               </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-4 leading-none">
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-2 md:mb-4 leading-none">
                 Let&apos;s<br />Talk.
               </h2>
-              <p className="text-xs md:text-sm text-white/70 leading-relaxed max-w-sm mb-6 font-normal">
-                Let&apos;s team up to engineer interactive websites, dynamic applications, or unique scrolling stories.
+              <p className="text-xs text-white/70 leading-relaxed max-w-sm mb-4 md:mb-6 font-normal">
+                Let&apos;s collaborate to design and engineer high-performance web applications, interactive user experiences, and scalable digital solutions.
               </p>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-2.5 md:space-y-4 mb-4 md:mb-0">
               <a 
                 href="mailto:axiogen01@gmail.com" 
-                className="flex items-center space-x-3 text-sm hover:text-purple-300 transition-colors pointer-events-auto border-b border-white/5 pb-2 hover:border-purple-300/30 font-medium"
+                className="flex items-center space-x-3 text-xs md:text-sm hover:text-purple-300 transition-colors pointer-events-auto border-b border-white/5 pb-1.5 md:pb-2 hover:border-purple-300/30 font-medium"
               >
-                <Mail className="w-4 h-4 text-pink-400 shrink-0" />
+                <Mail className="w-3.5 h-3.5 text-pink-400 shrink-0" />
                 <span>axiogen01@gmail.com</span>
               </a>
-              <div className="flex space-x-3 pointer-events-auto">
+              <a 
+                href="tel:+918010127704" 
+                className="flex items-center space-x-3 text-xs md:text-sm hover:text-purple-300 transition-colors pointer-events-auto border-b border-white/5 pb-1.5 md:pb-2 hover:border-purple-300/30 font-medium"
+              >
+                <Phone className="w-3.5 h-3.5 text-pink-400 shrink-0" />
+                <span>8010127704</span>
+              </a>
+              <a 
+                href="tel:+917972884083" 
+                className="flex items-center space-x-3 text-xs md:text-sm hover:text-purple-300 transition-colors pointer-events-auto border-b border-white/5 pb-1.5 md:pb-2 hover:border-purple-300/30 font-medium"
+              >
+                <Phone className="w-3.5 h-3.5 text-pink-400 shrink-0" />
+                <span>7972884083</span>
+              </a>
+              <div className="flex space-x-2.5 pointer-events-auto pt-1 md:pt-0">
                 <a 
                   href="https://twitter.com" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="p-3 bg-white/10 border border-white/10 hover:border-white/30 backdrop-blur-[4px] rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
+                  className="p-2.5 bg-white/10 border border-white/10 hover:border-white/30 rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
                 >
-                  <MessageSquare className="w-4 h-4" />
+                  <MessageSquare className="w-3.5 h-3.5" />
                 </a>
                 <a 
                   href="https://linkedin.com" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="p-3 bg-white/10 border border-white/10 hover:border-white/30 backdrop-blur-[4px] rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
+                  className="p-2.5 bg-white/10 border border-white/10 hover:border-white/30 rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
                 >
-                  <Briefcase className="w-4 h-4" />
+                  <Briefcase className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>
           </div>
 
           {/* Right panel - dynamic form mockup */}
-          <div className="md:col-span-7 flex flex-col bg-white/5 border border-white/10 p-6 md:p-8 rounded-2xl relative overflow-hidden">
+          <div className="md:col-span-7 flex flex-col bg-white/5 border border-white/10 p-4 md:p-8 rounded-xl md:rounded-2xl relative overflow-hidden">
             <AnimatePresence mode="wait">
               {!formSubmitted ? (
                 <motion.form 
                   key="contact-form"
                   onSubmit={handleFormSubmit} 
-                  className="space-y-4 text-left pointer-events-auto flex flex-col h-full"
+                  className="space-y-3 md:space-y-4 text-left pointer-events-auto flex flex-col h-full"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
                   <div>
-                    <label className="block text-[10px] uppercase tracking-wider font-semibold text-white/50 mb-1.5">Name</label>
+                    <label className="block text-[9px] md:text-[10px] uppercase tracking-wider font-semibold text-white/50 mb-1">Name</label>
                     <input 
                       type="text" 
                       name="name"
@@ -925,12 +943,12 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                       value={formData.name}
                       onChange={handleInputChange}
                       placeholder="Enter your name" 
-                      className="w-full px-4 py-2.5 bg-black/40 border border-white/10 rounded-xl text-xs text-white placeholder-white/30 focus:outline-none focus:border-purple-400 focus:bg-black/60 transition-all"
+                      className="w-full px-3.5 py-2 md:px-4 md:py-2.5 bg-black/40 border border-white/10 rounded-lg md:rounded-xl text-xs text-white placeholder-white/30 focus:outline-none focus:border-purple-400 focus:bg-black/60 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] uppercase tracking-wider font-semibold text-white/50 mb-1.5">Email Address</label>
+                    <label className="block text-[9px] md:text-[10px] uppercase tracking-wider font-semibold text-white/50 mb-1">Email Address</label>
                     <input 
                       type="email" 
                       name="email"
@@ -938,28 +956,28 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="your.email@domain.com" 
-                      className="w-full px-4 py-2.5 bg-black/40 border border-white/10 rounded-xl text-xs text-white placeholder-white/30 focus:outline-none focus:border-purple-400 focus:bg-black/60 transition-all"
+                      className="w-full px-3.5 py-2 md:px-4 md:py-2.5 bg-black/40 border border-white/10 rounded-lg md:rounded-xl text-xs text-white placeholder-white/30 focus:outline-none focus:border-purple-400 focus:bg-black/60 transition-all"
                     />
                   </div>
 
                   <div className="flex-1 flex flex-col">
-                    <label className="block text-[10px] uppercase tracking-wider font-semibold text-white/50 mb-1.5">Message</label>
+                    <label className="block text-[9px] md:text-[10px] uppercase tracking-wider font-semibold text-white/50 mb-1">Message</label>
                     <textarea 
                       name="message"
                       required
                       value={formData.message}
                       onChange={handleInputChange}
                       placeholder="Tell us about your project..." 
-                      rows={3}
-                      className="w-full flex-1 px-4 py-2.5 bg-black/40 border border-white/10 rounded-xl text-xs text-white placeholder-white/30 focus:outline-none focus:border-purple-400 focus:bg-black/60 transition-all resize-none"
+                      rows={2}
+                      className="w-full flex-1 px-3.5 py-2 md:px-4 md:py-2.5 bg-black/40 border border-white/10 rounded-lg md:rounded-xl text-xs text-white placeholder-white/30 focus:outline-none focus:border-purple-400 focus:bg-black/60 transition-all resize-none min-h-[60px] md:min-h-0"
                     />
                   </div>
 
                   <button 
                     type="submit" 
-                    className="w-full py-3 mt-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl text-xs uppercase font-bold tracking-widest transition-all shadow-md hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:scale-[1.02] flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-2.5 md:py-3 mt-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg md:rounded-xl text-xs uppercase font-bold tracking-widest transition-all shadow-md hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:scale-[1.02] flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <Send className="w-3.5 h-3.5" />
+                    <Send className="w-3 h-3 md:w-3.5 md:h-3.5" />
                     <span>Send Message</span>
                   </button>
                 </motion.form>

@@ -1,7 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
-
 import { FrameSequenceViewer } from '../components/FrameSequenceViewer';
 import { DynamicBlur } from '../components/DynamicBlur';
 import { DynamicVignette } from '../components/DynamicVignette';
@@ -10,15 +8,12 @@ import { PortfolioContent } from '../components/PortfolioContent';
 import { AmbientGlow } from '../components/AmbientGlow';
 
 export default function Home() {
-  const TOTAL_FRAMES = 502; // Bypasses portal sequence (frames 251-502 skipped in loading)
+  const TOTAL_FRAMES = 502;
 
   return (
     <main className="relative min-h-[1500vh]">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5 }}
-      >
+      {/* CSS animation replaces Framer Motion — one less JS animation library in the page tree */}
+      <div className="animate-page-fade-in">
         <Navbar />
         
         {/* Fixed UI Overlays */}
@@ -36,7 +31,7 @@ export default function Home() {
         
         {/* Dynamic Blur Layer that fades out after blackhole frames */}
         <DynamicBlur totalFrames={TOTAL_FRAMES} thresholdFrame={250} />
-      </motion.div>
+      </div>
     </main>
   );
 }

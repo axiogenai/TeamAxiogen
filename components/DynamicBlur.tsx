@@ -1,46 +1,27 @@
 'use client';
 
-import React, { useMemo } from 'react';
-import { useScroll } from '../hooks/useScroll';
-
-interface DynamicBlurProps {
-  totalFrames: number;
-  thresholdFrame: number;
-}
+import React from 'react';
+import { useIsBlurred } from '../hooks/useScroll';
 
 /**
- * DynamicBlur — pre-rendered blur layer that fades out via opacity only.
- * 
- * IMPORTANT: We do NOT animate `backdrop-filter` because it forces the GPU
- * to recomposite every visible pixel on every frame change. Instead, we
- * apply a fixed backdrop-filter and only animate `opacity` + `visibility`,
- * which are compositor-only properties (zero layout/paint cost).
+ * DynamicBlur — subtle darkening overlay.
+ *
+ * REMOVED backdrop-filter: blur() entirely. backdrop-filter forces the GPU
+ * to recomposite EVERY pixel on the screen on EVERY frame while visible.
+ * This was the #1 GPU bottleneck. Replaced with a simple dark overlay.
  */
-export const DynamicBlur: React.FC<DynamicBlurProps> = ({ totalFrames, thresholdFrame }) => {
-  const { scrollProgress } = useScroll();
-  
-  const currentFrame = Math.max(
-    1,
-    Math.min(totalFrames, Math.ceil((scrollProgress / 100) * totalFrames))
-  );
-
-  const isBlurred = currentFrame <= thresholdFrame;
-
-  // Memoize the static style to avoid creating new objects on every render
-  const blurStyle = useMemo(() => ({
-    backdropFilter: 'blur(4px)',
-    WebkitBackdropFilter: 'blur(4px)',
-  }), []);
+export const DynamicBlur: React.FC<{ totalFrames: number; thresholdFrame: number }> = () => {
+  const isBlurred = useIsBlurred();
 
   return (
-    <div 
+    <div
       className="fixed inset-0 pointer-events-none z-10"
-      style={{ 
-        ...blurStyle,
+      style={{
         opacity: isBlurred ? 1 : 0,
-        visibility: isBlurred ? 'visible' as const : 'hidden' as const,
+        visibility: isBlurred ? ('visible' as const) : ('hidden' as const),
         transition: 'opacity 0.7s ease-in-out, visibility 0.7s ease-in-out',
         willChange: 'opacity',
+        background: 'linear-gradient(to bottom, rgba(0,0,0,0.18), rgba(0,0,0,0.08))',
       }}
     />
   );

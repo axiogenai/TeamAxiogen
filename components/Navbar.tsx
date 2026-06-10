@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLenis } from 'lenis/react';
-import { useScroll } from '../hooks/useScroll';
+import { useNavSection, getStableHeight } from '../hooks/useScroll';
 
 export const Navbar = () => {
   const [mounted, setMounted] = useState(false);
   const lenis = useLenis();
-  const { scrollProgress } = useScroll();
+  const activeSection = useNavSection();
   const totalFrames = 502;
 
   useEffect(() => {
@@ -16,29 +16,12 @@ export const Navbar = () => {
     setMounted(true);
   }, []);
 
-  const currentFrame = Math.max(
-    1,
-    Math.min(totalFrames, Math.ceil((scrollProgress / 100) * totalFrames))
-  );
-
   const scrollToFrame = (frame: number) => {
     if (!lenis) return;
-    // Calculate maxScroll mathematically based on 1500vh page height
-    const maxScroll = 14 * window.innerHeight;
+    const maxScroll = 14 * getStableHeight();
     const targetY = (frame / totalFrames) * maxScroll;
     lenis.scrollTo(targetY, { duration: 1.5 });
   };
-
-  // Determine active section based on frame depth
-  const getActiveSection = () => {
-    if (currentFrame <= 135) return 'hero';
-    if (currentFrame > 135 && currentFrame <= 245) return 'about';
-    if (currentFrame > 245 && currentFrame <= 355) return 'work';
-    if (currentFrame > 355 && currentFrame <= 477) return 'services';
-    return 'contact';
-  };
-
-  const activeSection = getActiveSection();
 
   const navItems = [
     { id: 'about', label: 'About', frame: 190 },
@@ -67,7 +50,7 @@ export const Navbar = () => {
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 1, ease: 'easeOut', delay: 0.2 }}
-          className="flex items-center space-x-1 backdrop-blur-md bg-black/70 border border-white/10 rounded-full p-1.5 shadow-[0_10px_40px_rgba(0,0,0,0.6)] pointer-events-auto"
+          className="flex items-center space-x-1 bg-black/85 border border-white/10 rounded-full p-1.5 shadow-[0_10px_40px_rgba(0,0,0,0.6)] pointer-events-auto"
         >
           {navItems.map((item) => {
             const isActive = activeSection === item.id;
@@ -91,7 +74,7 @@ export const Navbar = () => {
       <div className="fixed top-6 right-4 md:right-8 z-50 pointer-events-auto hidden sm:block">
         <button 
           onClick={() => scrollToFrame(490)}
-          className="px-5 py-2.5 bg-white/10 border border-white/20 rounded-full text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-md hover:bg-white hover:text-black hover:border-white transition-all shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
+          className="px-5 py-2.5 bg-white/10 border border-white/20 rounded-full text-xs font-semibold uppercase tracking-widest text-white hover:bg-white hover:text-black hover:border-white transition-all shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
         >
           Let&apos;s Talk
         </button>

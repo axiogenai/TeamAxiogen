@@ -24,6 +24,8 @@ html, body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   overflow-anchor: none;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* Custom scrollbar utility */
@@ -40,4 +42,31 @@ html, body {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
+}
+
+/* ─── Page fade-in (replaces Framer Motion on page.tsx) ─── */
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-page-fade-in {
+  animation: pageFadeIn 1.5s ease-out forwards;
+}
+
+/* ─── AmbientGlow CSS Animations (replaces Framer Motion JS) ─── */
+/* These run entirely on the GPU compositor thread — zero JS cost */
+@keyframes ambientGlow1 {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  33% { transform: translate3d(50px, -40px, 0); }
+  66% { transform: translate3d(-30px, 60px, 0); }
+}
+@keyframes ambientGlow2 {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  33% { transform: translate3d(-60px, 50px, 0); }
+  66% { transform: translate3d(40px, -40px, 0); }
+}
+@keyframes ambientGlow3 {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  33% { transform: translate3d(40px, 60px, 0); }
+  66% { transform: translate3d(-50px, -30px, 0); }
 }
