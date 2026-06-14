@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSectionVisibility, getStableHeight } from '../hooks/useScroll';
 import { useLenis } from 'lenis/react';
+import { supabase } from '../lib/supabaseClient';
 import { 
   ArrowDown, 
   Mail, 
@@ -178,6 +179,84 @@ const SkillIcon = ({ name }: { name: string }) => {
   }
 };
 
+const fallbackProjects = [
+  {
+    name: 'Axiogen AI',
+    category: 'Artificial Intelligence',
+    year: '2026',
+    desc: 'Core neural network training workspace powering predictive analytics and cognitive assistant agents.',
+    tech: ['Python', 'FastAPI', 'PyTorch', 'Docker'],
+    link: 'https://axiogen.in'
+  },
+  {
+    name: 'RansomGuard AI',
+    category: 'Cybersecurity AI',
+    year: '2026',
+    desc: 'Real-time ransomware detection and response engine powered by watchdog traps, entropy analysis, and an ML ensemble.',
+    tech: ['Python', 'Flask', 'XGBoost', 'Socket.IO', 'SQLite']
+  },
+  {
+    name: 'OmniDx',
+    category: 'Digital Health AI',
+    year: '2026',
+    desc: 'Advanced medical X-ray pathology classification using DenseNet121 and Grad-CAM visual heatmaps for explainability.',
+    tech: ['PyTorch', 'Next.js', 'FastAPI', 'PostgreSQL', 'Docker']
+  },
+  {
+    name: 'Blockchain Forge',
+    category: 'Web3 Infrastructure',
+    year: '2025',
+    desc: 'High-performance cryptographic sandbox tool for generating, mining, and auditing distributed chains.',
+    tech: ['TypeScript', 'Node.js', 'Framer Motion', 'TailwindCSS'],
+    link: 'https://blockchainforge.vercel.app'
+  },
+  {
+    name: 'NAAC Platform',
+    category: 'Enterprise SaaS',
+    year: '2025',
+    desc: 'Advanced academic accreditation suite streamlining documentation, criteria metrics, and reporting.',
+    tech: ['Next.js', 'TypeScript', 'Prisma ORM', 'PostgreSQL'],
+    link: 'https://naac-nine.vercel.app'
+  },
+  {
+    name: 'SessionWarden',
+    category: 'Authentication Audit',
+    year: '2025',
+    desc: 'Active session protection agent intercepting hijack attempts and managing token rotation in real-time.',
+    tech: ['JavaScript', 'Express', 'JWT Security', 'TailwindCSS'],
+    link: 'https://sessionwarden.in'
+  },
+  {
+    name: 'Lumina Backgrounds',
+    category: 'Creative UI Assets',
+    year: '2025',
+    desc: 'Library of fluid particle simulations and interactive canvas shaders built for premium web graphics.',
+    tech: ['WebGL', 'GLSL', 'Canvas API', 'Vanilla CSS'],
+    link: 'https://luminabackgrounds.vercel.app'
+  },
+  {
+    name: 'Patient AI Explainer',
+    category: 'Digital Health AI',
+    year: '2026',
+    desc: 'Conversational patient explainer tool translating complex medical charts into simple patient-friendly reports.',
+    tech: ['React', 'TypeScript', 'FastAPI', 'LLM Agents']
+  },
+  {
+    name: 'Shivsai 360',
+    category: 'Virtual Reality Web',
+    year: '2025',
+    desc: 'Immersive 360-degree virtual tour and panoramic walkthrough engine for real estate properties.',
+    tech: ['Three.js', 'React Three Fiber', 'WebGL', 'CSS3D']
+  },
+  {
+    name: 'OpenRouter Chatbot',
+    category: 'Developer Tools',
+    year: '2025',
+    desc: 'Optimized multi-model chatbot sandbox integrating the openrouter API for low-latency code generation.',
+    tech: ['Next.js', 'TypeScript', 'API Routing', 'TailwindCSS']
+  }
+];
+
 export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   const [mounted, setMounted] = useState(false);
   const { showHero, showAbout, showProjects, projectPage, showServices, showContact } = useSectionVisibility();
@@ -185,6 +264,43 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   const [activeTab, setActiveTab] = useState<'languages' | 'mobile' | 'web' | 'systems'>('languages');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [projects, setProjects] = useState(fallbackProjects);
+
+  useEffect(() => {
+    async function fetchProjects() {
+      if (!supabase) return;
+      try {
+        const { data, error } = await supabase
+          .from('projects')
+          .select('*')
+          .order('display_order', { ascending: true })
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Error fetching projects:', error);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          const formatted = data.map((p: any) => ({
+            name: p.name,
+            category: p.category,
+            year: p.year,
+            desc: p.desc,
+            tech: Array.isArray(p.tech) ? p.tech : JSON.parse(p.tech || '[]'),
+            link: p.link || undefined
+          }));
+          setProjects(formatted);
+        }
+      } catch (err) {
+        console.error('Failed to load projects:', err);
+      }
+    }
+
+    if (mounted) {
+      fetchProjects();
+    }
+  }, [mounted]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -368,84 +484,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
     }
   ];
 
-  // Projects data
-  const projectsData = [
-    {
-      name: 'Axiogen AI',
-      category: 'Artificial Intelligence',
-      year: '2026',
-      desc: 'Core neural network training workspace powering predictive analytics and cognitive assistant agents.',
-      tech: ['Python', 'FastAPI', 'PyTorch', 'Docker'],
-      link: 'https://axiogen.in'
-    },
-    {
-      name: 'RansomGuard AI',
-      category: 'Cybersecurity AI',
-      year: '2026',
-      desc: 'Real-time ransomware detection and response engine powered by watchdog traps, entropy analysis, and an ML ensemble.',
-      tech: ['Python', 'Flask', 'XGBoost', 'Socket.IO', 'SQLite']
-    },
-    {
-      name: 'OmniDx',
-      category: 'Digital Health AI',
-      year: '2026',
-      desc: 'Advanced medical X-ray pathology classification using DenseNet121 and Grad-CAM visual heatmaps for explainability.',
-      tech: ['PyTorch', 'Next.js', 'FastAPI', 'PostgreSQL', 'Docker']
-    },
-    {
-      name: 'Blockchain Forge',
-      category: 'Web3 Infrastructure',
-      year: '2025',
-      desc: 'High-performance cryptographic sandbox tool for generating, mining, and auditing distributed chains.',
-      tech: ['TypeScript', 'Node.js', 'Framer Motion', 'TailwindCSS'],
-      link: 'https://blockchainforge.vercel.app'
-    },
-    {
-      name: 'NAAC Platform',
-      category: 'Enterprise SaaS',
-      year: '2025',
-      desc: 'Advanced academic accreditation suite streamlining documentation, criteria metrics, and reporting.',
-      tech: ['Next.js', 'TypeScript', 'Prisma ORM', 'PostgreSQL'],
-      link: 'https://naac-nine.vercel.app'
-    },
-    {
-      name: 'SessionWarden',
-      category: 'Authentication Audit',
-      year: '2025',
-      desc: 'Active session protection agent intercepting hijack attempts and managing token rotation in real-time.',
-      tech: ['JavaScript', 'Express', 'JWT Security', 'TailwindCSS'],
-      link: 'https://sessionwarden.in'
-    },
-    {
-      name: 'Lumina Backgrounds',
-      category: 'Creative UI Assets',
-      year: '2025',
-      desc: 'Library of fluid particle simulations and interactive canvas shaders built for premium web graphics.',
-      tech: ['WebGL', 'GLSL', 'Canvas API', 'Vanilla CSS'],
-      link: 'https://luminabackgrounds.vercel.app'
-    },
-    {
-      name: 'Patient AI Explainer',
-      category: 'Digital Health AI',
-      year: '2026',
-      desc: 'Conversational patient explainer tool translating complex medical charts into simple patient-friendly reports.',
-      tech: ['React', 'TypeScript', 'FastAPI', 'LLM Agents']
-    },
-    {
-      name: 'Shivsai 360',
-      category: 'Virtual Reality Web',
-      year: '2025',
-      desc: 'Immersive 360-degree virtual tour and panoramic walkthrough engine for real estate properties.',
-      tech: ['Three.js', 'React Three Fiber', 'WebGL', 'CSS3D']
-    },
-    {
-      name: 'OpenRouter Chatbot',
-      category: 'Developer Tools',
-      year: '2025',
-      desc: 'Optimized multi-model chatbot sandbox integrating the openrouter API for low-latency code generation.',
-      tech: ['Next.js', 'TypeScript', 'API Routing', 'TailwindCSS']
-    }
-  ];
+  // Fallback projects are moved outside the component
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -676,7 +715,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                data-lenis-prevent
                className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 pointer-events-auto max-h-[62vh] md:max-h-none overflow-x-auto md:overflow-x-visible overflow-y-hidden md:overflow-y-visible pr-2 py-2 snap-x snap-mandatory custom-scrollbar"
              >
-               {projectsData
+               {projects
                  .slice(projectPage * 6, (projectPage + 1) * 6)
                  .map((project) => {
                    const CardComponent = project.link ? motion.a : motion.div;
