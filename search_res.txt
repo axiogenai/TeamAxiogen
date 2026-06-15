@@ -1,0 +1,8 @@
+C:/Users/aditya/.gemini/antigravity/scratch/Portfolio\.next\dev\server\app/page.js
+C:/Users/aditya/.gemini/antigravity/scratch/Portfolio\.next\dev\static\chunks\app/page.js
+C:/Users/aditya/.gemini/antigravity/scratch/Portfolio\.next\dev\static\webpack\app/page.0043ebc3d4be1601.hot-update.js
+C:/Users/aditya/.gemini/antigravity/scratch/Portfolio\.next\dev\static\webpack\app/page.79e086f8c210e4d4.hot-update.js
+C:/Users/aditya/.gemini/antigravity/scratch/Portfolio\.next\dev\static\webpack\app/page.9b37ed988fe3116d.hot-update.js
+C:/Users/aditya/.gemini/antigravity/scratch/Portfolio\app/page.tsx
+C:/Users/aditya/.gemini/antigravity/scratch/Portfolio\components/FrameSequenceViewer.tsx
+C:/Users/aditya/.gemini/antigravity/scratch/Portfolio\hooks/useScroll.ts

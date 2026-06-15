@@ -1,0 +1,2 @@
+C:/Users/aditya/.gemini/antigravity/scratch/Portfolio/app/layout.tsx
+C:/Users/aditya/.gemini/antigravity/scratch/Portfolio/app/page.tsx

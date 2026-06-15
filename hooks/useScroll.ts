@@ -17,6 +17,37 @@ const listeners = new Set<() => void>();
 let stableHeight = 0;
 let stableWidth = 0;
 
+let projectCount = 12; // default
+
+export function setProjectCount(count: number) {
+  projectCount = count;
+  computeSnapshot();
+}
+
+export function getProjectPagesCount(): number {
+  return Math.max(1, Math.ceil(projectCount / 6));
+}
+
+export function getTotalStates(): number {
+  return 4 + getProjectPagesCount();
+}
+
+export function getMaxScrollMultiplier(): number {
+  return getTotalStates() - 2;
+}
+
+export function getSectionFrames(): number[] {
+  const P = getProjectPagesCount();
+  const totalStates = 4 + P;
+  const slice = 502 / totalStates;
+  
+  const frames: number[] = [];
+  for (let i = 0; i < totalStates; i++) {
+    frames.push(Math.round(slice * i + slice / 2));
+  }
+  return frames;
+}
+
 export function getStableHeight(): number {
   if (typeof window === 'undefined') return 0;
   if (stableHeight === 0) {
@@ -70,7 +101,7 @@ function computeSnapshot() {
   }
 
   const scrollY = Math.round(window.scrollY);
-  const maxScroll = 14 * stableHeight;
+  const maxScroll = getMaxScrollMultiplier() * stableHeight;
   const raw = maxScroll > 0 ? (scrollY / maxScroll) * 100 : 0;
   const scrollProgress = Math.min(Math.max(raw, 0), 100);
 
@@ -128,10 +159,14 @@ export function useNavSection(): string {
     subscribe,
     () => {
       const frame = getCurrentFrame(currentSnapshot.scrollProgress);
-      if (frame <= 135) return 'hero';
-      if (frame <= 245) return 'about';
-      if (frame <= 355) return 'work';
-      if (frame <= 477) return 'services';
+      const P = getProjectPagesCount();
+      const totalStates = 4 + P;
+      const slice = TOTAL_FRAMES / totalStates;
+
+      if (frame <= slice) return 'hero';
+      if (frame <= slice * 2) return 'about';
+      if (frame <= slice * (2 + P)) return 'work';
+      if (frame <= slice * (3 + P)) return 'services';
       return 'contact';
     },
     () => 'hero'
@@ -165,12 +200,22 @@ export function useSectionVisibility(): SectionVisibility {
     subscribe,
     () => {
       const frame = getCurrentFrame(currentSnapshot.scrollProgress);
-      const showHero = frame >= 26 && frame <= 135;
-      const showAbout = frame >= 136 && frame <= 245;
-      const showProjects = frame >= 246 && frame <= 355;
-      const projectPage = frame > 300 ? 1 : 0;
-      const showServices = frame >= 356 && frame <= 477;
-      const showContact = frame >= 478 && frame <= 502;
+      const P = getProjectPagesCount();
+      const totalStates = 4 + P;
+      const slice = TOTAL_FRAMES / totalStates;
+
+      const showHero = frame >= 1 && frame <= slice;
+      const showAbout = frame > slice && frame <= slice * 2;
+      const showProjects = frame > slice * 2 && frame <= slice * (2 + P);
+      
+      let projectPage = 0;
+      if (showProjects) {
+        const relativeFrame = frame - slice * 2;
+        projectPage = Math.min(P - 1, Math.floor(relativeFrame / slice));
+      }
+
+      const showServices = frame > slice * (2 + P) && frame <= slice * (3 + P);
+      const showContact = frame > slice * (3 + P) && frame <= TOTAL_FRAMES;
 
       if (
         cachedVisibility.showHero !== showHero ||

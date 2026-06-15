@@ -1,10 +1,17 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSectionVisibility, getStableHeight } from '../hooks/useScroll';
+import { 
+  useSectionVisibility, 
+  getStableHeight, 
+  setProjectCount, 
+  getSectionFrames, 
+  getMaxScrollMultiplier 
+} from '../hooks/useScroll';
 import { useLenis } from 'lenis/react';
 import { supabase } from '../lib/supabaseClient';
+import { LogoLoop } from './LogoLoop';
 import { 
   ArrowDown, 
   Mail, 
@@ -266,6 +273,57 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [projects, setProjects] = useState(fallbackProjects);
 
+  // Tech switcher data
+  const techData = {
+    languages: [
+      { name: 'Python', desc: 'AI/ML development, backend services, and automation' },
+      { name: 'JavaScript / TypeScript', desc: 'Dynamic web applications, mobile apps, and scripts' },
+      { name: 'Java', desc: 'Enterprise applications, Android apps, and robust systems' },
+      { name: 'C / C++', desc: 'Low-level system programming, graphics, and optimization' },
+    ],
+    mobile: [
+      { name: 'Kotlin / Android Studio', desc: 'Native Android app engineering and UI layout design' },
+      { name: 'Swift / iOS', desc: 'Native iOS app development and performance-focused screens' },
+      { name: 'React Native / Flutter', desc: 'Cross-platform mobile application development' },
+      { name: 'Gradle / XML', desc: 'Build configurations, dependency trees, and UI scripting' },
+    ],
+    web: [
+      { name: 'React / Next.js', desc: 'SSR, ISR, and dynamic component design' },
+      { name: 'Three.js / WebGL', desc: '3D scene graphs, custom shaders, and GPU graphics' },
+      { name: 'Node.js / Express', desc: 'Scalable API architectures and web backend routing' },
+      { name: 'TailwindCSS', desc: 'Responsive utilities and theme styling' },
+    ],
+    systems: [
+      { name: 'PyTorch / TensorFlow', desc: 'Deep learning models, neural networks, and AI pipelines' },
+      { name: 'Cloud & DevOps', desc: 'AWS/GCP cloud architectures and CI/CD pipelines' },
+      { name: 'PostgreSQL / SQL', desc: 'Optimized querying and relational models' },
+      { name: 'Docker / Containers', desc: 'Containerization, API scaling, and system orchestration' },
+    ],
+  };
+
+  const loopLogos = useMemo(() => {
+    const uniqueSkills = new Set<string>();
+    const list: { name: string; node: React.ReactNode }[] = [];
+    
+    Object.values(techData).forEach(skills => {
+      skills.forEach(skill => {
+        if (!uniqueSkills.has(skill.name)) {
+          uniqueSkills.add(skill.name);
+          list.push({
+            name: skill.name,
+            node: (
+              <div className="flex items-center gap-3 px-4 py-2.5 bg-white/5 border border-white/10 hover:border-white/20 transition-colors rounded-xl select-none group/item">
+                <SkillIcon name={skill.name} />
+                <span className="font-extrabold text-[10px] md:text-xs uppercase tracking-wider text-white/80 group-hover/item:text-white transition-colors">{skill.name}</span>
+              </div>
+            )
+          });
+        }
+      });
+    });
+    return list;
+  }, []);
+
   useEffect(() => {
     async function fetchProjects() {
       if (!supabase) return;
@@ -291,6 +349,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             link: p.link || undefined
           }));
           setProjects(formatted);
+          setProjectCount(data.length);
         }
       } catch (err) {
         console.error('Failed to load projects:', err);
@@ -321,12 +380,170 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
     }
   }, [mounted, lenis]);
 
+  useEffect(() => {
+    if (!lenis || !mounted) return;
+
+    let isAnimating = false;
+    let touchStartClientY = 0;
+    let touchStartClientX = 0;
+
+    const sectionFrames = getSectionFrames();
+
+    const isScrollableTarget = (target: HTMLElement | null): boolean => {
+      if (!target) return false;
+      let current: HTMLElement | null = target;
+      while (current && current !== document.body) {
+        if (current.tagName === 'INPUT' || current.tagName === 'TEXTAREA') {
+          return true;
+        }
+        const style = window.getComputedStyle(current);
+        const overflowY = style.overflowY;
+        const overflowX = style.overflowX;
+        if (
+          current.hasAttribute('data-lenis-prevent') ||
+          overflowY === 'auto' || overflowY === 'scroll' ||
+          overflowX === 'auto' || overflowX === 'scroll'
+        ) {
+          if (current.scrollHeight > current.clientHeight || current.scrollWidth > current.clientWidth) {
+            return true;
+          }
+        }
+        current = current.parentElement;
+      }
+      return false;
+    };
+
+    const getClosestSectionIndex = () => {
+      const maxScroll = getMaxScrollMultiplier() * getStableHeight();
+      const scrollY = window.scrollY;
+      const progress = maxScroll > 0 ? (scrollY / maxScroll) * 100 : 0;
+      const frame = Math.max(1, Math.min(502, Math.ceil((progress / 100) * 502)));
+
+      let closestIdx = 0;
+      let minDiff = Infinity;
+      sectionFrames.forEach((f, idx) => {
+        const diff = Math.abs(frame - f);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestIdx = idx;
+        }
+      });
+      return closestIdx;
+    };
+
+    const handleTransition = (direction: 'up' | 'down') => {
+      const currentIndex = getClosestSectionIndex();
+      let targetIndex = currentIndex;
+
+      if (direction === 'down') {
+        targetIndex = Math.min(sectionFrames.length - 1, currentIndex + 1);
+      } else {
+        targetIndex = Math.max(0, currentIndex - 1);
+      }
+
+      if (targetIndex !== currentIndex || (direction === 'down' && currentIndex === 0 && window.scrollY < 10)) {
+        isAnimating = true;
+        
+        const maxScroll = getMaxScrollMultiplier() * getStableHeight();
+        const targetFrame = sectionFrames[targetIndex];
+        const targetY = (targetFrame / 502) * maxScroll;
+
+        lenis.scrollTo(targetY, { 
+          duration: 1.2, 
+          easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+          onComplete: () => {
+            setTimeout(() => {
+              isAnimating = false;
+            }, 300);
+          }
+        });
+      }
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      const target = e.target as HTMLElement;
+      if (isScrollableTarget(target)) {
+        return;
+      }
+
+      e.preventDefault();
+
+      if (isAnimating) return;
+      if (Math.abs(e.deltaY) < 10) return;
+
+      const direction = e.deltaY > 0 ? 'down' : 'up';
+      handleTransition(direction);
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartClientY = e.touches[0].clientY;
+      touchStartClientX = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const touchEndClientY = e.touches[0].clientY;
+      const touchEndClientX = e.touches[0].clientX;
+      const diffY = touchStartClientY - touchEndClientY;
+      const diffX = touchStartClientX - touchEndClientX;
+
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        return;
+      }
+
+      const target = e.target as HTMLElement;
+      if (isScrollableTarget(target)) {
+        return;
+      }
+
+      e.preventDefault();
+
+      if (isAnimating) return;
+
+      if (Math.abs(diffY) > 50) {
+        const direction = diffY > 0 ? 'down' : 'up';
+        handleTransition(direction);
+        touchStartClientY = touchEndClientY;
+        touchStartClientX = touchEndClientX;
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || isScrollableTarget(target)) {
+        return;
+      }
+
+      if (['ArrowDown', 'PageDown', ' '].includes(e.key) && !e.shiftKey) {
+        e.preventDefault();
+        if (!isAnimating) handleTransition('down');
+      } else if (['ArrowUp', 'PageUp'].includes(e.key) || (e.key === ' ' && e.shiftKey)) {
+        e.preventDefault();
+        if (!isAnimating) handleTransition('up');
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('keydown', handleKeyDown, { passive: false });
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [lenis, mounted]);
+
   const scrollToFrame = (frame: number) => {
     if (!lenis) return;
-    // Calculate maxScroll mathematically based on 1500vh page height
-    const maxScroll = 14 * getStableHeight();
+    // Calculate maxScroll mathematically based on 500vh page height
+    const maxScroll = 4 * getStableHeight();
     const targetY = (frame / totalFrames) * maxScroll;
-    lenis.scrollTo(targetY, { duration: 1.5 });
+    lenis.scrollTo(targetY, { 
+      duration: 1.2,
+      easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+    });
   };
 
   // Section visibility is now computed in the useSectionVisibility() hook.
@@ -364,34 +581,6 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       y: 0,
       transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }
     }
-  };
-
-  // Tech switcher data
-  const techData = {
-    languages: [
-      { name: 'Python', desc: 'AI/ML development, backend services, and automation' },
-      { name: 'JavaScript / TypeScript', desc: 'Dynamic web applications, mobile apps, and scripts' },
-      { name: 'Java', desc: 'Enterprise applications, Android apps, and robust systems' },
-      { name: 'C / C++', desc: 'Low-level system programming, graphics, and optimization' },
-    ],
-    mobile: [
-      { name: 'Kotlin / Android Studio', desc: 'Native Android app engineering and UI layout design' },
-      { name: 'Swift / iOS', desc: 'Native iOS app development and performance-focused screens' },
-      { name: 'React Native / Flutter', desc: 'Cross-platform mobile application development' },
-      { name: 'Gradle / XML', desc: 'Build configurations, dependency trees, and UI scripting' },
-    ],
-    web: [
-      { name: 'React / Next.js', desc: 'SSR, ISR, and dynamic component design' },
-      { name: 'Three.js / WebGL', desc: '3D scene graphs, custom shaders, and GPU graphics' },
-      { name: 'Node.js / Express', desc: 'Scalable API architectures and web backend routing' },
-      { name: 'TailwindCSS', desc: 'Responsive utilities and theme styling' },
-    ],
-    systems: [
-      { name: 'PyTorch / TensorFlow', desc: 'Deep learning models, neural networks, and AI pipelines' },
-      { name: 'Cloud & DevOps', desc: 'AWS/GCP cloud architectures and CI/CD pipelines' },
-      { name: 'PostgreSQL / SQL', desc: 'Optimized querying and relational models' },
-      { name: 'Docker / Containers', desc: 'Containerization, API scaling, and system orchestration' },
-    ],
   };
 
   // Services data from user concept
@@ -553,7 +742,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           animate={{ opacity: showHero ? 1 : 0, y: showHero ? 0 : 20 }}
           transition={{ delay: 0.6 }}
           className="absolute bottom-24 flex flex-col items-center text-white cursor-pointer group" 
-          onClick={() => scrollToFrame(190)}
+          onClick={() => scrollToFrame(125)}
         >
           <span className="text-[10px] uppercase tracking-[0.3em] mb-4 text-white/60 group-hover:text-white transition-colors font-medium">
             Scroll to discover
@@ -571,7 +760,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- ABOUT SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex items-center justify-center px-6 md:px-16"
+        className="absolute inset-0 flex items-center justify-center px-6 md:px-16 text-white pt-24 pb-8"
         style={{ pointerEvents: showAbout ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -581,94 +770,107 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-
-
-        <div 
-          data-lenis-prevent
-          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-7xl w-full max-h-[85vh] overflow-y-auto lg:max-h-none lg:overflow-visible custom-scrollbar px-2 py-4"
-        >
-          {/* Bio statement */}
-          <div className="lg:col-span-5 text-white bg-black/75 p-5 md:p-10 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-            <div className="flex items-center gap-2 mb-2.5">
-              <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
+        <div className="flex flex-col items-center max-w-7xl w-full gap-5 md:gap-6 justify-center">
+          <div 
+            data-lenis-prevent
+            className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-center w-full max-h-[60vh] lg:max-h-none overflow-y-auto lg:overflow-visible custom-scrollbar px-2 py-2"
+          >
+            {/* Bio statement */}
+            <div className="lg:col-span-5 text-white bg-black/75 p-5 md:p-10 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+              <div className="flex items-center gap-2 mb-2.5">
+                <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
+              </div>
+              <h2 className="text-3xl md:text-6xl font-black tracking-tighter mb-4 md:mb-6 leading-none">
+                TEAM<br />AXIOGEN.
+              </h2>
+              <p className="text-xs md:text-base text-white/80 font-normal leading-relaxed mb-4 md:mb-6">
+                We are a full-cycle software engineering team delivering end-to-end digital solutions. Our expertise spans web and mobile development, bespoke AI integration, scalable cloud architecture, and immersive user experiences.
+              </p>
+              <p className="text-xs md:text-base text-white/60 font-normal leading-relaxed mb-5 md:mb-8">
+                From high-performance databases and automated research systems to advanced voice synthesis, document intelligence, and GPU-accelerated interfaces, we craft solutions tailored for both academic innovation and enterprise scale.
+              </p>
+              <div className="flex gap-4">
+                <a 
+                  href="https://www.instagram.com/axiogen.in?igsh=OGQ5ZDc2ODk2ZA==" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="px-5 py-2.5 md:px-6 md:py-3 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-2 font-bold text-[10px] md:text-xs uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(255,255,255,0.25)] hover:scale-105"
+                >
+                  <BookOpen className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                  <span>View Profile</span>
+                </a>
+              </div>
             </div>
-            <h2 className="text-3xl md:text-6xl font-black tracking-tighter mb-4 md:mb-6 leading-none">
-              TEAM<br />AXIOGEN.
-            </h2>
-            <p className="text-xs md:text-base text-white/80 font-normal leading-relaxed mb-4 md:mb-6">
-              We are a full-cycle software engineering team delivering end-to-end digital solutions. Our expertise spans web and mobile development, bespoke AI integration, scalable cloud architecture, and immersive user experiences.
-            </p>
-            <p className="text-xs md:text-base text-white/60 font-normal leading-relaxed mb-5 md:mb-8">
-              From high-performance databases and automated research systems to advanced voice synthesis, document intelligence, and GPU-accelerated interfaces, we craft solutions tailored for both academic innovation and enterprise scale.
-            </p>
-            <div className="flex gap-4">
-              <a 
-                href="https://www.instagram.com/axiogen.in?igsh=OGQ5ZDc2ODk2ZA==" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="px-5 py-2.5 md:px-6 md:py-3 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-2 font-bold text-[10px] md:text-xs uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(255,255,255,0.25)] hover:scale-105"
-              >
-                <BookOpen className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                <span>View Profile</span>
-              </a>
+            
+            {/* Tech switcher block */}
+            <div className="lg:col-span-7 flex flex-col bg-black/75 p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[300px] md:min-h-[420px]">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-white">Skills</h3>
+              </div>
+
+              {/* Selector tabs */}
+              <div className="flex flex-wrap gap-1 mb-4 md:mb-6 bg-white/5 p-1 rounded-xl md:rounded-2xl border border-white/5 pointer-events-auto">
+                {(['languages', 'mobile', 'web', 'systems'] as const).map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-3 py-1.5 md:px-4 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs uppercase tracking-widest font-bold transition-all duration-200 cursor-pointer pointer-events-auto select-none ${
+                      activeTab === tab 
+                        ? 'bg-white text-black shadow-[0_4px_15px_rgba(255,255,255,0.2)]' 
+                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    {tab === 'languages' ? 'Languages' : tab === 'mobile' ? 'Mobile Apps' : tab === 'web' ? 'Web & Creative' : 'AI & Systems'}
+                  </button>
+                ))}
+              </div>
+
+              {/* List with animated switcher */}
+              <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeTab}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                    className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3"
+                  >
+                    {techData[activeTab].map((skill, index) => (
+                      <div 
+                        key={index}
+                        className="p-3 md:p-5 rounded-xl md:rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/10 flex items-center md:flex-col md:justify-center gap-3 md:gap-0 shadow-lg group relative overflow-hidden"
+                      >
+                        {/* Glow outline hover effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
+                        
+                        <div className="flex items-center justify-between md:mb-2 w-full">
+                          <div className="flex items-center gap-2.5">
+                            <SkillIcon name={skill.name} />
+                            <span className="font-bold text-xs md:text-sm text-white group-hover:text-purple-300 transition-colors">{skill.name}</span>
+                          </div>
+                          <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-60 group-hover:translate-x-0 transition-all text-purple-300 hidden md:block" />
+                        </div>
+                        <p className="text-xs text-white/60 leading-relaxed font-normal hidden md:block">{skill.desc}</p>
+                      </div>
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
             </div>
           </div>
-          
-          {/* Tech switcher block */}
-          <div className="lg:col-span-7 flex flex-col bg-black/75 p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[300px] md:min-h-[420px]">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-white">Skills</h3>
-            </div>
 
-            {/* Selector tabs */}
-            <div className="flex flex-wrap gap-1 mb-4 md:mb-6 bg-white/5 p-1 rounded-xl md:rounded-2xl border border-white/5 pointer-events-auto">
-              {(['languages', 'mobile', 'web', 'systems'] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-3 py-1.5 md:px-4 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs uppercase tracking-widest font-bold transition-all duration-200 cursor-pointer pointer-events-auto select-none ${
-                    activeTab === tab 
-                      ? 'bg-white text-black shadow-[0_4px_15px_rgba(255,255,255,0.2)]' 
-                      : 'text-white/60 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  {tab === 'languages' ? 'Languages' : tab === 'mobile' ? 'Mobile Apps' : tab === 'web' ? 'Web & Creative' : 'AI & Systems'}
-                </button>
-              ))}
-            </div>
-
-            {/* List with animated switcher */}
-            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeTab}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.2, ease: 'easeOut' }}
-                  className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3"
-                >
-                  {techData[activeTab].map((skill, index) => (
-                    <div 
-                      key={index}
-                      className="p-3 md:p-5 rounded-xl md:rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/10 flex items-center md:flex-col md:justify-center gap-3 md:gap-0 shadow-lg group relative overflow-hidden"
-                    >
-                      {/* Glow outline hover effect */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
-                      
-                      <div className="flex items-center justify-between md:mb-2 w-full">
-                        <div className="flex items-center gap-2.5">
-                          <SkillIcon name={skill.name} />
-                          <span className="font-bold text-xs md:text-sm text-white group-hover:text-purple-300 transition-colors">{skill.name}</span>
-                        </div>
-                        <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-60 group-hover:translate-x-0 transition-all text-purple-300 hidden md:block" />
-                      </div>
-                      <p className="text-xs text-white/60 leading-relaxed font-normal hidden md:block">{skill.desc}</p>
-                    </div>
-                  ))}
-                </motion.div>
-              </AnimatePresence>
-            </div>
+          {/* Logo Loop Section */}
+          <div className="w-full px-2 overflow-hidden select-none pointer-events-auto">
+            <LogoLoop 
+              logos={loopLogos} 
+              speed={40} 
+              gap={24} 
+              logoHeight={40}
+              fadeOut={true} 
+              pauseOnHover={true}
+              scaleOnHover={true}
+            />
           </div>
         </div>
       </motion.section>
@@ -927,20 +1129,22 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 <Mail className="w-3.5 h-3.5 text-pink-400 shrink-0" />
                 <span>axiogen01@gmail.com</span>
               </a>
-              <a 
-                href="tel:+918010127704" 
-                className="flex items-center space-x-3 text-xs md:text-sm hover:text-purple-300 transition-colors pointer-events-auto border-b border-white/5 pb-1.5 md:pb-2 hover:border-purple-300/30 font-medium"
-              >
-                <Phone className="w-3.5 h-3.5 text-pink-400 shrink-0" />
-                <span>8010127704</span>
-              </a>
-              <a 
-                href="tel:+917972884083" 
-                className="flex items-center space-x-3 text-xs md:text-sm hover:text-purple-300 transition-colors pointer-events-auto border-b border-white/5 pb-1.5 md:pb-2 hover:border-purple-300/30 font-medium"
-              >
-                <Phone className="w-3.5 h-3.5 text-pink-400 shrink-0" />
-                <span>7972884083</span>
-              </a>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 space-y-2.5 sm:space-y-0 border-b border-white/5 pb-1.5 md:pb-2">
+                <a 
+                  href="tel:+918010127704" 
+                  className="flex items-center space-x-3 text-xs md:text-sm hover:text-purple-300 transition-colors pointer-events-auto font-medium"
+                >
+                  <Phone className="w-3.5 h-3.5 text-pink-400 shrink-0" />
+                  <span>8010127704</span>
+                </a>
+                <a 
+                  href="tel:+917972884083" 
+                  className="flex items-center space-x-3 text-xs md:text-sm hover:text-purple-300 transition-colors pointer-events-auto font-medium"
+                >
+                  <Phone className="w-3.5 h-3.5 text-pink-400 shrink-0" />
+                  <span>7972884083</span>
+                </a>
+              </div>
               <div className="flex space-x-2.5 pointer-events-auto pt-1 md:pt-0">
                 <a 
                   href="https://twitter.com" 

@@ -3,7 +3,13 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLenis } from 'lenis/react';
-import { useNavSection, getStableHeight } from '../hooks/useScroll';
+import { 
+  useNavSection, 
+  getStableHeight, 
+  getProjectPagesCount, 
+  getMaxScrollMultiplier, 
+  getSectionFrames 
+} from '../hooks/useScroll';
 
 export const Navbar = () => {
   const [mounted, setMounted] = useState(false);
@@ -18,16 +24,22 @@ export const Navbar = () => {
 
   const scrollToFrame = (frame: number) => {
     if (!lenis) return;
-    const maxScroll = 14 * getStableHeight();
+    const maxScroll = getMaxScrollMultiplier() * getStableHeight();
     const targetY = (frame / totalFrames) * maxScroll;
-    lenis.scrollTo(targetY, { duration: 1.5 });
+    lenis.scrollTo(targetY, { 
+      duration: 1.2,
+      easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+    });
   };
 
+  const frames = getSectionFrames();
+  const P = getProjectPagesCount();
+  
   const navItems = [
-    { id: 'about', label: 'About', frame: 190 },
-    { id: 'work', label: 'Work', frame: 300 },
-    { id: 'services', label: 'Services', frame: 416 },
-    { id: 'contact', label: 'Contact', frame: 490 },
+    { id: 'about', label: 'About', frame: frames[1] ?? 125 },
+    { id: 'work', label: 'Work', frame: frames[2] ?? 209 },
+    { id: 'services', label: 'Services', frame: frames[2 + P] ?? 377 },
+    { id: 'contact', label: 'Contact', frame: frames[3 + P] ?? 461 },
   ];
 
   if (!mounted) return null;
@@ -37,7 +49,7 @@ export const Navbar = () => {
       {/* Brand Logo - Top Left */}
       <div className="fixed top-6 left-4 md:left-8 z-50 pointer-events-auto select-none hidden sm:block">
         <button 
-          onClick={() => scrollToFrame(0)}
+          onClick={() => scrollToFrame(frames[0] ?? 42)}
           className="text-sm font-black tracking-tighter text-white uppercase bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent hover:opacity-85 transition-opacity cursor-pointer"
         >
           AXIOGEN
@@ -73,7 +85,7 @@ export const Navbar = () => {
 
       <div className="fixed top-6 right-4 md:right-8 z-50 pointer-events-auto hidden sm:block">
         <button 
-          onClick={() => scrollToFrame(490)}
+          onClick={() => scrollToFrame(frames[3 + P] ?? 461)}
           className="px-5 py-2.5 bg-white/10 border border-white/20 rounded-full text-xs font-semibold uppercase tracking-widest text-white hover:bg-white hover:text-black hover:border-white transition-all shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
         >
           Let&apos;s Talk
