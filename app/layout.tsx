@@ -1,10 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { SmoothScroll } from "../components/SmoothScroll";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Axiogen | Creative Engineering Studio",
   description: "Immersive, high-performance digital spaces at the intersection of cinematic design and web engineering.",
+};
+
+export const viewport: Viewport = {
+  width: 1280,
+  initialScale: 1,
 };
 
 export default function RootLayout({
