@@ -56,6 +56,15 @@ html, body {
   background: rgba(255, 255, 255, 0.3);
 }
 
+/* Hide scrollbar utility */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* ─── Page fade-in (replaces Framer Motion on page.tsx) ─── */
 @keyframes pageFadeIn {
   from { opacity: 0; }

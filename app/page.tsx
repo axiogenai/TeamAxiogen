@@ -8,8 +8,6 @@ import { PortfolioContent } from '../components/PortfolioContent';
 import { useProjectCount, useSectionVisibility, getTotalStates } from '../hooks/useScroll';
 import { SplashScreen } from '../components/SplashScreen';
 import { ScrollProgressBar } from '../components/ScrollProgressBar';
-import { ThemeToggle } from '../components/ThemeToggle';
-import { SoundManager } from '../components/SoundManager';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LightPillar = dynamic(() => import('../components/LightPillar'), {
@@ -93,8 +91,6 @@ export default function Home() {
           
           {/* Fixed UI Overlays */}
           <ScrollProgressBar />
-          <ThemeToggle />
-          <SoundManager />
           
           {/* Floating Layout Contents */}
           <PortfolioContent totalFrames={TOTAL_FRAMES} />

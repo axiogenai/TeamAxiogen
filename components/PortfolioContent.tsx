@@ -846,8 +846,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             data-lenis-prevent
             className={`grid grid-cols-12 gap-3 md:gap-8 items-start w-full ${
               isMobile 
-                ? 'max-h-[82vh] overflow-y-auto lg:max-h-none lg:overflow-visible custom-scrollbar touch-pan-y' 
-                : 'max-h-[60vh] lg:max-h-none overflow-y-auto lg:overflow-visible'
+                ? 'max-h-[82vh] overflow-y-auto lg:max-h-none lg:overflow-visible scrollbar-none touch-pan-y' 
+                : 'max-h-[60vh] lg:max-h-none overflow-y-auto lg:overflow-visible scrollbar-none'
             } px-2 py-2`}
           >
             <AnimatePresence mode={isMobile ? "wait" : "sync"}>
@@ -925,20 +925,20 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={isMobile ? { opacity: 0, y: -15 } : undefined}
                   transition={{ duration: 0.25 }}
-                  className="col-span-12 lg:col-span-7 flex flex-col gap-4 w-full h-full"
+                  className="col-span-12 lg:col-span-7 flex flex-col gap-2 md:gap-4 w-full h-full"
                 >
                   {isMobile && (
                     <div className="w-full overflow-hidden select-none pointer-events-auto">
                       <LogoLoop logos={loopLogos} />
                     </div>
                   )}
-                  <div className="flex flex-col bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[200px] sm:min-h-[300px] md:min-h-[380px]">
-                    <div className="flex justify-between items-center mb-4 md:mb-6">
+                  <div className="flex flex-col bg-[var(--card-bg)] p-3 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[170px] sm:min-h-[300px] md:min-h-[380px]">
+                    <div className="flex justify-between items-center mb-3 md:mb-6">
                       <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Skills</h3>
                     </div>
  
               {/* Selector tabs */}
-              <div className="flex flex-row flex-nowrap gap-0.5 sm:gap-1 mb-4 md:mb-6 bg-white/5 p-0.5 sm:p-1 rounded-xl md:rounded-2xl border border-white/5 pointer-events-auto w-full justify-between items-center">
+              <div className="flex flex-row flex-nowrap gap-0.5 sm:gap-1 mb-2.5 md:mb-6 bg-white/5 p-0.5 sm:p-1 rounded-xl md:rounded-2xl border border-white/5 pointer-events-auto w-full justify-between items-center">
                 {(['languages', 'mobile', 'web', 'systems'] as const).map((tab) => (
                   <button
                     key={tab}
@@ -1138,7 +1138,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           <div 
             data-scroll-container
             data-lenis-prevent
-            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[82vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar touch-pan-y"
+            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[82vh] overflow-y-auto md:max-h-none md:overflow-visible scrollbar-none touch-pan-y"
           >
             {/* Main Title - Inside the card */}
             <div className="text-center mb-3 md:mb-5">
@@ -1277,7 +1277,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             isMobile 
               ? 'max-h-none overflow-visible' 
               : 'max-h-[85vh] overflow-y-auto md:max-h-none md:overflow-visible'
-          } custom-scrollbar touch-pan-y`}
+          } scrollbar-none touch-pan-y`}
         >
           
           {/* Left panel - details */}
@@ -1286,8 +1286,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               <div className="flex items-center gap-2 mb-2 md:mb-4">
                 <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-pink-400">Get in Touch</span>
               </div>
-              <h2 className="text-xl sm:text-4xl lg:text-6xl font-black tracking-tighter mb-2 md:mb-4 leading-none">
-                Let&apos;s<br />Talk.
+              <h2 className="text-xl sm:text-4xl lg:text-6xl font-black tracking-tighter mb-2 md:mb-4 leading-none whitespace-nowrap">
+                Let&apos;s Talk.
               </h2>
               <p className="text-[10px] sm:text-xs text-white/70 leading-relaxed max-w-sm mb-4 md:mb-6 font-normal">
                 Let&apos;s collaborate to design and engineer high-performance web applications, interactive user experiences, and scalable digital solutions.

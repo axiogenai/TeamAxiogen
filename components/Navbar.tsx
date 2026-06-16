@@ -10,6 +10,7 @@ import {
   getMaxScrollMultiplier, 
   getSectionFrames 
 } from '../hooks/useScroll';
+import { ThemeToggle } from './ThemeToggle';
 
 export const Navbar = () => {
   const [mounted, setMounted] = useState(false);
@@ -89,10 +90,11 @@ export const Navbar = () => {
         </motion.div>
       </div>
 
-      <div className="hidden md:block fixed top-6 right-4 md:right-8 z-50 pointer-events-auto">
+      <div className="fixed top-6 right-4 md:right-8 z-50 pointer-events-auto flex items-center gap-3">
+        <ThemeToggle />
         <button 
           onClick={() => scrollToFrame(frames[3 + P] ?? 461)}
-          className="px-5 py-2.5 bg-white/10 border border-white/20 rounded-full text-xs font-semibold uppercase tracking-widest text-white hover:bg-white hover:text-black hover:border-white transition-all shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
+          className="hidden md:block px-5 py-2.5 bg-white/10 border border-white/20 rounded-full text-xs font-semibold uppercase tracking-widest text-white hover:bg-white hover:text-black hover:border-white transition-all shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
         >
           Let&apos;s Talk
         </button>
