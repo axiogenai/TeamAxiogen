@@ -44,11 +44,11 @@ const LightPillarBackground = () => {
             bottomColor="#FF9FFC"
             intensity={1}
             rotationSpeed={0.3}
-            glowAmount={isMobile ? 0.0035 : 0.002}
-            pillarWidth={isMobile ? 5.5 : 3.0}
-            pillarHeight={isMobile ? 0.35 : 0.40}
+            glowAmount={isMobile ? 0.0025 : 0.002}
+            pillarWidth={isMobile ? 2.8 : 3.0}
+            pillarHeight={isMobile ? 0.40 : 0.40}
             noiseIntensity={0.5}
-            pillarRotation={isMobile ? 5 : 25}
+            pillarRotation={isMobile ? 12 : 25}
             interactive={false}
             mixBlendMode="screen"
             quality="high"

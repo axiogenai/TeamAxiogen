@@ -75,8 +75,8 @@ const LightPillar: React.FC<LightPillarProps> = ({
     if (isMobile && quality !== 'low') effectiveQuality = 'low';
 
     const qualitySettings = {
-      low: { iterations: 24, waveIterations: 1, pixelRatio: 0.5, precision: 'mediump', stepMultiplier: 1.5 },
-      medium: { iterations: 40, waveIterations: 2, pixelRatio: 0.65, precision: 'mediump', stepMultiplier: 1.2 },
+      low: { iterations: 24, waveIterations: 1, pixelRatio: Math.min(window.devicePixelRatio, 1.0), precision: 'mediump', stepMultiplier: 1.5 },
+      medium: { iterations: 40, waveIterations: 2, pixelRatio: Math.min(window.devicePixelRatio, 1.25), precision: 'mediump', stepMultiplier: 1.2 },
       high: {
         iterations: 80,
         waveIterations: 4,

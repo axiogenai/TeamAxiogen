@@ -424,12 +424,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
     let isAnimating = false;
     let animatingTimeout: ReturnType<typeof setTimeout> | null = null;
-    let touchStartClientY = 0;
-    let touchStartClientX = 0;
     let wheelAccumulator = 0;
     let wheelResetTimer: ReturnType<typeof setTimeout> | null = null;
 
     const sectionFrames = getSectionFrames();
+    const mobile = window.innerWidth < 768;
 
     // Lock isAnimating with a safety timeout so it NEVER stays locked forever.
     const lockAnimation = () => {
@@ -458,7 +457,6 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           return current;
         }
         if (current.hasAttribute('data-scroll-container')) {
-          // Check if it's actually scrollable (has auto/scroll overflow and actual scrollable content)
           const style = window.getComputedStyle(current);
           const isScrollable = style.overflowY === 'auto' || style.overflowY === 'scroll';
           if (isScrollable && current.scrollHeight > current.clientHeight + 2) {
@@ -476,10 +474,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         return true;
       }
       if (diffY > 0) {
-        // Scrolling down — consume only if NOT at bottom
         return container.scrollTop + container.clientHeight < container.scrollHeight - 2;
       } else if (diffY < 0) {
-        // Scrolling up — consume only if NOT at top
         return container.scrollTop > 2;
       }
       return false;
@@ -503,6 +499,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       return closestIdx;
     };
 
+
+
     const handleTransition = (direction: 'up' | 'down') => {
       const currentIndex = getClosestSectionIndex();
       let targetIndex = currentIndex;
@@ -515,8 +513,6 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       if (targetIndex !== currentIndex || (direction === 'down' && currentIndex === 0 && window.scrollY < 10)) {
         lockAnimation();
-        
-        // Play synthesized sound effects
         playTransitionSound();
 
         const maxScroll = getMaxScrollMultiplier() * getStableHeight();
@@ -527,27 +523,24 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           duration: 0.7, 
           easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
           onComplete: () => {
-            setTimeout(() => {
-              unlockAnimation();
-            }, 100);
+            setTimeout(() => unlockAnimation(), 100);
           }
         });
       }
     };
 
+    // ===== DESKTOP: Wheel-based snap scrolling =====
     const handleWheel = (e: WheelEvent) => {
       const target = e.target as HTMLElement;
       const scrollContainer = findScrollContainer(target);
 
       if (scrollContainer && shouldConsumeScroll(scrollContainer, e.deltaY)) {
-        return; // Let the inner container scroll naturally
+        return;
       }
 
       e.preventDefault();
-
       if (isAnimating) return;
 
-      // Accumulate wheel deltas — handles trackpad micro-scrolls
       wheelAccumulator += e.deltaY;
       if (wheelResetTimer) clearTimeout(wheelResetTimer);
       wheelResetTimer = setTimeout(() => { wheelAccumulator = 0; }, 200);
@@ -557,56 +550,6 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       const direction = wheelAccumulator > 0 ? 'down' : 'up';
       wheelAccumulator = 0;
       handleTransition(direction);
-    };
-
-    const handleTouchStart = (e: TouchEvent) => {
-      if (!e.touches || e.touches.length === 0) return;
-      touchStartClientY = e.touches[0].clientY;
-      touchStartClientX = e.touches[0].clientX;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!e.touches || e.touches.length === 0) return;
-      const touchEndClientY = e.touches[0].clientY;
-      const touchEndClientX = e.touches[0].clientX;
-      const diffY = touchStartClientY - touchEndClientY;
-      const diffX = touchStartClientX - touchEndClientX;
-
-      // If we are currently animating a transition, keep updating the start positions
-      // so we don't accumulate a massive delta that fires on animation finish.
-      if (isAnimating) {
-        touchStartClientY = touchEndClientY;
-        touchStartClientX = touchEndClientX;
-        return;
-      }
-
-      // Ignore horizontal swipes
-      if (Math.abs(diffX) > Math.abs(diffY)) {
-        return;
-      }
-
-      // Wait for a clear vertical direction
-      if (Math.abs(diffY) < 5) {
-        return;
-      }
-
-      const target = e.target as HTMLElement;
-      const scrollContainer = findScrollContainer(target);
-
-      if (scrollContainer && shouldConsumeScroll(scrollContainer, diffY)) {
-        return; // Let the inner container scroll naturally
-      }
-
-      if (e.cancelable) {
-        e.preventDefault();
-      }
-
-      if (Math.abs(diffY) > 50) {
-        const direction = diffY > 0 ? 'down' : 'up';
-        handleTransition(direction);
-        touchStartClientY = touchEndClientY;
-        touchStartClientX = touchEndClientX;
-      }
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -624,15 +567,16 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       }
     };
 
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    if (!mobile) {
+      // DESKTOP: Keep existing wheel-based snap behavior.
+      window.addEventListener('wheel', handleWheel, { passive: false });
+    }
     window.addEventListener('keydown', handleKeyDown, { passive: false });
 
     return () => {
-      window.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
+      if (!mobile) {
+        window.removeEventListener('wheel', handleWheel);
+      }
       window.removeEventListener('keydown', handleKeyDown);
       if (animatingTimeout) clearTimeout(animatingTimeout);
       if (wheelResetTimer) clearTimeout(wheelResetTimer);
@@ -839,7 +783,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   };
 
   return (
-    <div className={`fixed inset-0 z-40 overflow-hidden touch-none selection:bg-white/20 selection:text-white ${isInteractive ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+    <div className={`fixed inset-0 z-40 overflow-hidden selection:bg-white/20 selection:text-white ${isMobile ? 'touch-auto' : 'touch-none'} ${isInteractive ? 'pointer-events-auto' : 'pointer-events-none'}`}>
       
       {/* ----------------- HERO SECTION ----------------- */}
       <motion.section 
@@ -907,77 +851,92 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 : 'max-h-[60vh] lg:max-h-none overflow-y-auto lg:overflow-visible'
             } custom-scrollbar px-2 py-2 touch-pan-y`}
           >
-            {/* Bio statement */}
-            {(!isMobile || showAboutUs) && (
-              <div className="col-span-12 lg:col-span-5 text-white bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
-              </div>
-              <h2 className="text-xl sm:text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-2 leading-none">
-                TEAM<br />AXIOGEN.
-              </h2>
-              <p className="text-[10px] sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-3">
-                We are a full-cycle software engineering team delivering end-to-end digital solutions. Our expertise spans web and mobile development, bespoke AI integration, scalable cloud architecture, and immersive user experiences.
-              </p>
-              <p className="text-[9px] sm:text-xs md:text-sm text-white/60 font-normal leading-relaxed mb-4">
-                From high-performance databases and automated research systems to advanced voice synthesis, document intelligence, and GPU-accelerated interfaces, we craft solutions tailored for both academic innovation and enterprise scale.
-              </p>
-              <div className="flex gap-4 mb-4 md:mb-6">
-                <a 
-                  href="https://www.instagram.com/axiogen.in?igsh=OGQ5ZDc2ODk2ZA==" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  onClick={playHoverSound}
-                  onMouseEnter={playHoverSound}
-                  className="px-4 py-2 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1.5 font-bold text-[9px] sm:text-xs uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(255,255,255,0.25)] hover:scale-105"
+            <AnimatePresence mode="wait">
+              {/* Bio statement */}
+              {(!isMobile || showAboutUs) && (
+                <motion.div
+                  key="bio-statement"
+                  initial={isMobile ? { opacity: 0, x: -15 } : undefined}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={isMobile ? { opacity: 0, x: 15 } : undefined}
+                  transition={{ duration: 0.25 }}
+                  className="col-span-12 lg:col-span-5 text-white bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
                 >
-                  <BookOpen className="w-3.5 h-3.5" />
-                  <span>View Profile</span>
-                </a>
-              </div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
+                  </div>
+                  <h2 className="text-xl sm:text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-2 leading-none">
+                    TEAM<br />AXIOGEN.
+                  </h2>
+                  <p className="text-[10px] sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-3">
+                    We are a full-cycle software engineering team delivering end-to-end digital solutions. Our expertise spans web and mobile development, bespoke AI integration, scalable cloud architecture, and immersive user experiences.
+                  </p>
+                  <p className="text-[9px] sm:text-xs md:text-sm text-white/60 font-normal leading-relaxed mb-4">
+                    From high-performance databases and automated research systems to advanced voice synthesis, document intelligence, and GPU-accelerated interfaces, we craft solutions tailored for both academic innovation and enterprise scale.
+                  </p>
+                  <div className="flex gap-4 mb-4 md:mb-6">
+                    <a 
+                      href="https://www.instagram.com/axiogen.in?igsh=OGQ5ZDc2ODk2ZA==" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      onClick={playHoverSound}
+                      onMouseEnter={playHoverSound}
+                      className="px-4 py-2 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1.5 font-bold text-[9px] sm:text-xs uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(255,255,255,0.25)] hover:scale-105"
+                    >
+                      <BookOpen className="w-3.5 h-3.5" />
+                      <span>View Profile</span>
+                    </a>
+                  </div>
 
-              {/* Stats Row - Numbers Side-to-Side */}
-              <div className="grid grid-cols-4 gap-2 pt-4 border-t border-white/10">
-                <div className="flex flex-col">
-                  <span className="text-base sm:text-xl md:text-3xl font-black text-purple-400">
-                    <AnimatedCounter value={50} suffix="+" trigger={showAbout} />
-                  </span>
-                  <span className="text-[6px] sm:text-[8px] md:text-[9px] uppercase tracking-wider text-white/50 font-bold">Projects</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-base sm:text-xl md:text-3xl font-black text-indigo-400">
-                    <AnimatedCounter value={10} suffix="+" trigger={showAbout} />
-                  </span>
-                  <span className="text-[6px] sm:text-[8px] md:text-[9px] uppercase tracking-wider text-white/50 font-bold">Techs</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-base sm:text-xl md:text-3xl font-black text-cyan-400">
-                    <AnimatedCounter value={99} suffix="%" trigger={showAbout} />
-                  </span>
-                  <span className="text-[6px] sm:text-[8px] md:text-[9px] uppercase tracking-wider text-white/50 font-bold">Satisfied</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-base sm:text-xl md:text-3xl font-black text-pink-400">
-                    <AnimatedCounter value={24} suffix="/7" trigger={showAbout} />
-                  </span>
-                  <span className="text-[6px] sm:text-[8px] md:text-[9px] uppercase tracking-wider text-white/50 font-bold">Support</span>
-                </div>
-              </div>
-            </div>
-            )}
-            
-            {/* Tech switcher block */}
-            {(!isMobile || showSkills) && (
-              <div className="col-span-12 lg:col-span-7 flex flex-col gap-4 w-full h-full">
-                {isMobile && (
-                  <div className="w-full overflow-hidden select-none pointer-events-auto">
-                    <LogoLoop logos={loopLogos} />
+                  {/* Stats Row - Numbers Side-to-Side */}
+                  <div className="grid grid-cols-4 gap-2 pt-4 border-t border-white/10">
+                    <div className="flex flex-col">
+                      <span className="text-base sm:text-xl md:text-3xl font-black text-purple-400">
+                        <AnimatedCounter value={50} suffix="+" trigger={showAbout} />
+                      </span>
+                      <span className="text-[6px] sm:text-[8px] md:text-[9px] uppercase tracking-wider text-white/50 font-bold">Projects</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-base sm:text-xl md:text-3xl font-black text-indigo-400">
+                        <AnimatedCounter value={10} suffix="+" trigger={showAbout} />
+                      </span>
+                      <span className="text-[6px] sm:text-[8px] md:text-[9px] uppercase tracking-wider text-white/50 font-bold">Techs</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-base sm:text-xl md:text-3xl font-black text-cyan-400">
+                        <AnimatedCounter value={99} suffix="%" trigger={showAbout} />
+                      </span>
+                      <span className="text-[6px] sm:text-[8px] md:text-[9px] uppercase tracking-wider text-white/50 font-bold">Satisfied</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-base sm:text-xl md:text-3xl font-black text-pink-400">
+                        <AnimatedCounter value={24} suffix="/7" trigger={showAbout} />
+                      </span>
+                      <span className="text-[6px] sm:text-[8px] md:text-[9px] uppercase tracking-wider text-white/50 font-bold">Support</span>
+                    </div>
                   </div>
-                )}
-                <div className="flex flex-col bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[200px] sm:min-h-[300px] md:min-h-[380px]">
-                  <div className="flex justify-between items-center mb-4 md:mb-6">
-                    <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Skills</h3>
-                  </div>
+                </motion.div>
+              )}
+              
+              {/* Tech switcher block */}
+              {(!isMobile || showSkills) && (
+                <motion.div
+                  key="tech-switcher"
+                  initial={isMobile ? { opacity: 0, x: 15 } : undefined}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={isMobile ? { opacity: 0, x: -15 } : undefined}
+                  transition={{ duration: 0.25 }}
+                  className="col-span-12 lg:col-span-7 flex flex-col gap-4 w-full h-full"
+                >
+                  {isMobile && (
+                    <div className="w-full overflow-hidden select-none pointer-events-auto">
+                      <LogoLoop logos={loopLogos} />
+                    </div>
+                  )}
+                  <div className="flex flex-col bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[200px] sm:min-h-[300px] md:min-h-[380px]">
+                    <div className="flex justify-between items-center mb-4 md:mb-6">
+                      <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Skills</h3>
+                    </div>
  
               {/* Selector tabs */}
               <div className="flex flex-wrap gap-1 mb-4 md:mb-6 bg-white/5 p-1 rounded-xl md:rounded-2xl border border-white/5 pointer-events-auto">
@@ -1033,9 +992,10 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   </motion.div>
                 </AnimatePresence>
               </div>
-                </div>
-              </div>
-            )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Logo Loop Section */}
@@ -1050,7 +1010,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- PROJECTS SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-16"
+        className="absolute inset-0 flex flex-col items-center justify-start pt-24 md:justify-center md:pt-0 px-6 md:px-16"
         style={{ pointerEvents: showProjects ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1156,7 +1116,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- SERVICES SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex flex-col items-center justify-start pt-20 md:pt-24 px-6 md:px-16"
+        className="absolute inset-0 flex flex-col items-center justify-start pt-24 md:pt-24 px-6 md:px-16"
         style={{ pointerEvents: showServices ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1171,9 +1131,13 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         <div className="w-full max-w-5xl text-white">
           {/* Unified Card Container Wrapper */}
           <div 
-            data-scroll-container
-            data-lenis-prevent
-            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[82vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar touch-pan-y"
+            data-scroll-container={!isMobile ? "" : undefined}
+            data-lenis-prevent={!isMobile ? "" : undefined}
+            className={`bg-[var(--card-bg)] border border-[var(--card-border)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] w-full ${
+              isMobile 
+                ? 'max-h-none overflow-visible' 
+                : 'max-h-[82vh] overflow-y-auto md:max-h-none md:overflow-visible'
+            } custom-scrollbar touch-pan-y`}
           >
             {/* Main Title - Inside the card */}
             <div className="text-center mb-3 md:mb-5">
@@ -1236,7 +1200,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                             {item.title}
                           </h3>
                         </div>
-                        <p className="text-[8px] sm:text-[9px] md:text-[10px] leading-relaxed text-white/50 font-normal line-clamp-3">
+                        <p className="hidden md:block text-[8px] sm:text-[9px] md:text-[10px] leading-relaxed text-white/50 font-normal line-clamp-3">
                           {item.desc}
                         </p>
                       </div>
@@ -1291,7 +1255,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- CONTACT SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex items-center justify-center px-4"
+        className="absolute inset-0 flex flex-col items-center justify-start pt-24 md:justify-center md:pt-0 px-4"
         style={{ pointerEvents: showContact ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1304,9 +1268,13 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
 
         <div 
-          data-scroll-container
-          data-lenis-prevent
-          className="text-white bg-[var(--card-bg)] p-4 md:p-10 lg:p-14 rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--card-border)] shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-12 gap-3 md:gap-8 items-stretch justify-center max-h-[85vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar touch-pan-y"
+          data-scroll-container={!isMobile ? "" : undefined}
+          data-lenis-prevent={!isMobile ? "" : undefined}
+          className={`text-white bg-[var(--card-bg)] p-4 md:p-10 lg:p-14 rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--card-border)] shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-12 gap-3 md:gap-8 items-stretch justify-center ${
+            isMobile 
+              ? 'max-h-none overflow-visible' 
+              : 'max-h-[85vh] overflow-y-auto md:max-h-none md:overflow-visible'
+          } custom-scrollbar touch-pan-y`}
         >
           
           {/* Left panel - details */}
