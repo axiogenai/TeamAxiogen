@@ -74,11 +74,7 @@ export default function Home() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const projectPages = isMobile 
-    ? Math.max(1, Math.ceil(projectCount / 2)) 
-    : Math.max(1, Math.ceil(projectCount / 6));
-  const baseStates = isMobile ? 5 : 4;
-  const totalStates = baseStates + projectPages;
+  const totalStates = getTotalStates();
   const dynamicMinHeight = `${(totalStates - 1) * 100}vh`;
 
   if (!mounted) return null;

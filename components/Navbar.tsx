@@ -41,12 +41,7 @@ export const Navbar = () => {
   const frames = getSectionFrames();
   const P = getProjectPagesCount();
   
-  const navItems = isMobile ? [
-    { id: 'about', label: 'About', frame: frames[1] ?? 100 },
-    { id: 'work', label: 'Work', frame: frames[3] ?? 250 },
-    { id: 'services', label: 'Services', frame: frames[3 + P] ?? 380 },
-    { id: 'contact', label: 'Contact', frame: frames[4 + P] ?? 460 },
-  ] : [
+  const navItems = [
     { id: 'about', label: 'About', frame: frames[1] ?? 125 },
     { id: 'work', label: 'Work', frame: frames[2] ?? 209 },
     { id: 'services', label: 'Services', frame: frames[2 + P] ?? 377 },
@@ -96,7 +91,7 @@ export const Navbar = () => {
 
       <div className="hidden md:block fixed top-6 right-4 md:right-8 z-50 pointer-events-auto">
         <button 
-          onClick={() => scrollToFrame(frames[isMobile ? 4 + P : 3 + P] ?? 461)}
+          onClick={() => scrollToFrame(frames[3 + P] ?? 461)}
           className="px-5 py-2.5 bg-white/10 border border-white/20 rounded-full text-xs font-semibold uppercase tracking-widest text-white hover:bg-white hover:text-black hover:border-white transition-all shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
         >
           Let&apos;s Talk

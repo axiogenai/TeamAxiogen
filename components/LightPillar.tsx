@@ -148,9 +148,7 @@ const LightPillar: React.FC<LightPillarProps> = ({
       const int WAVE_ITER = ${settings.waveIterations};
 
       void main() {
-        vec2 uv = vUv * 2.0 - 1.0;
-        float aspect = uResolution.x / uResolution.y;
-        uv *= vec2(max(aspect, 1.0), 1.0 / min(aspect, 1.0));
+        vec2 uv = (vUv * 2.0 - 1.0) * vec2(uResolution.x / uResolution.y, 1.0);
         uv = vec2(uPillarRotCos * uv.x - uPillarRotSin * uv.y, uPillarRotSin * uv.x + uPillarRotCos * uv.y);
 
         vec3 ro = vec3(0.0, 0.0, -10.0);
@@ -198,14 +196,11 @@ const LightPillar: React.FC<LightPillarProps> = ({
         }
 
         float widthNorm = uPillarWidth / 3.0;
-        vec3 finalCol = tanh(col * uGlowAmount / widthNorm);
+        col = tanh(col * uGlowAmount / widthNorm);
         
-        // Calculate alpha dynamically based on brightness before adding noise
-        float alpha = clamp(max(max(finalCol.r, finalCol.g), finalCol.b) * uIntensity, 0.0, 1.0);
+        col -= fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) / 15.0 * uNoiseIntensity;
         
-        finalCol -= fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) / 15.0 * uNoiseIntensity;
-        
-        gl_FragColor = vec4(finalCol * uIntensity, alpha);
+        gl_FragColor = vec4(col * uIntensity, 1.0);
       }
     `;
 

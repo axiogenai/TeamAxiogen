@@ -46,15 +46,14 @@ export function getIsMobile(): boolean {
 
 export function getProjectPagesCount(): number {
   if (getIsMobile()) {
-    // 2 projects per page on mobile
-    return Math.max(1, Math.ceil(projectCount / 2));
+    // 3 projects per page on mobile
+    return Math.max(1, Math.ceil(projectCount / 3));
   }
   return Math.max(1, Math.ceil(projectCount / 6));
 }
 
 export function getTotalStates(): number {
-  const baseStates = getIsMobile() ? 5 : 4;
-  return baseStates + getProjectPagesCount();
+  return 4 + getProjectPagesCount();
 }
 
 export function getMaxScrollMultiplier(): number {
@@ -185,23 +184,14 @@ export function useNavSection(): string {
     () => {
       const frame = getCurrentFrame(currentSnapshot.scrollProgress);
       const P = getProjectPagesCount();
-      const isMobile = getIsMobile();
       const totalStates = getTotalStates();
       const slice = TOTAL_FRAMES / totalStates;
 
-      if (isMobile) {
-        if (frame <= slice) return 'hero';
-        if (frame <= slice * 3) return 'about';
-        if (frame <= slice * (3 + P)) return 'work';
-        if (frame <= slice * (4 + P)) return 'services';
-        return 'contact';
-      } else {
-        if (frame <= slice) return 'hero';
-        if (frame <= slice * 2) return 'about';
-        if (frame <= slice * (2 + P)) return 'work';
-        if (frame <= slice * (3 + P)) return 'services';
-        return 'contact';
-      }
+      if (frame <= slice) return 'hero';
+      if (frame <= slice * 2) return 'about';
+      if (frame <= slice * (2 + P)) return 'work';
+      if (frame <= slice * (3 + P)) return 'services';
+      return 'contact';
     },
     () => 'hero'
   );
@@ -239,7 +229,6 @@ export function useSectionVisibility(): SectionVisibility {
     () => {
       const frame = getCurrentFrame(currentSnapshot.scrollProgress);
       const P = getProjectPagesCount();
-      const isMobile = getIsMobile();
       const totalStates = getTotalStates();
       const slice = TOTAL_FRAMES / totalStates;
 
@@ -252,31 +241,17 @@ export function useSectionVisibility(): SectionVisibility {
       let showServices = false;
       let showContact = false;
 
-      if (isMobile) {
-        showHero = frame >= 1 && frame <= slice;
-        showAboutUs = frame > slice && frame <= slice * 2;
-        showSkills = frame > slice * 2 && frame <= slice * 3;
-        showAbout = showAboutUs || showSkills;
-        showProjects = frame > slice * 3 && frame <= slice * (3 + P);
-        if (showProjects) {
-          const relativeFrame = frame - slice * 3;
-          projectPage = Math.min(P - 1, Math.floor(relativeFrame / slice));
-        }
-        showServices = frame > slice * (3 + P) && frame <= slice * (4 + P);
-        showContact = frame > slice * (4 + P) && frame <= TOTAL_FRAMES;
-      } else {
-        showHero = frame >= 1 && frame <= slice;
-        showAbout = frame > slice && frame <= slice * 2;
-        showAboutUs = showAbout;
-        showSkills = showAbout;
-        showProjects = frame > slice * 2 && frame <= slice * (2 + P);
-        if (showProjects) {
-          const relativeFrame = frame - slice * 2;
-          projectPage = Math.min(P - 1, Math.floor(relativeFrame / slice));
-        }
-        showServices = frame > slice * (2 + P) && frame <= slice * (3 + P);
-        showContact = frame > slice * (3 + P) && frame <= TOTAL_FRAMES;
+      showHero = frame >= 1 && frame <= slice;
+      showAbout = frame > slice && frame <= slice * 2;
+      showAboutUs = showAbout;
+      showSkills = showAbout;
+      showProjects = frame > slice * 2 && frame <= slice * (2 + P);
+      if (showProjects) {
+        const relativeFrame = frame - slice * 2;
+        projectPage = Math.min(P - 1, Math.floor(relativeFrame / slice));
       }
+      showServices = frame > slice * (2 + P) && frame <= slice * (3 + P);
+      showContact = frame > slice * (3 + P) && frame <= TOTAL_FRAMES;
 
       if (
         cachedVisibility.showHero !== showHero ||

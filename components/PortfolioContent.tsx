@@ -841,24 +841,23 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           display: showAbout ? 'flex' : 'none'
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      >        <div className="flex flex-col items-center max-w-7xl w-full gap-5 md:gap-6 justify-center">
-          <div 
-            data-scroll-container={!isMobile ? "" : undefined}
-            data-lenis-prevent={!isMobile ? "" : undefined}
-            className={`grid grid-cols-12 gap-3 md:gap-8 items-center w-full ${
+      >        <div className="flex flex-col items-center max-w-7xl w-full gap-5 md:gap-6 justify-center">          <div 
+            data-scroll-container
+            data-lenis-prevent
+            className={`grid grid-cols-12 gap-3 md:gap-8 items-start w-full ${
               isMobile 
-                ? 'max-h-none overflow-visible' 
+                ? 'max-h-[82vh] overflow-y-auto lg:max-h-none lg:overflow-visible custom-scrollbar touch-pan-y' 
                 : 'max-h-[60vh] lg:max-h-none overflow-y-auto lg:overflow-visible'
-            } custom-scrollbar px-2 py-2 touch-pan-y`}
+            } px-2 py-2`}
           >
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode={isMobile ? "wait" : "sync"}>
               {/* Bio statement */}
-              {(!isMobile || showAboutUs) && (
+              {showAbout && (
                 <motion.div
                   key="bio-statement"
-                  initial={isMobile ? { opacity: 0, x: -15 } : undefined}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={isMobile ? { opacity: 0, x: 15 } : undefined}
+                  initial={isMobile ? { opacity: 0, y: 15 } : undefined}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={isMobile ? { opacity: 0, y: -15 } : undefined}
                   transition={{ duration: 0.25 }}
                   className="col-span-12 lg:col-span-5 text-white bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
                 >
@@ -919,12 +918,12 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               )}
               
               {/* Tech switcher block */}
-              {(!isMobile || showSkills) && (
+              {showAbout && (
                 <motion.div
                   key="tech-switcher"
-                  initial={isMobile ? { opacity: 0, x: 15 } : undefined}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={isMobile ? { opacity: 0, x: -15 } : undefined}
+                  initial={isMobile ? { opacity: 0, y: 15 } : undefined}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={isMobile ? { opacity: 0, y: -15 } : undefined}
                   transition={{ duration: 0.25 }}
                   className="col-span-12 lg:col-span-7 flex flex-col gap-4 w-full h-full"
                 >
@@ -977,7 +976,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                         className="p-2 md:p-5 rounded-lg md:rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/10 flex flex-col md:justify-center gap-1 shadow-lg group relative overflow-hidden"
                       >
                         {/* Glow outline hover effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
+                        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
                         
                         <div className="flex items-center justify-between md:mb-1.5 w-full">
                           <div className="flex items-center gap-2">
@@ -1131,44 +1130,44 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         <div className="w-full max-w-5xl text-white">
           {/* Unified Card Container Wrapper */}
           <div 
-            data-scroll-container={!isMobile ? "" : undefined}
-            data-lenis-prevent={!isMobile ? "" : undefined}
-            className={`bg-[var(--card-bg)] border border-[var(--card-border)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] w-full ${
-              isMobile 
-                ? 'max-h-none overflow-visible' 
-                : 'max-h-[82vh] overflow-y-auto md:max-h-none md:overflow-visible'
-            } custom-scrollbar touch-pan-y`}
+            data-scroll-container
+            data-lenis-prevent
+            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[82vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar touch-pan-y"
           >
             {/* Main Title - Inside the card */}
             <div className="text-center mb-3 md:mb-5">
               <h2 className="text-xl md:text-3xl lg:text-4xl font-black tracking-tighter mb-1 bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Services We Provide</h2>
-              <p className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/50">
-                AI, Web, Mobile, Cloud & Intelligent Systems
-              </p>
+              {!isMobile && (
+                <p className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/50">
+                  AI, Web, Mobile, Cloud & Intelligent Systems
+                </p>
+              )}
             </div>
 
             {/* Description & Badges */}
-            <div className="text-center mb-4 md:mb-6">
-              <p className="text-[10px] md:text-xs text-white/70 max-w-2xl mx-auto leading-relaxed font-normal mb-3 md:mb-4">
-                From research to deployment — we build powerful, intelligent digital products for enterprises, startups &amp; students. You envision it, we engineer it.
-              </p>
-              
-              {/* Trust Badges */}
-              <div className="flex flex-wrap gap-1.5 md:gap-2.5 justify-center text-[8px] md:text-[10px] pointer-events-auto">
-                <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-                  Production-Grade Code
-                </div>
-                <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.8)]" />
-                  On-Time Delivery
-                </div>
-                <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
-                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
-                  Affordable Pricing
+            {!isMobile && (
+              <div className="text-center mb-4 md:mb-6">
+                <p className="text-[10px] md:text-xs text-white/70 max-w-2xl mx-auto leading-relaxed font-normal mb-3 md:mb-4">
+                  From research to deployment — we build powerful, intelligent digital products for enterprises, startups &amp; students. You envision it, we engineer it.
+                </p>
+                
+                {/* Trust Badges */}
+                <div className="flex flex-wrap gap-1.5 md:gap-2.5 justify-center text-[8px] md:text-[10px] pointer-events-auto">
+                  <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                    Production-Grade Code
+                  </div>
+                  <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.8)]" />
+                    On-Time Delivery
+                  </div>
+                  <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
+                    Affordable Pricing
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Services Grid (8 Services) */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3.5 max-w-4xl mx-auto">
@@ -1200,7 +1199,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                             {item.title}
                           </h3>
                         </div>
-                        <p className="hidden md:block text-[8px] sm:text-[9px] md:text-[10px] leading-relaxed text-white/50 font-normal line-clamp-3">
+                        <p className="text-[8px] sm:text-[9px] md:text-[10px] leading-relaxed text-white/50 font-normal line-clamp-3">
                           {item.desc}
                         </p>
                       </div>
@@ -1210,44 +1209,42 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               })}
             </div>
 
+            {/* Divider */}
+            <div className="bg-gradient-to-r from-transparent via-white/10 to-transparent h-[1px] my-4 w-full max-w-4xl mx-auto" />
+
+            {/* Perfect For Section */}
+            <div className="max-w-4xl mx-auto w-full">
+              <div className="text-center mb-2.5">
+                <span className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/40">Perfect Solutions For</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 pointer-events-auto">
+                {perfectForData.map((item, index) => {
+                  const IconComponent = item.icon;
+                  return (
+                    <div key={index} onMouseEnter={playHoverSound} className="p-2 md:p-3.5 bg-black/40 border border-white/10 rounded-xl flex gap-2 md:gap-3.5 items-start text-left hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
+                      <div className={`p-1.5 md:p-2 rounded-lg shrink-0 ${item.color}`}>
+                        <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      </div>
+                      <div>
+                        <h4 className="text-[9px] sm:text-[10px] md:text-xs font-black text-white leading-tight md:mb-0.5">{item.title}</h4>
+                        <p className="text-[8px] sm:text-[10px] text-white/50 leading-relaxed font-normal block">{item.desc}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Tech Stack Row */}
             {!isMobile && (
-              <>
-                {/* Divider */}
-                <div className="bg-gradient-to-r from-transparent via-white/10 to-transparent h-[1px] my-4 w-full max-w-4xl mx-auto" />
-
-                {/* Perfect For Section */}
-                <div className="max-w-4xl mx-auto w-full">
-                  <div className="text-center mb-2.5">
-                    <span className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/40">Perfect Solutions For</span>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 pointer-events-auto">
-                    {perfectForData.map((item, index) => {
-                      const IconComponent = item.icon;
-                      return (
-                        <div key={index} onMouseEnter={playHoverSound} className="p-2 md:p-3.5 bg-black/40 border border-white/10 rounded-xl flex gap-2 md:gap-3.5 items-start text-left hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
-                          <div className={`p-1.5 md:p-2 rounded-lg shrink-0 ${item.color}`}>
-                            <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                          </div>
-                          <div>
-                            <h4 className="text-[9px] sm:text-[10px] md:text-xs font-black text-white leading-tight md:mb-0.5">{item.title}</h4>
-                            <p className="text-[8px] sm:text-[10px] text-white/50 leading-relaxed font-normal block">{item.desc}</p>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Tech Stack Row */}
-                <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold text-white/30 max-w-4xl mx-auto pointer-events-auto">
-                  <span>Tech Stack :</span>
-                  {['Python', 'React', 'Node.js', 'Next.js', 'Java', 'TensorFlow', 'AWS / GCP', 'PostgreSQL', '.NET'].map((tech) => (
-                    <span key={tech} onMouseEnter={playHoverSound} className="px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full text-white/60 font-medium cursor-default hover:border-white/20 transition-colors">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </>
+              <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold text-white/30 max-w-4xl mx-auto pointer-events-auto">
+                <span>Tech Stack :</span>
+                {['Python', 'React', 'Node.js', 'Next.js', 'Java', 'TensorFlow', 'AWS / GCP', 'PostgreSQL', '.NET'].map((tech) => (
+                  <span key={tech} onMouseEnter={playHoverSound} className="px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full text-white/60 font-medium cursor-default hover:border-white/20 transition-colors">
+                    {tech}
+                  </span>
+                ))}
+              </div>
             )}
           </div>
         </div>
