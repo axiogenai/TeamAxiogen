@@ -19,6 +19,14 @@ const LightPillar = dynamic(() => import('../components/LightPillar'), {
 // Fixed wrapper component that dynamically updates opacity and unmounts the WebGL canvas when invisible
 const LightPillarBackground = () => {
   const { showHero } = useSectionVisibility();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <AnimatePresence>
@@ -31,21 +39,21 @@ const LightPillarBackground = () => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         >
-      <LightPillar 
-        topColor="#5227FF"
-        bottomColor="#FF9FFC"
-        intensity={1}
-        rotationSpeed={0.3}
-        glowAmount={0.002}
-        pillarWidth={3}
-        pillarHeight={0.4}
-        noiseIntensity={0.5}
-        pillarRotation={25}
-        interactive={false}
-        mixBlendMode="screen"
-        quality="high"
-      />
-      </motion.div>
+          <LightPillar 
+            topColor="#5227FF"
+            bottomColor="#FF9FFC"
+            intensity={1}
+            rotationSpeed={0.3}
+            glowAmount={isMobile ? 0.0035 : 0.002}
+            pillarWidth={isMobile ? 5.5 : 3.0}
+            pillarHeight={isMobile ? 0.35 : 0.40}
+            noiseIntensity={0.5}
+            pillarRotation={isMobile ? 5 : 25}
+            interactive={false}
+            mixBlendMode="screen"
+            quality="high"
+          />
+        </motion.div>
       )}
     </AnimatePresence>
   );

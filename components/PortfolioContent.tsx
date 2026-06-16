@@ -968,10 +968,16 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             
             {/* Tech switcher block */}
             {(!isMobile || showSkills) && (
-              <div className="col-span-12 lg:col-span-7 flex flex-col bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[200px] sm:min-h-[300px] md:min-h-[380px]">
-              <div className="flex justify-between items-center mb-4 md:mb-6">
-                <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Skills</h3>
-              </div>
+              <div className="col-span-12 lg:col-span-7 flex flex-col gap-4 w-full h-full">
+                {isMobile && (
+                  <div className="w-full overflow-hidden select-none pointer-events-auto">
+                    <LogoLoop logos={loopLogos} />
+                  </div>
+                )}
+                <div className="flex flex-col bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[200px] sm:min-h-[300px] md:min-h-[380px]">
+                  <div className="flex justify-between items-center mb-4 md:mb-6">
+                    <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Skills</h3>
+                  </div>
  
               {/* Selector tabs */}
               <div className="flex flex-wrap gap-1 mb-4 md:mb-6 bg-white/5 p-1 rounded-xl md:rounded-2xl border border-white/5 pointer-events-auto">
@@ -1027,22 +1033,15 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   </motion.div>
                 </AnimatePresence>
               </div>
-            </div>
+                </div>
+              </div>
             )}
           </div>
 
           {/* Logo Loop Section */}
-          {(!isMobile || showAboutUs) && (
+          {!isMobile && (
             <div className="w-full px-2 overflow-hidden select-none pointer-events-auto">
-              <LogoLoop 
-                logos={loopLogos} 
-                speed={40} 
-                gap={24} 
-                logoHeight={40}
-                fadeOut={true} 
-                pauseOnHover={true}
-                scaleOnHover={true}
-              />
+              <LogoLoop logos={loopLogos} />
             </div>
           )}
         </div>
@@ -1247,41 +1246,45 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               })}
             </div>
 
-            {/* Divider */}
-            <div className="bg-gradient-to-r from-transparent via-white/10 to-transparent h-[1px] my-4 w-full max-w-4xl mx-auto" />
+            {!isMobile && (
+              <>
+                {/* Divider */}
+                <div className="bg-gradient-to-r from-transparent via-white/10 to-transparent h-[1px] my-4 w-full max-w-4xl mx-auto" />
 
-            {/* Perfect For Section */}
-            <div className="max-w-4xl mx-auto w-full">
-              <div className="text-center mb-2.5">
-                <span className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/40">Perfect Solutions For</span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 pointer-events-auto">
-                {perfectForData.map((item, index) => {
-                  const IconComponent = item.icon;
-                  return (
-                    <div key={index} onMouseEnter={playHoverSound} className="p-2 md:p-3.5 bg-black/40 border border-white/10 rounded-xl flex gap-2 md:gap-3.5 items-start text-left hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
-                      <div className={`p-1.5 md:p-2 rounded-lg shrink-0 ${item.color}`}>
-                        <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      </div>
-                      <div>
-                        <h4 className="text-[9px] sm:text-[10px] md:text-xs font-black text-white leading-tight md:mb-0.5">{item.title}</h4>
-                        <p className="text-[8px] sm:text-[10px] text-white/50 leading-relaxed font-normal block">{item.desc}</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+                {/* Perfect For Section */}
+                <div className="max-w-4xl mx-auto w-full">
+                  <div className="text-center mb-2.5">
+                    <span className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/40">Perfect Solutions For</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 pointer-events-auto">
+                    {perfectForData.map((item, index) => {
+                      const IconComponent = item.icon;
+                      return (
+                        <div key={index} onMouseEnter={playHoverSound} className="p-2 md:p-3.5 bg-black/40 border border-white/10 rounded-xl flex gap-2 md:gap-3.5 items-start text-left hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
+                          <div className={`p-1.5 md:p-2 rounded-lg shrink-0 ${item.color}`}>
+                            <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          </div>
+                          <div>
+                            <h4 className="text-[9px] sm:text-[10px] md:text-xs font-black text-white leading-tight md:mb-0.5">{item.title}</h4>
+                            <p className="text-[8px] sm:text-[10px] text-white/50 leading-relaxed font-normal block">{item.desc}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
 
-            {/* Tech Stack Row */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold text-white/30 max-w-4xl mx-auto pointer-events-auto">
-              <span>Tech Stack :</span>
-              {['Python', 'React', 'Node.js', 'Next.js', 'Java', 'TensorFlow', 'AWS / GCP', 'PostgreSQL', '.NET'].map((tech) => (
-                <span key={tech} onMouseEnter={playHoverSound} className="px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full text-white/60 font-medium cursor-default hover:border-white/20 transition-colors">
-                  {tech}
-                </span>
-              ))}
-            </div>
+                {/* Tech Stack Row */}
+                <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold text-white/30 max-w-4xl mx-auto pointer-events-auto">
+                  <span>Tech Stack :</span>
+                  {['Python', 'React', 'Node.js', 'Next.js', 'Java', 'TensorFlow', 'AWS / GCP', 'PostgreSQL', '.NET'].map((tech) => (
+                    <span key={tech} onMouseEnter={playHoverSound} className="px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full text-white/60 font-medium cursor-default hover:border-white/20 transition-colors">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </motion.section>
