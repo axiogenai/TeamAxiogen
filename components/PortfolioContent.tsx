@@ -864,8 +864,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
                   </div>
-                  <h2 className="text-xl sm:text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-2 leading-none">
-                    TEAM<br />AXIOGEN.
+                  <h2 className="text-xl sm:text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-2 leading-none whitespace-nowrap">
+                    TEAM AXIOGEN.
                   </h2>
                   <p className="text-[10px] sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-3">
                     We are a full-cycle software engineering team delivering end-to-end digital solutions. Our expertise spans web and mobile development, bespoke AI integration, scalable cloud architecture, and immersive user experiences.
@@ -938,7 +938,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     </div>
  
               {/* Selector tabs */}
-              <div className="flex flex-wrap gap-1 mb-4 md:mb-6 bg-white/5 p-1 rounded-xl md:rounded-2xl border border-white/5 pointer-events-auto">
+              <div className="flex flex-row flex-nowrap gap-0.5 sm:gap-1 mb-4 md:mb-6 bg-white/5 p-0.5 sm:p-1 rounded-xl md:rounded-2xl border border-white/5 pointer-events-auto w-full justify-between items-center">
                 {(['languages', 'mobile', 'web', 'systems'] as const).map((tab) => (
                   <button
                     key={tab}
@@ -947,13 +947,19 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                       setActiveTab(tab);
                     }}
                     onMouseEnter={playHoverSound}
-                    className={`px-2 py-1 md:px-4 md:py-2 rounded-lg md:rounded-xl text-[8px] sm:text-xs uppercase tracking-widest font-bold transition-all duration-200 cursor-pointer pointer-events-auto select-none ${
+                    className={`flex-1 text-center px-1 sm:px-3 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[7px] sm:text-xs uppercase tracking-normal sm:tracking-widest font-extrabold transition-all duration-200 cursor-pointer pointer-events-auto select-none ${
                       activeTab === tab 
                         ? 'bg-white text-black shadow-[0_4px_15px_rgba(255,255,255,0.2)]' 
                         : 'text-white/60 hover:text-white hover:bg-white/5'
                     }`}
                   >
-                    {tab === 'languages' ? 'Languages' : tab === 'mobile' ? 'Mobile Apps' : tab === 'web' ? 'Web & Creative' : 'AI & Systems'}
+                    {tab === 'languages' 
+                      ? 'Languages' 
+                      : tab === 'mobile' 
+                        ? (isMobile ? 'Mobile' : 'Mobile Apps') 
+                        : tab === 'web' 
+                          ? (isMobile ? 'Web' : 'Web & Creative') 
+                          : 'AI & Systems'}
                   </button>
                 ))}
               </div>
@@ -1030,7 +1036,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 <span>
                   {(() => {
                     const totalProjectPages = isMobile 
-                      ? Math.max(1, Math.ceil(projects.length / 2)) 
+                      ? Math.max(1, Math.ceil(projects.length / 3)) 
                       : Math.max(1, Math.ceil(projects.length / 6));
                     return `Page ${projectPage + 1} of ${totalProjectPages} • ${
                       projectPage < totalProjectPages - 1 
@@ -1060,7 +1066,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                }`}
              >
                {projects
-                 .slice(projectPage * (isMobile ? 2 : 6), (projectPage + 1) * (isMobile ? 2 : 6))
+                 .slice(projectPage * (isMobile ? 3 : 6), (projectPage + 1) * (isMobile ? 3 : 6))
                  .map((project) => {
                    const CardComponent = project.link ? motion.a : motion.div;
                    const linkProps = project.link ? {
