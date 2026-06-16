@@ -384,45 +384,62 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
     if (!lenis || !mounted) return;
 
     let isAnimating = false;
+    let animatingTimeout: ReturnType<typeof setTimeout> | null = null;
     let touchStartClientY = 0;
     let touchStartClientX = 0;
+    let wheelAccumulator = 0;
+    let wheelResetTimer: ReturnType<typeof setTimeout> | null = null;
 
     const sectionFrames = getSectionFrames();
 
-    const isScrollableTarget = (target: HTMLElement | null, diffY: number = 0): boolean => {
-      if (!target) return false;
+    // Lock isAnimating with a safety timeout so it NEVER stays locked forever.
+    const lockAnimation = () => {
+      isAnimating = true;
+      if (animatingTimeout) clearTimeout(animatingTimeout);
+      animatingTimeout = setTimeout(() => {
+        isAnimating = false;
+      }, 2000); // Safety: unlock after 2 seconds no matter what
+    };
+
+    const unlockAnimation = () => {
+      isAnimating = false;
+      if (animatingTimeout) {
+        clearTimeout(animatingTimeout);
+        animatingTimeout = null;
+      }
+    };
+
+    // Find the nearest scrollable ancestor marked with data-scroll-container.
+    // Only those explicitly-marked containers are treated as inner scroll zones.
+    const findScrollContainer = (target: HTMLElement | null): HTMLElement | null => {
+      if (!target) return null;
       let current: HTMLElement | null = target;
       while (current && current !== document.body) {
         if (current.tagName === 'INPUT' || current.tagName === 'TEXTAREA') {
-          return true;
+          return current;
         }
-        const style = window.getComputedStyle(current);
-        const overflowY = style.overflowY;
-        const overflowX = style.overflowX;
-        if (
-          current.hasAttribute('data-lenis-prevent') ||
-          overflowY === 'auto' || overflowY === 'scroll' ||
-          overflowX === 'auto' || overflowX === 'scroll'
-        ) {
-          if (current.scrollHeight > current.clientHeight) {
-            if (diffY > 0) {
-              // Scroll down (finger swipe up / wheel down)
-              const isAtBottom = current.scrollTop + current.clientHeight >= current.scrollHeight - 2;
-              if (!isAtBottom) {
-                return true;
-              }
-            } else if (diffY < 0) {
-              // Scroll up (finger swipe down / wheel up)
-              const isAtTop = current.scrollTop <= 2;
-              if (!isAtTop) {
-                return true;
-              }
-            } else {
-              return true; // Fallback when direction is unknown
-            }
+        if (current.hasAttribute('data-scroll-container')) {
+          // Only if it actually has overflow content
+          if (current.scrollHeight > current.clientHeight + 2) {
+            return current;
           }
         }
         current = current.parentElement;
+      }
+      return null;
+    };
+
+    // Check if the scrollable container should consume this scroll event
+    const shouldConsumeScroll = (container: HTMLElement, diffY: number): boolean => {
+      if (container.tagName === 'INPUT' || container.tagName === 'TEXTAREA') {
+        return true;
+      }
+      if (diffY > 0) {
+        // Scrolling down — consume only if NOT at bottom
+        return container.scrollTop + container.clientHeight < container.scrollHeight - 2;
+      } else if (diffY < 0) {
+        // Scrolling up — consume only if NOT at top
+        return container.scrollTop > 2;
       }
       return false;
     };
@@ -456,19 +473,19 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       }
 
       if (targetIndex !== currentIndex || (direction === 'down' && currentIndex === 0 && window.scrollY < 10)) {
-        isAnimating = true;
+        lockAnimation();
         
         const maxScroll = getMaxScrollMultiplier() * getStableHeight();
         const targetFrame = sectionFrames[targetIndex];
         const targetY = (targetFrame / 502) * maxScroll;
 
         lenis.scrollTo(targetY, { 
-          duration: 1.2, 
+          duration: 0.7, 
           easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
           onComplete: () => {
             setTimeout(() => {
-              isAnimating = false;
-            }, 300);
+              unlockAnimation();
+            }, 100);
           }
         });
       }
@@ -476,40 +493,61 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
     const handleWheel = (e: WheelEvent) => {
       const target = e.target as HTMLElement;
-      if (isScrollableTarget(target, e.deltaY)) {
-        return;
+      const scrollContainer = findScrollContainer(target);
+
+      if (scrollContainer && shouldConsumeScroll(scrollContainer, e.deltaY)) {
+        return; // Let the inner container scroll naturally
       }
 
       e.preventDefault();
 
       if (isAnimating) return;
-      if (Math.abs(e.deltaY) < 10) return;
 
-      const direction = e.deltaY > 0 ? 'down' : 'up';
+      // Accumulate wheel deltas — handles trackpad micro-scrolls
+      wheelAccumulator += e.deltaY;
+      if (wheelResetTimer) clearTimeout(wheelResetTimer);
+      wheelResetTimer = setTimeout(() => { wheelAccumulator = 0; }, 200);
+
+      if (Math.abs(wheelAccumulator) < 30) return;
+
+      const direction = wheelAccumulator > 0 ? 'down' : 'up';
+      wheelAccumulator = 0;
       handleTransition(direction);
     };
 
     const handleTouchStart = (e: TouchEvent) => {
+      if (!e.touches || e.touches.length === 0) return;
       touchStartClientY = e.touches[0].clientY;
       touchStartClientX = e.touches[0].clientX;
     };
 
     const handleTouchMove = (e: TouchEvent) => {
+      if (!e.touches || e.touches.length === 0) return;
       const touchEndClientY = e.touches[0].clientY;
       const touchEndClientX = e.touches[0].clientX;
       const diffY = touchStartClientY - touchEndClientY;
       const diffX = touchStartClientX - touchEndClientX;
 
+      // Ignore horizontal swipes
       if (Math.abs(diffX) > Math.abs(diffY)) {
         return;
       }
 
-      const target = e.target as HTMLElement;
-      if (isScrollableTarget(target, diffY)) {
+      // Wait for a clear vertical direction
+      if (Math.abs(diffY) < 5) {
         return;
       }
 
-      e.preventDefault();
+      const target = e.target as HTMLElement;
+      const scrollContainer = findScrollContainer(target);
+
+      if (scrollContainer && shouldConsumeScroll(scrollContainer, diffY)) {
+        return; // Let the inner container scroll naturally
+      }
+
+      if (e.cancelable) {
+        e.preventDefault();
+      }
 
       if (isAnimating) return;
 
@@ -523,14 +561,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      let diffY = 0;
-      if (['ArrowDown', 'PageDown', ' '].includes(e.key) && !e.shiftKey) {
-        diffY = 1;
-      } else if (['ArrowUp', 'PageUp'].includes(e.key) || (e.key === ' ' && e.shiftKey)) {
-        diffY = -1;
-      }
-
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || isScrollableTarget(target, diffY)) {
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
         return;
       }
 
@@ -553,6 +584,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('keydown', handleKeyDown);
+      if (animatingTimeout) clearTimeout(animatingTimeout);
+      if (wheelResetTimer) clearTimeout(wheelResetTimer);
     };
   }, [lenis, mounted]);
 
@@ -714,7 +747,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   const isInteractive = showHero || showAbout || showProjects || showServices || showContact;
 
   return (
-    <div className={`fixed inset-0 z-40 overflow-hidden selection:bg-white/20 selection:text-white ${isInteractive ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+    <div className={`fixed inset-0 z-40 overflow-hidden touch-none selection:bg-white/20 selection:text-white ${isInteractive ? 'pointer-events-auto' : 'pointer-events-none'}`}>
       
       {/* ----------------- HERO SECTION ----------------- */}
       <motion.section 
@@ -792,8 +825,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         transition={{ duration: 0.8, ease: "easeOut" }}
       >        <div className="flex flex-col items-center max-w-7xl w-full gap-5 md:gap-6 justify-center">
           <div 
+            data-scroll-container
             data-lenis-prevent
-            className="grid grid-cols-12 gap-3 md:gap-8 items-center w-full max-h-[60vh] lg:max-h-none overflow-y-auto lg:overflow-visible custom-scrollbar px-2 py-2"
+            className="grid grid-cols-12 gap-3 md:gap-8 items-center w-full max-h-[60vh] lg:max-h-none overflow-y-auto lg:overflow-visible custom-scrollbar px-2 py-2 touch-pan-y"
           >
             {/* Bio statement */}
             <div className="col-span-5 text-white bg-black/75 p-3 md:p-10 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
@@ -934,8 +968,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                animate={{ opacity: 1, y: 0 }}
                exit={{ opacity: 0, y: -15 }}
                transition={{ duration: 0.35, ease: "easeInOut" }}
+               data-scroll-container
                data-lenis-prevent
-               className="grid grid-cols-3 gap-2.5 md:gap-6 pointer-events-auto max-h-[62vh] md:max-h-none pr-2 py-2 overflow-y-auto custom-scrollbar"
+               className="grid grid-cols-3 gap-2.5 md:gap-6 pointer-events-auto max-h-[62vh] md:max-h-none pr-2 py-2 overflow-y-auto custom-scrollbar touch-pan-y"
              >
                {projects
                  .slice(projectPage * 6, (projectPage + 1) * 6)
@@ -1005,8 +1040,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         <div className="w-full max-w-5xl text-white">
           {/* Unified Card Container Wrapper */}
           <div 
+            data-scroll-container
             data-lenis-prevent
-            className="bg-black/75 border border-white/10 p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[82vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar"
+            className="bg-black/75 border border-white/10 p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[82vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar touch-pan-y"
           >
             {/* Main Title - Inside the card */}
             <div className="text-center mb-3.5 md:mb-5">
@@ -1123,8 +1159,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
 
         <div 
+          data-scroll-container
           data-lenis-prevent
-          className="text-white bg-black/75 p-3.5 md:p-10 lg:p-14 rounded-[1.5rem] md:rounded-[2.5rem] border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-12 gap-3 md:gap-8 items-stretch justify-center max-h-[85vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar"
+          className="text-white bg-black/75 p-3.5 md:p-10 lg:p-14 rounded-[1.5rem] md:rounded-[2.5rem] border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-12 gap-3 md:gap-8 items-stretch justify-center max-h-[85vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar touch-pan-y"
         >
           
           {/* Left panel - details */}
@@ -1149,7 +1186,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 <Mail className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-pink-400 shrink-0" />
                 <span>axiogen01@gmail.com</span>
               </a>
-              <div className="flex flex-col border-b border-white/5 pb-1 md:pb-2">
+              <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-2 border-b border-white/5 pb-1 md:pb-2">
                 <a 
                   href="tel:+918010127704" 
                   className="flex items-center space-x-1.5 md:space-x-3 text-[8px] sm:text-sm hover:text-purple-300 transition-colors pointer-events-auto font-medium"

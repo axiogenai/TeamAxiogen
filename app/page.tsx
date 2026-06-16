@@ -1,24 +1,23 @@
 'use client';
 
-import { useSyncExternalStore, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DynamicVignette } from '../components/DynamicVignette';
 import { Navbar } from '../components/Navbar';
 import { PortfolioContent } from '../components/PortfolioContent';
 import { AmbientGlow } from '../components/AmbientGlow';
-import { getTotalStates, subscribe, getSnapshot } from '../hooks/useScroll';
+import { useProjectCount } from '../hooks/useScroll';
 
 export default function Home() {
   const TOTAL_FRAMES = 502;
   const [mounted, setMounted] = useState(false);
-
-  // Subscribe to scroll updates to force re-render when total states changes dynamically
-  useSyncExternalStore(subscribe, getSnapshot, () => ({ scrollProgress: 0, scrollY: 0 }));
+  const projectCount = useProjectCount();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const totalStates = getTotalStates();
+  const projectPages = Math.max(1, Math.ceil(projectCount / 6));
+  const totalStates = 4 + projectPages;
   const dynamicMinHeight = `${(totalStates - 1) * 100}vh`;
 
   return (

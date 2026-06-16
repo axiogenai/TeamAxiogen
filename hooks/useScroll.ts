@@ -18,10 +18,25 @@ let stableHeight = 0;
 let stableWidth = 0;
 
 let projectCount = 12; // default
+const projectCountListeners = new Set<() => void>();
 
 export function setProjectCount(count: number) {
-  projectCount = count;
-  computeSnapshot();
+  if (projectCount !== count) {
+    projectCount = count;
+    computeSnapshot();
+    projectCountListeners.forEach((l) => l());
+  }
+}
+
+export function subscribeProjectCount(listener: () => void): () => void {
+  projectCountListeners.add(listener);
+  return () => {
+    projectCountListeners.delete(listener);
+  };
+}
+
+export function useProjectCount(): number {
+  return useSyncExternalStore(subscribeProjectCount, () => projectCount, () => 12);
 }
 
 export function getProjectPagesCount(): number {
