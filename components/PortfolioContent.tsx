@@ -14,6 +14,7 @@ import { useLenis } from 'lenis/react';
 import { supabase } from '../lib/supabaseClient';
 import { LogoLoop } from './LogoLoop';
 import { ScrollVelocity } from './ScrollVelocity';
+import { BorderGlow } from './BorderGlow';
 import { AnimatedCounter } from './AnimatedCounter';
 import { playTransitionSound, playHoverSound } from './SoundManager';
 import { 
@@ -812,7 +813,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             ))}
             <br />
             {"AXIOGEN".split("").map((char, index) => (
-              <motion.span key={index} variants={charVariants} className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400">
+              <motion.span key={index} variants={charVariants} className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-500">
                 {char}
               </motion.span>
             ))}
@@ -1063,7 +1064,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 pointer-events-auto ${
                  isMobile 
                    ? 'max-h-none overflow-visible pr-0 py-0' 
-                   : 'max-h-[62vh] md:max-h-none pr-2 py-2 overflow-y-auto custom-scrollbar touch-pan-y'
+                   : 'overflow-visible pr-0 py-0'
                }`}
              >
                {projects
@@ -1077,42 +1078,52 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                    } : {};
 
                    return (
-                     <CardComponent 
-                       key={project.name} 
-                       {...linkProps}
-                       onMouseEnter={playHoverSound}
-                       className={`group relative min-h-[160px] md:min-h-[270px] rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto block ${project.link ? 'cursor-pointer' : 'select-none'}`}
-                       whileHover={project.link ? { scale: 1.03, y: -6 } : {}}
-                       transition={{ type: 'spring' as const, stiffness: 300, damping: 20 }}
-                     >
-                       <div className="p-3.5 md:p-6 flex flex-col justify-between flex-1 relative z-10">
-                         {/* Glow effect blob behind card on hover */}
-                         <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/10 via-indigo-500/5 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
+                      <CardComponent 
+                        key={project.name} 
+                        {...linkProps}
+                        onMouseEnter={playHoverSound}
+                        className={`group relative min-h-[160px] md:min-h-[270px] bg-transparent overflow-visible flex flex-col justify-between pointer-events-auto block ${project.link ? 'cursor-pointer' : 'select-none'}`}
+                      >
+                        <BorderGlow
+                          edgeSensitivity={30}
+                          glowColor="270 85 65"
+                          backgroundColor="var(--card-bg)"
+                          borderRadius={isMobile ? 12 : 24}
+                          glowRadius={isMobile ? 30 : 50}
+                          glowIntensity={0.8}
+                          coneSpread={25}
+                          colors={['#c084fc', '#f472b6', '#38bdf8']}
+                          className="w-full h-full flex flex-col justify-between"
+                        >
+                          <div className="p-3.5 md:p-6 flex flex-col justify-between flex-1 relative z-10 w-full h-full">
+                            {/* Glow effect blob behind card on hover */}
+                            <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/10 via-indigo-500/5 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
 
-                         <div className="flex justify-between items-start mb-2.5">
-                           <span className="px-2 py-0.5 md:px-3 md:py-1 rounded-full border border-white/10 text-[7px] sm:text-[9px] md:text-[10px] tracking-wider uppercase font-bold bg-white/5 text-white/80 group-hover:border-purple-500/30 group-hover:text-purple-300 transition-colors">
-                             {project.category}
-                           </span>
-                           <span className="opacity-60 text-[8px] sm:text-[10px] md:text-xs bg-white/5 px-1.5 py-0.2 md:px-2 md:py-0.5 rounded border border-white/5 font-medium">{project.year}</span>
-                         </div>
-                         
-                         <div className="mt-auto">
-                           <h3 className="text-sm sm:text-lg md:text-2xl font-black tracking-tight mb-1 md:mb-2 group-hover:-translate-y-0.5 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-purple-200 group-hover:to-pink-300 transition-all duration-500 leading-tight">
-                             {project.name}
-                           </h3>
-                           <p className="text-[9px] sm:text-xs text-white/60 mb-3 group-hover:text-white/80 transition-colors leading-relaxed line-clamp-3">
-                             {project.desc}
-                           </p>
-                           
-                           {/* Tech tags */}
-                           <div className="flex flex-wrap gap-1 opacity-75 group-hover:opacity-100 transition-opacity">
-                             {project.tech.map((tag, tIndex) => (
-                               <span key={tIndex} className="text-[7px] sm:text-[9px] bg-white/5 border border-white/10 rounded px-1.5 py-0.2 md:py-0.5 font-medium">{tag}</span>
-                             ))}
-                           </div>
-                         </div>
-                       </div>
-                     </CardComponent>
+                            <div className="flex justify-between items-start mb-2.5">
+                              <span className="px-2 py-0.5 md:px-3 md:py-1 rounded-full border border-white/10 text-[7px] sm:text-[9px] md:text-[10px] tracking-wider uppercase font-bold bg-white/5 text-white/80 group-hover:border-purple-500/30 group-hover:text-purple-300 transition-colors">
+                                {project.category}
+                              </span>
+                              <span className="opacity-60 text-[8px] sm:text-[10px] md:text-xs bg-white/5 px-1.5 py-0.2 md:px-2 md:py-0.5 rounded border border-white/5 font-medium">{project.year}</span>
+                            </div>
+                            
+                            <div className="mt-auto">
+                              <h3 className="text-sm sm:text-lg md:text-2xl font-black tracking-tight mb-1 md:mb-2 group-hover:-translate-y-0.5 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-purple-200 group-hover:to-pink-300 transition-all duration-500 leading-tight">
+                                {project.name}
+                              </h3>
+                              <p className="text-[9px] sm:text-xs text-white/60 mb-3 group-hover:text-white/80 transition-colors leading-relaxed line-clamp-3">
+                                {project.desc}
+                              </p>
+                              
+                              {/* Tech tags */}
+                              <div className="flex flex-wrap gap-1 opacity-75 group-hover:opacity-100 transition-opacity">
+                                {project.tech.map((tag, tIndex) => (
+                                  <span key={tIndex} className="text-[7px] sm:text-[9px] bg-white/5 border border-white/10 rounded px-1.5 py-0.2 md:py-0.5 font-medium">{tag}</span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </BorderGlow>
+                      </CardComponent>
                    );
                  })}
              </motion.div>
@@ -1284,8 +1295,30 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           {/* Left panel - details */}
           <div className="col-span-12 md:col-span-5 flex flex-col justify-between py-1 md:py-2 text-left">
             <div>
-              <div className="flex items-center gap-2 mb-2 md:mb-4">
+              <div className="flex items-center justify-between gap-2 mb-2 md:mb-4">
                 <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-pink-400">Get in Touch</span>
+                <div className="flex space-x-1.5 pointer-events-auto">
+                  <a 
+                    href="https://twitter.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    onClick={playHoverSound}
+                    onMouseEnter={playHoverSound}
+                    className="p-1.5 bg-white/10 border border-white/10 hover:border-white/30 rounded-lg hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
+                  >
+                    <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4" />
+                  </a>
+                  <a 
+                    href="https://linkedin.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    onClick={playHoverSound}
+                    onMouseEnter={playHoverSound}
+                    className="p-1.5 bg-white/10 border border-white/10 hover:border-white/30 rounded-lg hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
+                  >
+                    <Briefcase className="w-3 h-3 sm:w-4 sm:h-4" />
+                  </a>
+                </div>
               </div>
               <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tighter mb-2 md:mb-4 leading-none whitespace-nowrap">
                 Let&apos;s Talk.
@@ -1293,15 +1326,6 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               <p className="text-[10px] sm:text-xs text-white/70 leading-relaxed max-w-sm mb-4 md:mb-6 font-normal">
                 Let&apos;s collaborate to design and engineer high-performance software, immersive user experiences, and scalable digital solutions across web, mobile, and AI.
               </p>
-            </div>
-
-            <div className="my-2 py-1 select-none pointer-events-none overflow-hidden max-w-xs md:max-w-sm">
-              <ScrollVelocity
-                texts={['THANK YOU', 'VISIT AGAIN']} 
-                velocity={100}
-                className="custom-scroll-text"
-                numCopies={12}
-              />
             </div>
 
             <div className="space-y-2.5 md:space-y-4 mb-4 md:mb-0">
@@ -1334,28 +1358,17 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   <span>7972884083</span>
                 </a>
               </div>
-              <div className="flex space-x-1.5 pointer-events-auto pt-1 md:pt-0">
-                <a 
-                  href="https://twitter.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  onClick={playHoverSound}
-                  onMouseEnter={playHoverSound}
-                  className="p-1.5 bg-white/10 border border-white/10 hover:border-white/30 rounded-lg hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
-                >
-                  <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4" />
-                </a>
-                <a 
-                  href="https://linkedin.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  onClick={playHoverSound}
-                  onMouseEnter={playHoverSound}
-                  className="p-1.5 bg-white/10 border border-white/10 hover:border-white/30 rounded-lg hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
-                >
-                  <Briefcase className="w-3 h-3 sm:w-4 sm:h-4" />
-                </a>
+
+              <div className="my-1.5 py-0.5 select-none pointer-events-none overflow-hidden max-w-xs md:max-w-sm hidden md:block">
+                <ScrollVelocity
+                  texts={['THANK YOU', 'VISIT AGAIN']} 
+                  velocity={100}
+                  className="custom-scroll-text"
+                  numCopies={12}
+                />
               </div>
+
+
             </div>
           </div>
 
@@ -1443,6 +1456,16 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 </motion.div>
               )}
             </AnimatePresence>
+          </div>
+
+          {/* Mobile-only ScrollVelocity loop below send message button */}
+          <div className="col-span-12 block md:hidden my-1.5 py-0.5 select-none pointer-events-none overflow-hidden w-full">
+            <ScrollVelocity
+              texts={['THANK YOU', 'VISIT AGAIN']} 
+              velocity={100}
+              className="custom-scroll-text"
+              numCopies={12}
+            />
           </div>
         </div>
       </motion.section>

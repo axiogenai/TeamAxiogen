@@ -56,7 +56,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
       {/* Logo container */}
       <div className="relative flex flex-col items-center gap-4 z-10">
         <div className="relative flex items-center justify-center">
-          <h1 className="text-5xl md:text-7xl font-black tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-300 to-indigo-200 drop-shadow-[0_4px_12px_rgba(0,0,0,0.50)] uppercase">
+          <h1 className="text-5xl md:text-7xl font-black tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-blue-300 drop-shadow-[0_4px_12px_rgba(0,0,0,0.50)] uppercase">
             AXIOGEN
           </h1>
         </div>

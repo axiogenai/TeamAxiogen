@@ -15,7 +15,7 @@
 }
 
 .logoloop-css-track.is-animating {
-  animation: logoloop-marquee 30s linear infinite;
+  animation: logoloop-marquee 70s linear infinite;
 }
 
 .logoloop-css-track:hover {

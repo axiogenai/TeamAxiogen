@@ -57,7 +57,7 @@ export const Navbar = () => {
       <div className="hidden md:flex fixed top-6 left-4 md:left-8 z-50 pointer-events-auto select-none items-center gap-2.5">
         <button 
           onClick={() => scrollToFrame(frames[0] ?? 42)}
-          className="text-sm font-black tracking-tighter text-white uppercase bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent hover:opacity-85 transition-opacity cursor-pointer"
+          className="text-sm font-black tracking-tighter text-white uppercase bg-gradient-to-r from-cyan-200 via-blue-400 to-indigo-400 bg-clip-text text-transparent hover:opacity-85 transition-opacity cursor-pointer"
         >
           AXIOGEN
         </button>
