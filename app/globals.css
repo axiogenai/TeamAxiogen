@@ -38,6 +38,16 @@ html, body {
   overflow-anchor: none;
   overflow-x: hidden;
   max-width: 100%;
+  
+  /* Hide scrollbar globally for Firefox and IE/Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Hide scrollbar globally for Chrome, Safari, and WebKit browsers */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
 
 /* Custom scrollbar utility */

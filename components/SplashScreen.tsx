@@ -1,6 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+
+const ShaderAnimation = dynamic(() => import('./ShaderAnimation').then((m) => m.ShaderAnimation), {
+  ssr: false,
+});
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -45,13 +50,13 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
         }
       `}</style>
 
-      {/* Subtle background glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.12)_0%,transparent_60%)] animate-pulse" />
+      {/* Dynamic Cosmic Portal Shader Background */}
+      <ShaderAnimation />
 
       {/* Logo container */}
       <div className="relative flex flex-col items-center gap-4 z-10">
         <div className="relative flex items-center justify-center">
-          <h1 className="text-5xl md:text-7xl font-black tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-300 to-indigo-200 drop-shadow-[0_0_30px_rgba(168,85,247,0.4)] uppercase">
+          <h1 className="text-5xl md:text-7xl font-black tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-300 to-indigo-200 drop-shadow-[0_4px_12px_rgba(0,0,0,0.50)] uppercase">
             AXIOGEN
           </h1>
         </div>

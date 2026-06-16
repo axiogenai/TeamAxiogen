@@ -13,6 +13,7 @@ import {
 import { useLenis } from 'lenis/react';
 import { supabase } from '../lib/supabaseClient';
 import { LogoLoop } from './LogoLoop';
+import { ScrollVelocity } from './ScrollVelocity';
 import { AnimatedCounter } from './AnimatedCounter';
 import { playTransitionSound, playHoverSound } from './SoundManager';
 import { 
@@ -822,7 +823,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           variants={fadeUpVariants}
           initial="hidden"
           animate={showHero ? "visible" : "hidden"}
-          className="text-lg md:text-xl text-white/80 font-medium max-w-2xl drop-shadow-2xl bg-black/75 p-6 rounded-3xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] leading-relaxed"
+          className="text-sm md:text-lg lg:text-xl text-white/70 font-normal max-w-xl md:max-w-3xl lg:max-w-4xl leading-relaxed drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]"
         >
           Axiogen builds everything — AI models, mobile apps, cinematic web experiences, cloud infrastructure, and deep research systems.
         </motion.p>
@@ -864,7 +865,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
                   </div>
-                  <h2 className="text-lg sm:text-2xl md:text-4xl lg:text-6xl font-black tracking-tighter mb-2 leading-none whitespace-nowrap">
+                  <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tighter mb-2 leading-none whitespace-nowrap">
                     TEAM AXIOGEN.
                   </h2>
                   <p className="text-[10px] sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-3">
@@ -1286,12 +1287,21 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               <div className="flex items-center gap-2 mb-2 md:mb-4">
                 <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-pink-400">Get in Touch</span>
               </div>
-              <h2 className="text-lg sm:text-2xl md:text-4xl lg:text-6xl font-black tracking-tighter mb-2 md:mb-4 leading-none whitespace-nowrap">
+              <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tighter mb-2 md:mb-4 leading-none whitespace-nowrap">
                 Let&apos;s Talk.
               </h2>
               <p className="text-[10px] sm:text-xs text-white/70 leading-relaxed max-w-sm mb-4 md:mb-6 font-normal">
-                Let&apos;s collaborate to design and engineer high-performance web applications, interactive user experiences, and scalable digital solutions.
+                Let&apos;s collaborate to design and engineer high-performance software, immersive user experiences, and scalable digital solutions across web, mobile, and AI.
               </p>
+            </div>
+
+            <div className="my-2 py-1 select-none pointer-events-none overflow-hidden max-w-xs md:max-w-sm">
+              <ScrollVelocity
+                texts={['THANK YOU', 'VISIT AGAIN']} 
+                velocity={100}
+                className="custom-scroll-text"
+                numCopies={12}
+              />
             </div>
 
             <div className="space-y-2.5 md:space-y-4 mb-4 md:mb-0">
