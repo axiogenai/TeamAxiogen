@@ -1,15 +1,60 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { DynamicVignette } from '../components/DynamicVignette';
 import { Navbar } from '../components/Navbar';
 import { PortfolioContent } from '../components/PortfolioContent';
-import { AmbientGlow } from '../components/AmbientGlow';
-import { useProjectCount } from '../hooks/useScroll';
+import { useProjectCount, useSectionVisibility } from '../hooks/useScroll';
+import { SplashScreen } from '../components/SplashScreen';
+import { ScrollProgressBar } from '../components/ScrollProgressBar';
+import { ThemeToggle } from '../components/ThemeToggle';
+import { SoundManager } from '../components/SoundManager';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const LightPillar = dynamic(() => import('../components/LightPillar'), {
+  ssr: false,
+});
+
+// Fixed wrapper component that dynamically updates opacity and unmounts the WebGL canvas when invisible
+const LightPillarBackground = () => {
+  const { showHero } = useSectionVisibility();
+
+  return (
+    <AnimatePresence>
+      {showHero && (
+        <motion.div 
+          className="fixed inset-0 pointer-events-none overflow-hidden"
+          style={{ zIndex: -9 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.90 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        >
+      <LightPillar 
+        topColor="#5227FF"
+        bottomColor="#FF9FFC"
+        intensity={1}
+        rotationSpeed={0.3}
+        glowAmount={0.002}
+        pillarWidth={3}
+        pillarHeight={0.4}
+        noiseIntensity={0.5}
+        pillarRotation={25}
+        interactive={false}
+        mixBlendMode="screen"
+        quality="high"
+      />
+      </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
 
 export default function Home() {
   const TOTAL_FRAMES = 502;
   const [mounted, setMounted] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
   const projectCount = useProjectCount();
 
   useEffect(() => {
@@ -20,34 +65,40 @@ export default function Home() {
   const totalStates = 4 + projectPages;
   const dynamicMinHeight = `${(totalStates - 1) * 100}vh`;
 
-  return (
-    <main 
-      className="relative bg-black"
-      style={{ minHeight: dynamicMinHeight }}
-    >
-      <div className="animate-page-fade-in">
-        <Navbar />
-        
-        {/* Fixed UI Overlays */}
-        <AmbientGlow />
-        
-        {/* Floating Layout Contents */}
-        <PortfolioContent totalFrames={TOTAL_FRAMES} />
-        <DynamicVignette totalFrames={TOTAL_FRAMES} />
+  if (!mounted) return null;
 
-        {/* Premium Simple Background */}
-        <div className="fixed inset-0 w-full h-full -z-10 bg-[#07070c] select-none pointer-events-none overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#020205] via-[#07070c] to-[#0d0714]" />
+  return (
+    <>
+      <main 
+        className="relative transition-colors duration-1000"
+        style={{ minHeight: dynamicMinHeight }}
+      >
+        <div className="animate-page-fade-in">
+          <Navbar />
+          
+          {/* Scroll-Linked Fixed Background Shader */}
+          <LightPillarBackground />
+          
+          {/* Fixed UI Overlays */}
+          <ScrollProgressBar />
+          <ThemeToggle />
+          <SoundManager />
+          
+          {/* Floating Layout Contents */}
+          <PortfolioContent totalFrames={TOTAL_FRAMES} />
+          <DynamicVignette totalFrames={TOTAL_FRAMES} />
+
+          {/* Premium Simple Background */}
           <div 
-            className="absolute inset-0 opacity-[0.02]" 
-            style={{
-              backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-              backgroundSize: '40px 40px',
-            }}
-          />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(120,119,198,0.08)_0%,transparent_70%)]" />
+            className="fixed inset-0 w-full h-full bg-[var(--background)] transition-colors duration-1000 select-none pointer-events-none overflow-hidden"
+            style={{ zIndex: -10 }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--bg-gradient-from)] via-[var(--bg-gradient-via)] to-[var(--bg-gradient-to)] transition-colors duration-1000" />
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+      
+      {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
+    </>
   );
 }

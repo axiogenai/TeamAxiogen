@@ -47,7 +47,7 @@ export const Navbar = () => {
   return (
     <>
       {/* Brand Logo - Top Left */}
-      <div className="fixed top-6 left-4 md:left-8 z-50 pointer-events-auto select-none block">
+      <div className="fixed top-6 left-4 md:left-8 z-50 pointer-events-auto select-none flex items-center gap-2.5">
         <button 
           onClick={() => scrollToFrame(frames[0] ?? 42)}
           className="text-sm font-black tracking-tighter text-white uppercase bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent hover:opacity-85 transition-opacity cursor-pointer"

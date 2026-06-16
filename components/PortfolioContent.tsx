@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   useSectionVisibility, 
+  useNavSection,
   getStableHeight, 
   setProjectCount, 
   getSectionFrames, 
@@ -12,6 +13,8 @@ import {
 import { useLenis } from 'lenis/react';
 import { supabase } from '../lib/supabaseClient';
 import { LogoLoop } from './LogoLoop';
+import { AnimatedCounter } from './AnimatedCounter';
+import { playTransitionSound, playHoverSound } from './SoundManager';
 import { 
   ArrowDown, 
   Mail, 
@@ -193,21 +196,24 @@ const fallbackProjects = [
     year: '2026',
     desc: 'Core neural network training workspace powering predictive analytics and cognitive assistant agents.',
     tech: ['Python', 'FastAPI', 'PyTorch', 'Docker'],
-    link: 'https://axiogen.in'
+    link: 'https://axiogen.in',
+    preview: 'from-purple-600 to-indigo-600'
   },
   {
     name: 'RansomGuard AI',
     category: 'Cybersecurity AI',
     year: '2026',
     desc: 'Real-time ransomware detection and response engine powered by watchdog traps, entropy analysis, and an ML ensemble.',
-    tech: ['Python', 'Flask', 'XGBoost', 'Socket.IO', 'SQLite']
+    tech: ['Python', 'Flask', 'XGBoost', 'Socket.IO', 'SQLite'],
+    preview: 'from-red-600 to-orange-600'
   },
   {
     name: 'OmniDx',
     category: 'Digital Health AI',
     year: '2026',
     desc: 'Advanced medical X-ray pathology classification using DenseNet121 and Grad-CAM visual heatmaps for explainability.',
-    tech: ['PyTorch', 'Next.js', 'FastAPI', 'PostgreSQL', 'Docker']
+    tech: ['PyTorch', 'Next.js', 'FastAPI', 'PostgreSQL', 'Docker'],
+    preview: 'from-blue-600 to-teal-600'
   },
   {
     name: 'Blockchain Forge',
@@ -215,7 +221,8 @@ const fallbackProjects = [
     year: '2025',
     desc: 'High-performance cryptographic sandbox tool for generating, mining, and auditing distributed chains.',
     tech: ['TypeScript', 'Node.js', 'Framer Motion', 'TailwindCSS'],
-    link: 'https://blockchainforge.vercel.app'
+    link: 'https://blockchainforge.vercel.app',
+    preview: 'from-pink-600 to-rose-600'
   },
   {
     name: 'NAAC Platform',
@@ -223,7 +230,8 @@ const fallbackProjects = [
     year: '2025',
     desc: 'Advanced academic accreditation suite streamlining documentation, criteria metrics, and reporting.',
     tech: ['Next.js', 'TypeScript', 'Prisma ORM', 'PostgreSQL'],
-    link: 'https://naac-nine.vercel.app'
+    link: 'https://naac-nine.vercel.app',
+    preview: 'from-teal-600 to-emerald-600'
   },
   {
     name: 'SessionWarden',
@@ -231,7 +239,8 @@ const fallbackProjects = [
     year: '2025',
     desc: 'Active session protection agent intercepting hijack attempts and managing token rotation in real-time.',
     tech: ['JavaScript', 'Express', 'JWT Security', 'TailwindCSS'],
-    link: 'https://sessionwarden.in'
+    link: 'https://sessionwarden.in',
+    preview: 'from-yellow-600 to-amber-600'
   },
   {
     name: 'Lumina Backgrounds',
@@ -239,28 +248,32 @@ const fallbackProjects = [
     year: '2025',
     desc: 'Library of fluid particle simulations and interactive canvas shaders built for premium web graphics.',
     tech: ['WebGL', 'GLSL', 'Canvas API', 'Vanilla CSS'],
-    link: 'https://luminabackgrounds.vercel.app'
+    link: 'https://luminabackgrounds.vercel.app',
+    preview: 'from-cyan-600 to-blue-600'
   },
   {
     name: 'Patient AI Explainer',
     category: 'Digital Health AI',
     year: '2026',
     desc: 'Conversational patient explainer tool translating complex medical charts into simple patient-friendly reports.',
-    tech: ['React', 'TypeScript', 'FastAPI', 'LLM Agents']
+    tech: ['React', 'TypeScript', 'FastAPI', 'LLM Agents'],
+    preview: 'from-indigo-600 to-blue-600'
   },
   {
     name: 'Shivsai 360',
     category: 'Virtual Reality Web',
     year: '2025',
     desc: 'Immersive 360-degree virtual tour and panoramic walkthrough engine for real estate properties.',
-    tech: ['Three.js', 'React Three Fiber', 'WebGL', 'CSS3D']
+    tech: ['Three.js', 'React Three Fiber', 'WebGL', 'CSS3D'],
+    preview: 'from-purple-600 to-pink-600'
   },
   {
     name: 'OpenRouter Chatbot',
     category: 'Developer Tools',
     year: '2025',
     desc: 'Optimized multi-model chatbot sandbox integrating the openrouter API for low-latency code generation.',
-    tech: ['Next.js', 'TypeScript', 'API Routing', 'TailwindCSS']
+    tech: ['Next.js', 'TypeScript', 'API Routing', 'TailwindCSS'],
+    preview: 'from-slate-600 to-zinc-600'
   }
 ];
 
@@ -340,13 +353,22 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }
 
         if (data && data.length > 0) {
-          const formatted = data.map((p: any) => ({
+          const gradients = [
+            'from-purple-600 to-indigo-600',
+            'from-blue-600 to-teal-600',
+            'from-red-600 to-orange-600',
+            'from-pink-600 to-rose-600',
+            'from-teal-600 to-emerald-600',
+            'from-yellow-600 to-amber-600'
+          ];
+          const formatted = data.map((p: any, index: number) => ({
             name: p.name,
             category: p.category,
             year: p.year,
             desc: p.desc,
             tech: Array.isArray(p.tech) ? p.tech : JSON.parse(p.tech || '[]'),
-            link: p.link || undefined
+            link: p.link || undefined,
+            preview: p.preview || gradients[index % gradients.length]
           }));
           setProjects(formatted);
           setProjectCount(data.length);
@@ -379,6 +401,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       scrollResetRef.current = true;
     }
   }, [mounted, lenis]);
+
+  const activeSection = useNavSection();
 
   useEffect(() => {
     if (!lenis || !mounted) return;
@@ -419,8 +443,10 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           return current;
         }
         if (current.hasAttribute('data-scroll-container')) {
-          // Only if it actually has overflow content
-          if (current.scrollHeight > current.clientHeight + 2) {
+          // Check if it's actually scrollable (has auto/scroll overflow and actual scrollable content)
+          const style = window.getComputedStyle(current);
+          const isScrollable = style.overflowY === 'auto' || style.overflowY === 'scroll';
+          if (isScrollable && current.scrollHeight > current.clientHeight + 2) {
             return current;
           }
         }
@@ -475,6 +501,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       if (targetIndex !== currentIndex || (direction === 'down' && currentIndex === 0 && window.scrollY < 10)) {
         lockAnimation();
         
+        // Play synthesized sound effects
+        playTransitionSound();
+
         const maxScroll = getMaxScrollMultiplier() * getStableHeight();
         const targetFrame = sectionFrames[targetIndex];
         const targetY = (targetFrame / 502) * maxScroll;
@@ -528,6 +557,14 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       const diffY = touchStartClientY - touchEndClientY;
       const diffX = touchStartClientX - touchEndClientX;
 
+      // If we are currently animating a transition, keep updating the start positions
+      // so we don't accumulate a massive delta that fires on animation finish.
+      if (isAnimating) {
+        touchStartClientY = touchEndClientY;
+        touchStartClientX = touchEndClientX;
+        return;
+      }
+
       // Ignore horizontal swipes
       if (Math.abs(diffX) > Math.abs(diffY)) {
         return;
@@ -548,8 +585,6 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       if (e.cancelable) {
         e.preventDefault();
       }
-
-      if (isAnimating) return;
 
       if (Math.abs(diffY) > 50) {
         const direction = diffY > 0 ? 'down' : 'up';
@@ -746,6 +781,48 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
   const isInteractive = showHero || showAbout || showProjects || showServices || showContact;
 
+  // Motion variants for service card icons
+  const getIconVariants = (title: string): any => {
+    switch (title) {
+      case 'AI / ML Solutions': // Brain
+        return {
+          hover: { scale: [1, 1.25, 1, 1.25, 1], transition: { repeat: Infinity, duration: 1.5 } }
+        };
+      case 'Web Development': // Globe
+        return {
+          hover: { rotate: 360, transition: { duration: 2, ease: "linear" as const, repeat: Infinity } }
+        };
+      case 'Mobile Apps': // Smartphone
+        return {
+          hover: { rotate: [-10, 10, -10], transition: { repeat: Infinity, duration: 0.6, ease: "easeInOut" as const } }
+        };
+      case 'Cloud Solutions': // Cloud
+        return {
+          hover: { y: [-2, 2, -2], transition: { repeat: Infinity, duration: 1.2, ease: "easeInOut" as const } }
+        };
+      case 'Database Design': // Database
+        return {
+          hover: { y: [0, -4, 0], transition: { repeat: Infinity, duration: 0.6, ease: "easeInOut" as const } }
+        };
+      case 'Voice Synthesis': // Mic
+        return {
+          hover: { x: [-1.5, 1.5, -1.5, 1.5, 0], transition: { repeat: Infinity, duration: 0.3 } }
+        };
+      case 'Document Intelligence': // FileText
+        return {
+          hover: { rotateY: 180, transition: { duration: 0.8 } }
+        };
+      case 'Deep Research': // Search
+        return {
+          hover: { scale: 1.25, rotate: 15, transition: { type: "spring", stiffness: 300, damping: 10 } }
+        };
+      default:
+        return {
+          hover: { scale: 1.1 }
+        };
+    }
+  };
+
   return (
     <div className={`fixed inset-0 z-40 overflow-hidden touch-none selection:bg-white/20 selection:text-white ${isInteractive ? 'pointer-events-auto' : 'pointer-events-none'}`}>
       
@@ -756,10 +833,10 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         initial={{ opacity: 0 }}
         animate={{ 
           opacity: showHero ? 1 : 0, 
-          y: showHero ? 0 : -60,
+          y: showHero ? "0%" : "-100%",
           display: showHero ? 'flex' : 'none'
         }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
         <motion.div
           variants={containerVariants}
@@ -796,7 +873,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           animate={{ opacity: showHero ? 1 : 0, y: showHero ? 0 : 20 }}
           transition={{ delay: 0.6 }}
           className="absolute bottom-24 flex flex-col items-center text-white cursor-pointer group" 
-          onClick={() => scrollToFrame(125)}
+          onClick={() => {
+            playHoverSound();
+            scrollToFrame(125);
+          }}
+          onMouseEnter={playHoverSound}
         >
           <span className="text-[10px] uppercase tracking-[0.3em] mb-4 text-white/60 group-hover:text-white transition-colors font-medium">
             Scroll to discover
@@ -819,10 +900,10 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         initial={{ opacity: 0 }}
         animate={{ 
           opacity: showAbout ? 1 : 0,
-          scale: showAbout ? 1 : 0.95,
+          x: showAbout ? "0%" : (activeSection === 'hero' ? "100%" : "-100%"),
           display: showAbout ? 'flex' : 'none'
         }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >        <div className="flex flex-col items-center max-w-7xl w-full gap-5 md:gap-6 justify-center">
           <div 
             data-scroll-container
@@ -830,36 +911,66 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             className="grid grid-cols-12 gap-3 md:gap-8 items-center w-full max-h-[60vh] lg:max-h-none overflow-y-auto lg:overflow-visible custom-scrollbar px-2 py-2 touch-pan-y"
           >
             {/* Bio statement */}
-            <div className="col-span-5 text-white bg-black/75 p-3 md:p-10 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-              <div className="flex items-center gap-2 mb-2.5">
+            <div className="col-span-12 lg:col-span-5 text-white bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+              <div className="flex items-center gap-2 mb-2">
                 <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
               </div>
-              <h2 className="text-sm sm:text-3xl md:text-6xl font-black tracking-tighter mb-1.5 md:mb-6 leading-none">
+              <h2 className="text-xl sm:text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-2 leading-none">
                 TEAM<br />AXIOGEN.
               </h2>
-              <p className="text-[8px] sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-1.5 md:mb-6">
+              <p className="text-[10px] sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-3">
                 We are a full-cycle software engineering team delivering end-to-end digital solutions. Our expertise spans web and mobile development, bespoke AI integration, scalable cloud architecture, and immersive user experiences.
               </p>
-              <p className="text-[8px] sm:text-xs md:text-base text-white/60 font-normal leading-relaxed mb-2 md:mb-8">
+              <p className="text-[9px] sm:text-xs md:text-sm text-white/60 font-normal leading-relaxed mb-4">
                 From high-performance databases and automated research systems to advanced voice synthesis, document intelligence, and GPU-accelerated interfaces, we craft solutions tailored for both academic innovation and enterprise scale.
               </p>
-              <div className="flex gap-4">
+              <div className="flex gap-4 mb-4 md:mb-6">
                 <a 
                   href="https://www.instagram.com/axiogen.in?igsh=OGQ5ZDc2ODk2ZA==" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="px-2.5 py-1.5 md:px-6 md:py-3 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1 font-bold text-[7px] sm:text-xs uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(255,255,255,0.25)] hover:scale-105"
+                  onClick={playHoverSound}
+                  onMouseEnter={playHoverSound}
+                  className="px-4 py-2 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1.5 font-bold text-[9px] sm:text-xs uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(255,255,255,0.25)] hover:scale-105"
                 >
-                  <BookOpen className="w-2 h-2 sm:w-4 sm:h-4" />
+                  <BookOpen className="w-3.5 h-3.5" />
                   <span>View Profile</span>
                 </a>
+              </div>
+
+              {/* Stats Row - Numbers Side-to-Side */}
+              <div className="grid grid-cols-4 gap-2 pt-4 border-t border-white/10">
+                <div className="flex flex-col">
+                  <span className="text-base sm:text-xl md:text-3xl font-black text-purple-400">
+                    <AnimatedCounter value={50} suffix="+" trigger={showAbout} />
+                  </span>
+                  <span className="text-[6px] sm:text-[8px] md:text-[9px] uppercase tracking-wider text-white/50 font-bold">Projects</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-base sm:text-xl md:text-3xl font-black text-indigo-400">
+                    <AnimatedCounter value={10} suffix="+" trigger={showAbout} />
+                  </span>
+                  <span className="text-[6px] sm:text-[8px] md:text-[9px] uppercase tracking-wider text-white/50 font-bold">Techs</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-base sm:text-xl md:text-3xl font-black text-cyan-400">
+                    <AnimatedCounter value={99} suffix="%" trigger={showAbout} />
+                  </span>
+                  <span className="text-[6px] sm:text-[8px] md:text-[9px] uppercase tracking-wider text-white/50 font-bold">Satisfied</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-base sm:text-xl md:text-3xl font-black text-pink-400">
+                    <AnimatedCounter value={24} suffix="/7" trigger={showAbout} />
+                  </span>
+                  <span className="text-[6px] sm:text-[8px] md:text-[9px] uppercase tracking-wider text-white/50 font-bold">Support</span>
+                </div>
               </div>
             </div>
             
             {/* Tech switcher block */}
-            <div className="col-span-7 flex flex-col bg-black/75 p-3 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[160px] sm:min-h-[300px] md:min-h-[420px]">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-white">Skills</h3>
+            <div className="col-span-12 lg:col-span-7 flex flex-col bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[200px] sm:min-h-[300px] md:min-h-[380px]">
+              <div className="flex justify-between items-center mb-4 md:mb-6">
+                <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Skills</h3>
               </div>
  
               {/* Selector tabs */}
@@ -867,8 +978,12 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 {(['languages', 'mobile', 'web', 'systems'] as const).map((tab) => (
                   <button
                     key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`px-2 py-1 md:px-4 md:py-2 rounded-lg md:rounded-xl text-[7px] sm:text-xs uppercase tracking-widest font-bold transition-all duration-200 cursor-pointer pointer-events-auto select-none ${
+                    onClick={() => {
+                      playHoverSound();
+                      setActiveTab(tab);
+                    }}
+                    onMouseEnter={playHoverSound}
+                    className={`px-2 py-1 md:px-4 md:py-2 rounded-lg md:rounded-xl text-[8px] sm:text-xs uppercase tracking-widest font-bold transition-all duration-200 cursor-pointer pointer-events-auto select-none ${
                       activeTab === tab 
                         ? 'bg-white text-black shadow-[0_4px_15px_rgba(255,255,255,0.2)]' 
                         : 'text-white/60 hover:text-white hover:bg-white/5'
@@ -893,19 +1008,20 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     {techData[activeTab].map((skill, index) => (
                       <div 
                         key={index}
-                        className="p-1.5 md:p-5 rounded-lg md:rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/10 flex flex-col md:justify-center gap-1 md:gap-0 shadow-lg group relative overflow-hidden"
+                        onMouseEnter={playHoverSound}
+                        className="p-2 md:p-5 rounded-lg md:rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/10 flex flex-col md:justify-center gap-1 shadow-lg group relative overflow-hidden"
                       >
                         {/* Glow outline hover effect */}
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
                         
-                        <div className="flex items-center justify-between md:mb-2 w-full">
-                          <div className="flex items-center gap-2.5">
+                        <div className="flex items-center justify-between md:mb-1.5 w-full">
+                          <div className="flex items-center gap-2">
                             <SkillIcon name={skill.name} />
-                            <span className="font-bold text-[8px] sm:text-xs md:text-sm text-white group-hover:text-purple-300 transition-colors">{skill.name}</span>
+                            <span className="font-bold text-[9px] sm:text-xs md:text-sm text-white group-hover:text-purple-300 transition-colors">{skill.name}</span>
                           </div>
-                          <ChevronRight className="w-2.5 h-2.5 md:w-3.5 md:h-3.5 opacity-0 -translate-x-2 group-hover:opacity-60 group-hover:translate-x-0 transition-all text-purple-300 block" />
+                          <ChevronRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-60 group-hover:translate-x-0 transition-all text-purple-300 block" />
                         </div>
-                        <p className="text-[7px] sm:text-xs text-white/60 leading-relaxed font-normal block">{skill.desc}</p>
+                        <p className="text-[8px] sm:text-xs text-white/60 leading-relaxed font-normal block">{skill.desc}</p>
                       </div>
                     ))}
                   </motion.div>
@@ -931,34 +1047,29 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
 
       {/* ----------------- PROJECTS SECTION ----------------- */}
-      {/* ----------------- PROJECTS SECTION ----------------- */}
       <motion.section
         className="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-16"
         style={{ pointerEvents: showProjects ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
           opacity: showProjects ? 1 : 0,
-          scale: showProjects ? 1 : 0.98,
+          y: showProjects ? "0%" : (['hero', 'about'].includes(activeSection) ? "100%" : "-100%"),
           display: showProjects ? 'flex' : 'none'
         }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
 
 
         <div className="w-full max-w-7xl text-white">
-          <div className="flex justify-between items-end mb-8 md:mb-10">
+          <div className="flex justify-between items-end mb-6 md:mb-8">
             <div>
-              <h2 className="text-4xl md:text-5xl font-black tracking-tighter bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Selected Work</h2>
+              <h2 className="text-3xl md:text-5xl font-black tracking-tighter bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Selected Work</h2>
               <div className="flex items-center space-x-2 text-white/40 text-xs mt-1">
                 <Sparkles className="w-3.5 h-3.5 text-purple-400" />
                 <span>{projectPage === 0 ? "Page 1 of 2 • Scroll to reveal more projects" : "Page 2 of 2 • Scrolling to Services next"}</span>
               </div>
             </div>
             
-            <div className="hidden md:flex items-center space-x-2 text-white/40 text-xs bg-white/5 px-3 py-1.5 rounded-full border border-white/10 select-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
-              <span>Scroll-Driven Gallery</span>
-            </div>
           </div>
           
           <AnimatePresence mode="wait">
@@ -970,7 +1081,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                transition={{ duration: 0.35, ease: "easeInOut" }}
                data-scroll-container
                data-lenis-prevent
-               className="grid grid-cols-3 gap-2.5 md:gap-6 pointer-events-auto max-h-[62vh] md:max-h-none pr-2 py-2 overflow-y-auto custom-scrollbar touch-pan-y"
+               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 pointer-events-auto max-h-[62vh] md:max-h-none pr-2 py-2 overflow-y-auto custom-scrollbar touch-pan-y"
              >
                {projects
                  .slice(projectPage * 6, (projectPage + 1) * 6)
@@ -986,54 +1097,57 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                      <CardComponent 
                        key={project.name} 
                        {...linkProps}
-                       className={`group relative min-h-[140px] md:min-h-[260px] rounded-xl md:rounded-3xl bg-black/75 border border-white/10 hover:border-purple-400/40 overflow-hidden p-2.5 md:p-6 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto block ${project.link ? 'cursor-pointer' : 'select-none'}`}
+                       onMouseEnter={playHoverSound}
+                       className={`group relative min-h-[160px] md:min-h-[270px] rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto block ${project.link ? 'cursor-pointer' : 'select-none'}`}
                        whileHover={project.link ? { scale: 1.03, y: -6 } : {}}
                        transition={{ type: 'spring' as const, stiffness: 300, damping: 20 }}
                      >
-                       {/* Glow effect blob behind card on hover */}
-                       <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/15 via-indigo-500/10 to-pink-500/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
+                       <div className="p-3.5 md:p-6 flex flex-col justify-between flex-1 relative z-10">
+                         {/* Glow effect blob behind card on hover */}
+                         <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/10 via-indigo-500/5 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
 
-                       <div className="flex justify-between items-start z-10">
-                         <span className="px-1.5 py-0.5 md:px-3.5 md:py-1.5 rounded-full border border-white/10 text-[6px] sm:text-[9px] md:text-[10px] tracking-widest uppercase font-bold bg-white/5 text-white/80 group-hover:border-purple-500/30 group-hover:text-purple-300 transition-colors">
-                           {project.category}
-                         </span>
-                         <span className="opacity-60 text-[7px] sm:text-[10px] md:text-xs bg-white/5 px-1 py-0.2 md:px-2.5 md:py-1 rounded-lg border border-white/5 font-medium">{project.year}</span>
+                         <div className="flex justify-between items-start mb-2.5">
+                           <span className="px-2 py-0.5 md:px-3 md:py-1 rounded-full border border-white/10 text-[7px] sm:text-[9px] md:text-[10px] tracking-wider uppercase font-bold bg-white/5 text-white/80 group-hover:border-purple-500/30 group-hover:text-purple-300 transition-colors">
+                             {project.category}
+                           </span>
+                           <span className="opacity-60 text-[8px] sm:text-[10px] md:text-xs bg-white/5 px-1.5 py-0.2 md:px-2 md:py-0.5 rounded border border-white/5 font-medium">{project.year}</span>
+                         </div>
+                         
+                         <div className="mt-auto">
+                           <h3 className="text-sm sm:text-lg md:text-2xl font-black tracking-tight mb-1 md:mb-2 group-hover:-translate-y-0.5 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-purple-200 group-hover:to-pink-300 transition-all duration-500 leading-tight">
+                             {project.name}
+                           </h3>
+                           <p className="text-[9px] sm:text-xs text-white/60 mb-3 group-hover:text-white/80 transition-colors leading-relaxed line-clamp-3">
+                             {project.desc}
+                           </p>
+                           
+                           {/* Tech tags */}
+                           <div className="flex flex-wrap gap-1 opacity-75 group-hover:opacity-100 transition-opacity">
+                             {project.tech.map((tag, tIndex) => (
+                               <span key={tIndex} className="text-[7px] sm:text-[9px] bg-white/5 border border-white/10 rounded px-1.5 py-0.2 md:py-0.5 font-medium">{tag}</span>
+                             ))}
+                           </div>
+                         </div>
                        </div>
-                       
-                       <div className="z-10 mt-auto">
-                         <h3 className="text-[10px] sm:text-xl md:text-3xl font-black tracking-tight mb-1 md:mb-3 group-hover:-translate-y-1 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-purple-200 group-hover:to-pink-300 transition-all duration-500 leading-tight">
-                           {project.name}
-                         </h3>
-                         <p className="text-[8px] sm:text-xs text-white/60 mb-2 md:mb-6 group-hover:text-white/80 transition-colors leading-relaxed line-clamp-3 md:line-clamp-none">
-                          {project.desc}
-                        </p>
-                        
-                        {/* Tech tags */}
-                        <div className="flex flex-wrap gap-1.5 opacity-70 group-hover:opacity-100 transition-opacity">
-                          {project.tech.map((tag, tIndex) => (
-                            <span key={tIndex} className="text-[7px] sm:text-[10px] bg-white/5 border border-white/10 rounded px-1 py-0.2 md:px-2 md:py-0.5 font-medium">{tag}</span>
-                          ))}
-                        </div>
-                      </div>
-                    </CardComponent>
-                  );
-                })}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </motion.section>
+                     </CardComponent>
+                   );
+                 })}
+             </motion.div>
+           </AnimatePresence>
+         </div>
+       </motion.section>
 
       {/* ----------------- SERVICES SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex flex-col items-center justify-start pt-20 md:pt-22 px-6 md:px-16"
+        className="absolute inset-0 flex flex-col items-center justify-start pt-20 md:pt-24 px-6 md:px-16"
         style={{ pointerEvents: showServices ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
           opacity: showServices ? 1 : 0,
-          scale: showServices ? 1 : 0.98,
+          x: showServices ? "0%" : (['hero', 'about', 'work'].includes(activeSection) ? "-100%" : "100%"),
           display: showServices ? 'flex' : 'none'
         }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
 
 
@@ -1042,11 +1156,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           <div 
             data-scroll-container
             data-lenis-prevent
-            className="bg-black/75 border border-white/10 p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[82vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar touch-pan-y"
+            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[82vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar touch-pan-y"
           >
             {/* Main Title - Inside the card */}
-            <div className="text-center mb-3.5 md:mb-5">
-              <h2 className="text-2xl md:text-4xl lg:text-5xl font-black tracking-tighter mb-1 bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Services We Provide</h2>
+            <div className="text-center mb-3 md:mb-5">
+              <h2 className="text-xl md:text-3xl lg:text-4xl font-black tracking-tighter mb-1 bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Services We Provide</h2>
               <p className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/50">
                 AI, Web, Mobile, Cloud & Intelligent Systems
               </p>
@@ -1054,7 +1168,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
             {/* Description & Badges */}
             <div className="text-center mb-4 md:mb-6">
-              <p className="text-[11px] md:text-xs text-white/70 max-w-2xl mx-auto leading-relaxed font-normal mb-3 md:mb-4">
+              <p className="text-[10px] md:text-xs text-white/70 max-w-2xl mx-auto leading-relaxed font-normal mb-3 md:mb-4">
                 From research to deployment — we build powerful, intelligent digital products for enterprises, startups &amp; students. You envision it, we engineer it.
               </p>
               
@@ -1076,7 +1190,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </div>
 
             {/* Services Grid (8 Services) */}
-            <div className="grid grid-cols-4 gap-1.5 md:gap-3.5 max-w-4xl mx-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3.5 max-w-4xl mx-auto">
               {servicesData.map((item, index) => {
                 const IconComponent = item.icon;
                 return (
@@ -1084,22 +1198,32 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     key={index}
                     className="relative group pointer-events-auto"
                   >
-                    <div className="relative overflow-hidden p-2 md:p-3.5 rounded-xl bg-black/40 border border-white/10 hover:border-white/20 transition-all hover:bg-black/60 flex flex-col h-full justify-between shadow-md">
+                    <motion.div 
+                      whileHover="hover"
+                      onMouseEnter={playHoverSound}
+                      className="relative overflow-hidden p-2.5 md:p-4 rounded-xl bg-black/40 border border-white/10 hover:border-white/20 transition-all hover:bg-black/60 flex flex-col h-full justify-between shadow-md cursor-default"
+                    >
                       {/* Glow effect blob inside card on hover */}
                       <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/5 via-transparent to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
                       
                       <div className="relative z-10">
-                        <div className="flex items-center gap-1.5 mb-1">
-                          <IconComponent className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-white/70 group-hover:text-purple-300 transition-colors" />
-                          <h3 className="text-[8px] sm:text-[11px] md:text-xs font-black text-white group-hover:text-purple-300 transition-colors leading-tight">
+                        <div className="flex items-center gap-1.5 mb-1.5">
+                          {/* Motion-animated icon wrapper (Feature #5) */}
+                          <motion.div 
+                            variants={getIconVariants(item.title)}
+                            className="inline-block shrink-0"
+                          >
+                            <IconComponent className="w-3.5 h-3.5 md:w-4.5 md:h-4.5 text-white/70 group-hover:text-purple-300 transition-colors" />
+                          </motion.div>
+                          <h3 className="text-[9px] sm:text-[11px] md:text-xs font-black text-white group-hover:text-purple-300 transition-colors leading-tight">
                             {item.title}
                           </h3>
                         </div>
-                        <p className="text-[7px] sm:text-[9px] md:text-[10px] leading-relaxed text-white/50 font-normal line-clamp-2 md:line-clamp-none">
+                        <p className="text-[8px] sm:text-[9px] md:text-[10px] leading-relaxed text-white/50 font-normal line-clamp-3">
                           {item.desc}
                         </p>
                       </div>
-                    </div>
+                    </motion.div>
                   </div>
                 );
               })}
@@ -1113,17 +1237,17 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               <div className="text-center mb-2.5">
                 <span className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/40">Perfect Solutions For</span>
               </div>
-              <div className="grid grid-cols-3 md:grid-cols-3 gap-2 md:gap-3 pointer-events-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 pointer-events-auto">
                 {perfectForData.map((item, index) => {
                   const IconComponent = item.icon;
                   return (
-                    <div key={index} className="p-1.5 md:p-4 bg-black/40 border border-white/10 rounded-xl flex flex-col md:flex-row gap-1.5 md:gap-3.5 items-center md:items-start text-center md:text-left hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
-                      <div className={`p-1 md:p-2 rounded-lg shrink-0 ${item.color}`}>
-                        <IconComponent className="w-2.5 h-2.5 sm:w-4 sm:h-4" />
+                    <div key={index} onMouseEnter={playHoverSound} className="p-2 md:p-3.5 bg-black/40 border border-white/10 rounded-xl flex gap-2 md:gap-3.5 items-start text-left hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
+                      <div className={`p-1.5 md:p-2 rounded-lg shrink-0 ${item.color}`}>
+                        <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </div>
                       <div>
-                        <h4 className="text-[8px] sm:text-[10px] md:text-xs font-black text-white leading-tight md:mb-1">{item.title}</h4>
-                        <p className="text-[7px] sm:text-[10px] text-white/50 leading-relaxed font-normal block">{item.desc}</p>
+                        <h4 className="text-[9px] sm:text-[10px] md:text-xs font-black text-white leading-tight md:mb-0.5">{item.title}</h4>
+                        <p className="text-[8px] sm:text-[10px] text-white/50 leading-relaxed font-normal block">{item.desc}</p>
                       </div>
                     </div>
                   );
@@ -1135,7 +1259,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold text-white/30 max-w-4xl mx-auto pointer-events-auto">
               <span>Tech Stack :</span>
               {['Python', 'React', 'Node.js', 'Next.js', 'Java', 'TensorFlow', 'AWS / GCP', 'PostgreSQL', '.NET'].map((tech) => (
-                <span key={tech} className="px-2 py-0.5 bg-white/5 border border-white/10 rounded-full text-white/60 font-medium">
+                <span key={tech} onMouseEnter={playHoverSound} className="px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full text-white/60 font-medium cursor-default hover:border-white/20 transition-colors">
                   {tech}
                 </span>
               ))}
@@ -1151,29 +1275,29 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         initial={{ opacity: 0 }}
         animate={{ 
           opacity: showContact ? 1 : 0,
-          scale: showContact ? 1 : 0.95,
+          y: showContact ? "0%" : "100%",
           display: showContact ? 'flex' : 'none'
         }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
 
 
         <div 
           data-scroll-container
           data-lenis-prevent
-          className="text-white bg-black/75 p-3.5 md:p-10 lg:p-14 rounded-[1.5rem] md:rounded-[2.5rem] border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-12 gap-3 md:gap-8 items-stretch justify-center max-h-[85vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar touch-pan-y"
+          className="text-white bg-[var(--card-bg)] p-4 md:p-10 lg:p-14 rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--card-border)] shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-12 gap-3 md:gap-8 items-stretch justify-center max-h-[85vh] overflow-y-auto md:max-h-none md:overflow-visible custom-scrollbar touch-pan-y"
         >
           
           {/* Left panel - details */}
-          <div className="col-span-5 flex flex-col justify-between py-1 md:py-2 text-left">
+          <div className="col-span-12 md:col-span-5 flex flex-col justify-between py-1 md:py-2 text-left">
             <div>
               <div className="flex items-center gap-2 mb-2 md:mb-4">
                 <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-pink-400">Get in Touch</span>
               </div>
-              <h2 className="text-sm sm:text-5xl lg:text-6xl font-black tracking-tighter mb-1.5 md:mb-4 leading-none">
+              <h2 className="text-xl sm:text-4xl lg:text-6xl font-black tracking-tighter mb-2 md:mb-4 leading-none">
                 Let&apos;s<br />Talk.
               </h2>
-              <p className="text-[8px] sm:text-xs text-white/70 leading-relaxed max-w-sm mb-2 md:mb-6 font-normal">
+              <p className="text-[10px] sm:text-xs text-white/70 leading-relaxed max-w-sm mb-4 md:mb-6 font-normal">
                 Let&apos;s collaborate to design and engineer high-performance web applications, interactive user experiences, and scalable digital solutions.
               </p>
             </div>
@@ -1181,24 +1305,30 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             <div className="space-y-2.5 md:space-y-4 mb-4 md:mb-0">
               <a 
                 href="mailto:axiogen01@gmail.com" 
-                className="flex items-center space-x-1.5 md:space-x-3 text-[8px] sm:text-sm hover:text-purple-300 transition-colors pointer-events-auto border-b border-white/5 pb-1 md:pb-2 hover:border-purple-300/30 font-medium"
+                onClick={playHoverSound}
+                onMouseEnter={playHoverSound}
+                className="flex items-center space-x-1.5 md:space-x-3 text-[10px] sm:text-sm hover:text-purple-300 transition-colors pointer-events-auto border-b border-white/5 pb-1 md:pb-2 hover:border-purple-300/30 font-semibold"
               >
-                <Mail className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-pink-400 shrink-0" />
+                <Mail className="w-3 h-3 sm:w-4 sm:h-4 text-pink-400 shrink-0" />
                 <span>axiogen01@gmail.com</span>
               </a>
               <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-2 border-b border-white/5 pb-1 md:pb-2">
                 <a 
                   href="tel:+918010127704" 
-                  className="flex items-center space-x-1.5 md:space-x-3 text-[8px] sm:text-sm hover:text-purple-300 transition-colors pointer-events-auto font-medium"
+                  onClick={playHoverSound}
+                  onMouseEnter={playHoverSound}
+                  className="flex items-center space-x-1.5 md:space-x-3 text-[10px] sm:text-sm hover:text-purple-300 transition-colors pointer-events-auto font-semibold"
                 >
-                  <Phone className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-pink-400 shrink-0" />
+                  <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-pink-400 shrink-0" />
                   <span>8010127704</span>
                 </a>
                 <a 
                   href="tel:+917972884083" 
-                  className="flex items-center space-x-1.5 md:space-x-3 text-[8px] sm:text-sm hover:text-purple-300 transition-colors pointer-events-auto font-medium"
+                  onClick={playHoverSound}
+                  onMouseEnter={playHoverSound}
+                  className="flex items-center space-x-1.5 md:space-x-3 text-[10px] sm:text-sm hover:text-purple-300 transition-colors pointer-events-auto font-semibold"
                 >
-                  <Phone className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-pink-400 shrink-0" />
+                  <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-pink-400 shrink-0" />
                   <span>7972884083</span>
                 </a>
               </div>
@@ -1207,24 +1337,28 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   href="https://twitter.com" 
                   target="_blank" 
                   rel="noopener noreferrer" 
+                  onClick={playHoverSound}
+                  onMouseEnter={playHoverSound}
                   className="p-1.5 bg-white/10 border border-white/10 hover:border-white/30 rounded-lg hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
                 >
-                  <MessageSquare className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
+                  <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4" />
                 </a>
                 <a 
                   href="https://linkedin.com" 
                   target="_blank" 
                   rel="noopener noreferrer" 
+                  onClick={playHoverSound}
+                  onMouseEnter={playHoverSound}
                   className="p-1.5 bg-white/10 border border-white/10 hover:border-white/30 rounded-lg hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
                 >
-                  <Briefcase className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
+                  <Briefcase className="w-3 h-3 sm:w-4 sm:h-4" />
                 </a>
               </div>
             </div>
           </div>
 
           {/* Right panel - dynamic form mockup */}
-          <div className="col-span-7 flex flex-col bg-white/5 border border-white/10 p-2.5 md:p-8 rounded-xl md:rounded-2xl relative overflow-hidden">
+          <div className="col-span-12 md:col-span-7 flex flex-col bg-white/5 border border-white/10 p-3 md:p-8 rounded-xl md:rounded-2xl relative overflow-hidden">
             <AnimatePresence mode="wait">
               {!formSubmitted ? (
                 <motion.form 
@@ -1237,49 +1371,54 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   transition={{ duration: 0.2 }}
                 >
                   <div>
-                    <label className="block text-[7px] sm:text-[10px] uppercase tracking-wider font-semibold text-white/50 mb-0.5 md:mb-1">Name</label>
+                    <label className="block text-[8px] sm:text-[10px] uppercase tracking-wider font-semibold text-white/50 mb-0.5 md:mb-1">Name</label>
                     <input 
                       type="text" 
                       name="name"
                       required
                       value={formData.name}
                       onChange={handleInputChange}
+                      onFocus={playHoverSound}
                       placeholder="Enter your name" 
-                      className="w-full px-2 py-1 md:px-4 md:py-2.5 bg-black/40 border border-white/10 rounded-lg md:rounded-xl text-[8px] sm:text-xs text-white placeholder-white/30 focus:outline-none focus:border-purple-400 focus:bg-black/60 transition-all"
+                      className="w-full px-2.5 py-1 md:px-4 md:py-2.5 bg-black/40 border border-white/10 rounded-lg md:rounded-xl text-[10px] sm:text-xs text-white placeholder-white/30 focus:outline-none focus:border-purple-400 focus:bg-black/60 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[7px] sm:text-[10px] uppercase tracking-wider font-semibold text-white/50 mb-0.5 md:mb-1">Email Address</label>
+                    <label className="block text-[8px] sm:text-[10px] uppercase tracking-wider font-semibold text-white/50 mb-0.5 md:mb-1">Email Address</label>
                     <input 
                       type="email" 
                       name="email"
                       required
                       value={formData.email}
                       onChange={handleInputChange}
+                      onFocus={playHoverSound}
                       placeholder="your.email@domain.com" 
-                      className="w-full px-2 py-1 md:px-4 md:py-2.5 bg-black/40 border border-white/10 rounded-lg md:rounded-xl text-[8px] sm:text-xs text-white placeholder-white/30 focus:outline-none focus:border-purple-400 focus:bg-black/60 transition-all"
+                      className="w-full px-2.5 py-1 md:px-4 md:py-2.5 bg-black/40 border border-white/10 rounded-lg md:rounded-xl text-[10px] sm:text-xs text-white placeholder-white/30 focus:outline-none focus:border-purple-400 focus:bg-black/60 transition-all"
                     />
                   </div>
 
                   <div className="flex-1 flex flex-col">
-                    <label className="block text-[7px] sm:text-[10px] uppercase tracking-wider font-semibold text-white/50 mb-0.5 md:mb-1">Message</label>
+                    <label className="block text-[8px] sm:text-[10px] uppercase tracking-wider font-semibold text-white/50 mb-0.5 md:mb-1">Message</label>
                     <textarea 
                       name="message"
                       required
                       value={formData.message}
                       onChange={handleInputChange}
+                      onFocus={playHoverSound}
                       placeholder="Tell us about your project..." 
-                      rows={2}
-                      className="w-full flex-1 px-2 py-1 md:px-4 md:py-2.5 bg-black/40 border border-white/10 rounded-lg md:rounded-xl text-[8px] sm:text-xs text-white placeholder-white/30 focus:outline-none focus:border-purple-400 focus:bg-black/60 transition-all resize-none min-h-[60px] md:min-h-0"
+                      rows={3}
+                      className="w-full flex-1 px-2.5 py-1 md:px-4 md:py-2.5 bg-black/40 border border-white/10 rounded-lg md:rounded-xl text-[10px] sm:text-xs text-white placeholder-white/30 focus:outline-none focus:border-purple-400 focus:bg-black/60 transition-all resize-none min-h-[70px]"
                     />
                   </div>
 
                   <button 
                     type="submit" 
-                    className="w-full py-1.5 md:py-3 mt-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg md:rounded-xl text-[8px] sm:text-xs uppercase font-bold tracking-widest transition-all shadow-md hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:scale-[1.02] flex items-center justify-center gap-1.5 cursor-pointer"
+                    onClick={playHoverSound}
+                    onMouseEnter={playHoverSound}
+                    className="w-full py-2 md:py-3 mt-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg md:rounded-xl text-[10px] sm:text-xs uppercase font-bold tracking-widest transition-all shadow-md hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:scale-[1.02] flex items-center justify-center gap-1.5 cursor-pointer"
                   >
-                    <Send className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
+                    <Send className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span>Send Message</span>
                   </button>
                 </motion.form>
@@ -1305,7 +1444,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           </div>
         </div>
       </motion.section>
-
     </div>
   );
 };
+
