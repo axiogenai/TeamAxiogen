@@ -928,7 +928,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   className="col-span-12 lg:col-span-7 flex flex-col gap-2 md:gap-4 w-full h-full"
                 >
                   {isMobile && (
-                    <div className="w-full overflow-hidden select-none pointer-events-auto">
+                    <div className="w-full select-none pointer-events-auto h-16 flex items-center">
                       <LogoLoop logos={loopLogos} />
                     </div>
                   )}
