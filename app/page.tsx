@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { DynamicVignette } from '../components/DynamicVignette';
 import { Navbar } from '../components/Navbar';
 import { PortfolioContent } from '../components/PortfolioContent';
-import { useProjectCount, useSectionVisibility } from '../hooks/useScroll';
+import { useProjectCount, useSectionVisibility, getTotalStates } from '../hooks/useScroll';
 import { SplashScreen } from '../components/SplashScreen';
 import { ScrollProgressBar } from '../components/ScrollProgressBar';
 import { ThemeToggle } from '../components/ThemeToggle';
@@ -55,14 +55,22 @@ export default function Home() {
   const TOTAL_FRAMES = 502;
   const [mounted, setMounted] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const projectCount = useProjectCount();
 
   useEffect(() => {
     setMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const projectPages = Math.max(1, Math.ceil(projectCount / 6));
-  const totalStates = 4 + projectPages;
+  const projectPages = isMobile 
+    ? Math.max(1, Math.ceil(projectCount / 2)) 
+    : Math.max(1, Math.ceil(projectCount / 6));
+  const baseStates = isMobile ? 5 : 4;
+  const totalStates = baseStates + projectPages;
   const dynamicMinHeight = `${(totalStates - 1) * 100}vh`;
 
   if (!mounted) return null;

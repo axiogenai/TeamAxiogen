@@ -279,7 +279,17 @@ const fallbackProjects = [
 
 export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   const [mounted, setMounted] = useState(false);
-  const { showHero, showAbout, showProjects, projectPage, showServices, showContact } = useSectionVisibility();
+  const [isMobile, setIsMobile] = useState(false);
+  const { 
+    showHero, 
+    showAbout, 
+    showAboutUs,
+    showSkills,
+    showProjects, 
+    projectPage, 
+    showServices, 
+    showContact 
+  } = useSectionVisibility();
   const lenis = useLenis();
   const [activeTab, setActiveTab] = useState<'languages' | 'mobile' | 'web' | 'systems'>('languages');
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -391,6 +401,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       history.scrollRestoration = 'manual';
     }
     window.scrollTo(0, 0);
+
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const scrollResetRef = useRef(false);
@@ -884,12 +899,17 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >        <div className="flex flex-col items-center max-w-7xl w-full gap-5 md:gap-6 justify-center">
           <div 
-            data-scroll-container
-            data-lenis-prevent
-            className="grid grid-cols-12 gap-3 md:gap-8 items-center w-full max-h-[60vh] lg:max-h-none overflow-y-auto lg:overflow-visible custom-scrollbar px-2 py-2 touch-pan-y"
+            data-scroll-container={!isMobile ? "" : undefined}
+            data-lenis-prevent={!isMobile ? "" : undefined}
+            className={`grid grid-cols-12 gap-3 md:gap-8 items-center w-full ${
+              isMobile 
+                ? 'max-h-none overflow-visible' 
+                : 'max-h-[60vh] lg:max-h-none overflow-y-auto lg:overflow-visible'
+            } custom-scrollbar px-2 py-2 touch-pan-y`}
           >
             {/* Bio statement */}
-            <div className="col-span-12 lg:col-span-5 text-white bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            {(!isMobile || showAboutUs) && (
+              <div className="col-span-12 lg:col-span-5 text-white bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
               </div>
@@ -944,9 +964,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 </div>
               </div>
             </div>
+            )}
             
             {/* Tech switcher block */}
-            <div className="col-span-12 lg:col-span-7 flex flex-col bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[200px] sm:min-h-[300px] md:min-h-[380px]">
+            {(!isMobile || showSkills) && (
+              <div className="col-span-12 lg:col-span-7 flex flex-col bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[200px] sm:min-h-[300px] md:min-h-[380px]">
               <div className="flex justify-between items-center mb-4 md:mb-6">
                 <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Skills</h3>
               </div>
@@ -1006,20 +1028,23 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 </AnimatePresence>
               </div>
             </div>
+            )}
           </div>
 
           {/* Logo Loop Section */}
-          <div className="w-full px-2 overflow-hidden select-none pointer-events-auto">
-            <LogoLoop 
-              logos={loopLogos} 
-              speed={40} 
-              gap={24} 
-              logoHeight={40}
-              fadeOut={true} 
-              pauseOnHover={true}
-              scaleOnHover={true}
-            />
-          </div>
+          {(!isMobile || showAboutUs) && (
+            <div className="w-full px-2 overflow-hidden select-none pointer-events-auto">
+              <LogoLoop 
+                logos={loopLogos} 
+                speed={40} 
+                gap={24} 
+                logoHeight={40}
+                fadeOut={true} 
+                pauseOnHover={true}
+                scaleOnHover={true}
+              />
+            </div>
+          )}
         </div>
       </motion.section>
 
@@ -1044,7 +1069,18 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               <h2 className="text-3xl md:text-5xl font-black tracking-tighter bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Selected Work</h2>
               <div className="flex items-center space-x-2 text-white/40 text-xs mt-1">
                 <Sparkles className="w-3.5 h-3.5 text-purple-400" />
-                <span>{projectPage === 0 ? "Page 1 of 2 • Scroll to reveal more projects" : "Page 2 of 2 • Scrolling to Services next"}</span>
+                <span>
+                  {(() => {
+                    const totalProjectPages = isMobile 
+                      ? Math.max(1, Math.ceil(projects.length / 2)) 
+                      : Math.max(1, Math.ceil(projects.length / 6));
+                    return `Page ${projectPage + 1} of ${totalProjectPages} • ${
+                      projectPage < totalProjectPages - 1 
+                        ? "Scroll to reveal more projects" 
+                        : "Scrolling to Services next"
+                    }`;
+                  })()}
+                </span>
               </div>
             </div>
             
@@ -1057,12 +1093,16 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                animate={{ opacity: 1, y: 0 }}
                exit={{ opacity: 0, y: -15 }}
                transition={{ duration: 0.35, ease: "easeInOut" }}
-               data-scroll-container
-               data-lenis-prevent
-               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 pointer-events-auto max-h-[62vh] md:max-h-none pr-2 py-2 overflow-y-auto custom-scrollbar touch-pan-y"
+               data-scroll-container={!isMobile ? "" : undefined}
+               data-lenis-prevent={!isMobile ? "" : undefined}
+               className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 pointer-events-auto ${
+                 isMobile 
+                   ? 'max-h-none overflow-visible pr-0 py-0' 
+                   : 'max-h-[62vh] md:max-h-none pr-2 py-2 overflow-y-auto custom-scrollbar touch-pan-y'
+               }`}
              >
                {projects
-                 .slice(projectPage * 6, (projectPage + 1) * 6)
+                 .slice(projectPage * (isMobile ? 2 : 6), (projectPage + 1) * (isMobile ? 2 : 6))
                  .map((project) => {
                    const CardComponent = project.link ? motion.a : motion.div;
                    const linkProps = project.link ? {
