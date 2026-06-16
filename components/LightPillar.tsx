@@ -148,7 +148,9 @@ const LightPillar: React.FC<LightPillarProps> = ({
       const int WAVE_ITER = ${settings.waveIterations};
 
       void main() {
-        vec2 uv = (vUv * 2.0 - 1.0) * vec2(uResolution.x / uResolution.y, 1.0);
+        vec2 uv = vUv * 2.0 - 1.0;
+        float aspect = uResolution.x / uResolution.y;
+        uv *= vec2(max(aspect, 1.0), 1.0 / min(aspect, 1.0));
         uv = vec2(uPillarRotCos * uv.x - uPillarRotSin * uv.y, uPillarRotSin * uv.x + uPillarRotCos * uv.y);
 
         vec3 ro = vec3(0.0, 0.0, -10.0);

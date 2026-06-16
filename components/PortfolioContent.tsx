@@ -868,28 +868,6 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           Axiogen builds everything — AI models, mobile apps, cinematic web experiences, cloud infrastructure, and deep research systems.
         </motion.p>
         
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: showHero ? 1 : 0, y: showHero ? 0 : 20 }}
-          transition={{ delay: 0.6 }}
-          className="absolute bottom-24 flex flex-col items-center text-white cursor-pointer group" 
-          onClick={() => {
-            playHoverSound();
-            scrollToFrame(125);
-          }}
-          onMouseEnter={playHoverSound}
-        >
-          <span className="text-[10px] uppercase tracking-[0.3em] mb-4 text-white/60 group-hover:text-white transition-colors font-medium">
-            Scroll to discover
-          </span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center bg-black/65 group-hover:border-white/50 transition-colors shadow-lg"
-          >
-            <ArrowDown className="w-4 h-4 text-white/80 group-hover:text-white" />
-          </motion.div>
-        </motion.div>
       </motion.section>
 
 
