@@ -75,12 +75,12 @@ const LightPillar: React.FC<LightPillarProps> = ({
     if (isMobile && quality !== 'low') effectiveQuality = 'low';
 
     const qualitySettings = {
-      low: { iterations: 24, waveIterations: 1, pixelRatio: Math.min(window.devicePixelRatio, 1.0), precision: 'mediump', stepMultiplier: 1.5 },
-      medium: { iterations: 40, waveIterations: 2, pixelRatio: Math.min(window.devicePixelRatio, 1.25), precision: 'mediump', stepMultiplier: 1.2 },
+      low: { iterations: 48, waveIterations: 2, pixelRatio: Math.min(window.devicePixelRatio, 1.0), precision: 'mediump', stepMultiplier: 1.0 },
+      medium: { iterations: 60, waveIterations: 3, pixelRatio: Math.min(window.devicePixelRatio, 1.25), precision: 'mediump', stepMultiplier: 1.0 },
       high: {
         iterations: 80,
         waveIterations: 4,
-        pixelRatio: Math.min(window.devicePixelRatio, 2),
+        pixelRatio: Math.min(window.devicePixelRatio, 2.0),
         precision: 'highp',
         stepMultiplier: 1.0
       }
@@ -105,6 +105,7 @@ const LightPillar: React.FC<LightPillarProps> = ({
 
     renderer.setSize(width, height);
     renderer.setPixelRatio(settings.pixelRatio);
+    renderer.setClearColor(0x000000, 0.0); // Ensure background is transparent
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
@@ -200,7 +201,8 @@ const LightPillar: React.FC<LightPillarProps> = ({
         
         col -= fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) / 15.0 * uNoiseIntensity;
         
-        gl_FragColor = vec4(col * uIntensity, 1.0);
+        float alpha = clamp(max(max(col.r, col.g), col.b) * uIntensity * 1.5, 0.0, 1.0);
+        gl_FragColor = vec4(col * uIntensity, alpha);
       }
     `;
 

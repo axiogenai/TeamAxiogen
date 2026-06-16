@@ -864,7 +864,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
                   </div>
-                  <h2 className="text-xl sm:text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-2 leading-none whitespace-nowrap">
+                  <h2 className="text-lg sm:text-2xl md:text-4xl lg:text-6xl font-black tracking-tighter mb-2 leading-none whitespace-nowrap">
                     TEAM AXIOGEN.
                   </h2>
                   <p className="text-[10px] sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-3">
@@ -1286,7 +1286,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               <div className="flex items-center gap-2 mb-2 md:mb-4">
                 <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-pink-400">Get in Touch</span>
               </div>
-              <h2 className="text-xl sm:text-4xl lg:text-6xl font-black tracking-tighter mb-2 md:mb-4 leading-none whitespace-nowrap">
+              <h2 className="text-lg sm:text-2xl md:text-4xl lg:text-6xl font-black tracking-tighter mb-2 md:mb-4 leading-none whitespace-nowrap">
                 Let&apos;s Talk.
               </h2>
               <p className="text-[10px] sm:text-xs text-white/70 leading-relaxed max-w-sm mb-4 md:mb-6 font-normal">
