@@ -7,11 +7,19 @@ export const ScrollProgressBar: React.FC = () => {
   const { scrollProgress } = useScroll();
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-[3px] z-[9999] bg-white/5 pointer-events-none">
-      <div 
-        className="h-full bg-gradient-to-r from-neutral-200 to-white transition-all duration-75 ease-out shadow-[0_0_8px_rgba(255,255,255,0.4)]"
-        style={{ width: `${scrollProgress}%` }}
-      />
+    <div className="hidden md:block fixed right-4 top-1/2 -translate-y-1/2 z-50 pointer-events-none">
+      {/* Track */}
+      <div className="relative w-[2px] h-24 bg-white/[0.06] rounded-full overflow-hidden">
+        {/* Fill — grows from bottom */}
+        <div
+          className="absolute bottom-0 left-0 w-full rounded-full transition-all duration-150 ease-out"
+          style={{
+            height: `${scrollProgress}%`,
+            backgroundColor: 'var(--theme-accent-solid)',
+            boxShadow: '0 0 6px var(--theme-accent)',
+          }}
+        />
+      </div>
     </div>
   );
 };

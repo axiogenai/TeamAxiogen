@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SmoothScroll } from "../components/SmoothScroll";
+import { CustomCursor } from "../components/CustomCursor";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
         <script dangerouslySetInnerHTML={{ __html: `
           window.onerror = function(message, source, lineno, colno, error) {
             var div = document.createElement('div');
@@ -37,7 +38,7 @@ export default function RootLayout({
             div.innerHTML = '<h1>🚨 Hydration/Client-Side Crash Detected</h1>' +
               '<p><strong>Message:</strong> ' + message + '</p>' +
               '<p><strong>Source:</strong> ' + source + ':' + lineno + ':' + colno + '</p>' +
-              '<pre style=\"background: rgba(0,0,0,0.5); padding: 15px; border-radius: 5px; margin-top: 20px;\">' + 
+              '<pre style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 5px; margin-top: 20px;">' + 
               (error ? error.stack : 'No stack trace available') + '</pre>';
             document.body.appendChild(div);
           };
@@ -57,16 +58,18 @@ export default function RootLayout({
             div.style.whiteSpace = 'pre-wrap';
             div.style.overflow = 'auto';
             div.innerHTML = '<h1>🚨 Promise Rejection Detected</h1>' +
-              '<pre style=\"background: rgba(0,0,0,0.5); padding: 15px; border-radius: 5px; margin-top: 20px;\">' + 
+              '<pre style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 5px; margin-top: 20px;">' + 
               event.reason + '</pre>';
             document.body.appendChild(div);
           };
         ` }} />
       </head>
-      <body className="font-outfit antialiased bg-black text-white selection:bg-white selection:text-black">
+      <body className="font-outfit antialiased bg-black text-white selection:bg-violet-500/30 selection:text-white">
+        <CustomCursor />
         <SmoothScroll>
           {children}
         </SmoothScroll>
+        <div className="film-grain" aria-hidden="true" />
       </body>
     </html>
   );
