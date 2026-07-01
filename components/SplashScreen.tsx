@@ -1,75 +1,78 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import dynamic from 'next/dynamic';
+
+const ShaderAnimation = dynamic(() => import('./ShaderAnimation').then((m) => m.ShaderAnimation), {
+  ssr: false,
+});
 
 interface SplashScreenProps {
   onComplete: () => void;
 }
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
-  const [isVisible, setIsVisible] = useState(true);
-
-  const brandName = 'AXIOGEN';
-  const letters = brandName.split('');
+  const [isAnimatingOut, setIsAnimatingOut] = useState(false);
 
   useEffect(() => {
-    // Total sequence: letters stagger (~0.35s) + hold (0.8s) + exit (0.6s) ≈ 2.5s
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-    }, 1700);
+    // 1.8 seconds of visible logo
+    const timer1 = setTimeout(() => {
+      setIsAnimatingOut(true);
+    }, 1800);
 
-    return () => clearTimeout(timer);
-  }, []);
+    // 0.8 seconds of slide-up transition, then trigger unmount callback
+    const timer2 = setTimeout(() => {
+      onComplete();
+    }, 2600);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, [onComplete]);
 
   return (
-    <AnimatePresence
-      onExitComplete={() => {
-        onComplete();
+    <div
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#030306] text-white select-none overflow-hidden"
+      style={{
+        transform: isAnimatingOut ? 'translateY(-100vh)' : 'translateY(0)',
+        transition: 'transform 0.8s cubic-bezier(0.76, 0, 0.24, 1)',
+        willChange: 'transform',
       }}
     >
-      {isVisible && (
-        <motion.div
-          key="splash"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#050505] select-none overflow-hidden"
-        >
-          {/* AXIOGEN — letter-by-letter stagger */}
-          <div className="flex items-center justify-center" aria-label={brandName}>
-            {letters.map((letter, i) => (
-              <motion.span
-                key={i}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.4,
-                  delay: 0.2 + i * 0.05,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="text-4xl md:text-6xl font-bold tracking-[-0.04em] text-white"
-                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-              >
-                {letter}
-              </motion.span>
-            ))}
-          </div>
+      <style>{`
+        @keyframes loadingSlide {
+          from { left: -100%; }
+          to { left: 100%; }
+        }
+        .animate-loading-slide {
+          animation: loadingSlide 1.5s ease-in-out forwards;
+        }
+      `}</style>
 
-          {/* Expanding horizontal line */}
-          <motion.div
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 80, opacity: 1 }}
-            transition={{
-              duration: 0.8,
-              delay: 0.6,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className="h-[1px] mt-6 rounded-full"
-            style={{ backgroundColor: 'var(--theme-accent-solid)' }}
-          />
-        </motion.div>
-      )}
-    </AnimatePresence>
+      {/* Dynamic Cosmic Portal Shader Background */}
+      <ShaderAnimation />
+
+      {/* Logo container */}
+      <div className="relative flex flex-col items-center gap-4 z-10">
+        <div className="relative flex items-center justify-center">
+          <h1 className="text-5xl md:text-7xl font-black tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-300 to-indigo-200 drop-shadow-[0_4px_12px_rgba(0,0,0,0.50)] uppercase">
+            AXIOGEN
+          </h1>
+        </div>
+
+        {/* Subtitle */}
+        <p className="text-[9px] md:text-xs uppercase tracking-[0.4em] text-white/60 text-center">
+          Engineering Digital Futures
+        </p>
+      </div>
+
+      {/* Clean progress loading line at the bottom */}
+      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 w-48 h-[1px] bg-white/10 overflow-hidden">
+        <div 
+          className="absolute top-0 bottom-0 w-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent animate-loading-slide"
+        />
+      </div>
+    </div>
   );
 };

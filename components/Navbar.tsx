@@ -53,29 +53,23 @@ export const Navbar = () => {
 
   return (
     <>
-      {/* Brand Logo — Top Left */}
+      {/* Brand Logo - Top Left */}
       <div className="hidden md:flex fixed top-6 left-4 md:left-8 z-50 pointer-events-auto select-none items-center gap-2.5">
         <button 
           onClick={() => scrollToFrame(frames[0] ?? 42)}
-          style={{ 
-            backgroundImage: 'linear-gradient(to right, #ffffff, var(--theme-accent-solid))',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}
-          className="text-sm font-black tracking-[-0.02em] uppercase hover:opacity-85 transition-opacity cursor-pointer"
+          className="text-sm font-black tracking-tighter text-white uppercase bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent hover:opacity-85 transition-opacity cursor-pointer"
         >
           AXIOGEN
         </button>
       </div>
- 
-      {/* Floating Capsule Nav — Center */}
+
+      {/* Floating Capsule Menu - Center */}
       <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-max px-4 pointer-events-none">
         <motion.div 
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-          className="flex items-center space-x-0.5 bg-white/[0.05] backdrop-blur-2xl border border-white/[0.06] rounded-2xl p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.4)] pointer-events-auto"
+          transition={{ duration: 1, ease: 'easeOut', delay: 0.2 }}
+          className="flex items-center space-x-1 bg-black/85 border border-white/10 rounded-full p-1.5 shadow-[0_10px_40px_rgba(0,0,0,0.6)] pointer-events-auto"
         >
           {navItems.map((item) => {
             const isActive = activeSection === item.id;
@@ -85,43 +79,22 @@ export const Navbar = () => {
                 onClick={() => scrollToFrame(item.frame)}
                 className={`relative px-2.5 md:px-4 py-1.5 md:py-2 text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest cursor-pointer select-none transition-all duration-300 ${
                   isActive 
-                    ? 'font-extrabold scale-105' 
-                    : 'text-white/40 hover:text-white/70 font-medium'
+                    ? 'text-cyan-400 font-extrabold filter drop-shadow-[0_0_6px_rgba(34,211,238,0.6)] scale-105' 
+                    : 'text-white/50 hover:text-white/80 font-medium'
                 }`}
               >
-                <span
-                  className="relative z-10 mr-[-0.1em]"
-                  style={isActive ? { 
-                    color: 'var(--theme-accent-solid)', 
-                    filter: 'drop-shadow(0 0 6px var(--theme-accent))' 
-                  } : {}}
-                >
-                  {item.label}
-                </span>
-                {isActive && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute bottom-0 left-0 right-0 h-[2px] rounded-full"
-                    style={{ 
-                      backgroundColor: 'var(--theme-accent-solid)',
-                      boxShadow: '0 0 8px var(--theme-accent), 0 0 16px var(--theme-accent)',
-                    }}
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
+                <span className="mr-[-0.1em]">{item.label}</span>
               </button>
             );
           })}
         </motion.div>
       </div>
 
-      {/* Right Side — Theme Toggle + CTA */}
       <div className="fixed top-6 right-4 md:right-8 z-50 pointer-events-auto flex items-center gap-3">
         <ThemeToggle />
         <button 
           onClick={() => scrollToFrame(frames[3 + P] ?? 461)}
-          style={{ backgroundColor: 'var(--theme-accent-solid)' }}
-          className="hidden md:block px-5 py-2.5 text-white rounded-xl text-xs font-semibold uppercase tracking-widest hover:brightness-110 transition-all shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
+          className="hidden md:block px-5 py-2.5 bg-white/10 border border-white/20 rounded-full text-xs font-semibold uppercase tracking-widest text-white hover:bg-white hover:text-black hover:border-white transition-all shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
         >
           Let&apos;s Talk
         </button>
