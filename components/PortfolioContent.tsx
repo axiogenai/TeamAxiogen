@@ -878,7 +878,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- ABOUT SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex items-center justify-center px-6 md:px-16 text-white pt-14 md:pt-24 pb-4 md:pb-8 section-bg-adapt overflow-hidden"
+        className="absolute inset-0 flex flex-col items-center justify-start md:justify-center px-6 md:px-16 text-white pt-12 md:pt-0 pb-4 md:pb-0 section-bg-adapt overflow-hidden"
         style={{ pointerEvents: showAbout ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -888,11 +888,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-center">
+        <div className="flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-start md:justify-center flex-1 md:flex-initial min-h-0">
           <div 
             data-scroll-container
             data-lenis-prevent
-            className="grid grid-cols-12 gap-3 md:gap-8 items-start w-full max-h-[82vh] md:max-h-[80vh] overflow-y-auto scrollbar-none px-2 py-2"
+            className="grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full overflow-y-auto scrollbar-none px-2 py-2 flex-1 md:flex-initial min-h-0"
           >
             <AnimatePresence mode={isMobile ? "wait" : "sync"}>
               {/* Bio statement */}
@@ -903,34 +903,36 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={isMobile ? { opacity: 0, y: -15 } : undefined}
                   transition={{ duration: 0.25 }}
-                  className="col-span-12 lg:col-span-5 text-white bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] glass-card gradient-border"
+                  className="col-span-12 lg:col-span-5 text-white bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] glass-card gradient-border flex flex-col justify-between lg:h-full"
                 >
-                  <div className="flex items-center gap-2 mb-1.5 md:mb-2">
-                    <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
-                  </div>
-                  <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tighter mb-2 md:mb-3 leading-none whitespace-nowrap">
-                    TEAM AXIOGEN.
-                  </h2>
-                  <p className="text-xs sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-3 md:mb-4">
-                    We are a full-cycle software engineering team delivering end-to-end digital solutions. Our expertise spans web and mobile development, bespoke AI integration, scalable cloud architecture, and immersive user experiences.
-                  </p>
-                  <p className="text-[10px] sm:text-xs md:text-sm text-white/60 font-normal leading-relaxed mb-3 md:mb-5 hidden md:block">
-                    From high-performance databases and automated research systems to advanced voice synthesis, document intelligence, and GPU-accelerated interfaces, we craft solutions tailored for both academic innovation and enterprise scale.
-                  </p>
-                  <div className="flex gap-4 mb-3 md:mb-6">
-                    <a 
-                      href="https://www.instagram.com/axiogen.in?igsh=OGQ5ZDc2ODk2ZA==" 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="px-4 py-2 md:px-5 md:py-2.5 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(255,255,255,0.25)] hover:scale-105 btn-view-profile"
-                    >
-                      <BookOpen className="w-4 h-4" />
-                      <span>View Profile</span>
-                    </a>
+                  <div className="flex flex-col flex-1">
+                    <div className="flex items-center gap-2 mb-1.5 md:mb-2">
+                      <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
+                    </div>
+                    <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tighter mb-2 md:mb-3 leading-none whitespace-nowrap">
+                      TEAM AXIOGEN.
+                    </h2>
+                    <p className="text-xs sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-3 md:mb-4">
+                      We are a full-cycle software engineering team delivering end-to-end digital solutions. Our expertise spans web and mobile development, bespoke AI integration, scalable cloud architecture, and immersive user experiences.
+                    </p>
+                    <p className="text-[10px] sm:text-xs md:text-sm text-white/60 font-normal leading-relaxed mb-3 md:mb-5">
+                      From high-performance databases and automated research systems to advanced voice synthesis, document intelligence, and GPU-accelerated interfaces, we craft solutions tailored for both academic innovation and enterprise scale.
+                    </p>
+                    <div className="flex gap-4 mb-3 md:mb-6">
+                      <a 
+                        href="https://www.instagram.com/axiogen.in?igsh=OGQ5ZDc2ODk2ZA==" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="px-4 py-2 md:px-5 md:py-2.5 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(255,255,255,0.25)] hover:scale-105 btn-view-profile"
+                      >
+                        <BookOpen className="w-4 h-4" />
+                        <span>View Profile</span>
+                      </a>
+                    </div>
                   </div>
 
                   {/* Stats Row - Numbers Side-to-Side */}
-                  <div className="grid grid-cols-4 gap-3 pt-5 border-t border-white/10">
+                  <div className="grid grid-cols-4 gap-3 pt-5 border-t border-white/10 mt-auto">
                     <div className="flex flex-col">
                       <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-purple-400">
                         <AnimatedCounter value={50} suffix="+" trigger={showAbout} />
@@ -1028,7 +1030,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                                 </div>
                                 <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-60 group-hover:translate-x-0 transition-all text-purple-300 block" />
                               </div>
-                              <p className="text-[9px] sm:text-xs text-white/60 leading-relaxed font-normal hidden md:block">{skill.desc}</p>
+                              <p className="text-[9px] sm:text-xs text-white/60 leading-relaxed font-normal">{skill.desc}</p>
                             </div>
                           ))}
                         </motion.div>
@@ -1052,7 +1054,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- PROJECTS SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-24 md:justify-center md:pt-0 px-6 md:px-16 section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
+        className={`absolute inset-0 flex flex-col items-center justify-start pt-12 md:justify-center md:pt-0 px-6 md:px-16 section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
         style={{ pointerEvents: showProjects ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1177,7 +1179,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         </motion.section>
       {/* ----------------- SERVICES SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex flex-col items-center justify-start pt-20 md:pt-24 px-6 md:px-16 section-bg-adapt overflow-hidden"
+        className="absolute inset-0 flex flex-col items-center justify-start md:justify-center pt-12 md:pt-0 pb-4 md:pb-0 px-6 md:px-16 section-bg-adapt overflow-hidden"
         style={{ pointerEvents: showServices ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1205,42 +1207,38 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           <div 
             data-scroll-container
             data-lenis-prevent
-            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-4 md:py-5 md:px-7 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[82vh] overflow-y-auto md:max-h-none md:overflow-visible services-no-scrollbar touch-pan-y glass-card"
+            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-3.5 md:py-5 md:px-7 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[94vh] md:max-h-none md:overflow-visible services-no-scrollbar touch-pan-y glass-card"
           >
             {/* Main Title - Inside the card */}
-            <div className="text-center mb-2 md:mb-3">
+            <div className="text-center mb-1.5 md:mb-3">
               <h2 className="text-xl md:text-3xl lg:text-4xl font-black tracking-tighter mb-1 bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Services We Provide</h2>
-              {!isMobile && (
-                <p className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/50">
-                  AI, Web, Mobile, Cloud & Intelligent Systems
-                </p>
-              )}
+              <p className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/50">
+                AI, Web, Mobile, Cloud &amp; Intelligent Systems
+              </p>
             </div>
 
             {/* Description & Badges */}
-            {!isMobile && (
-              <div className="text-center mb-3 md:mb-4">
-                <p className="text-[10px] md:text-xs text-white/70 max-w-2xl mx-auto leading-relaxed font-normal mb-2 md:mb-3">
-                  From research to deployment — we build powerful, intelligent digital products for enterprises, startups &amp; students. You envision it, we engineer it.
-                </p>
-                
-                {/* Trust Badges */}
-                <div className="flex flex-wrap gap-1.5 md:gap-2.5 justify-center text-[8px] md:text-[10px] pointer-events-auto">
-                  <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-                    Production-Grade Code
-                  </div>
-                  <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.8)]" />
-                    On-Time Delivery
-                  </div>
-                  <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
-                    Affordable Pricing
-                  </div>
+            <div className="text-center mb-2.5 md:mb-4">
+              <p className="text-[9px] md:text-xs text-white/70 max-w-2xl mx-auto leading-relaxed font-normal mb-1.5 md:mb-3 px-2">
+                From research to deployment — we build powerful, intelligent digital products for enterprises, startups &amp; students. You envision it, we engineer it.
+              </p>
+              
+              {/* Trust Badges */}
+              <div className="hidden sm:flex flex-wrap gap-1.5 md:gap-2.5 justify-center text-[8px] md:text-[10px] pointer-events-auto">
+                <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                  Production-Grade Code
+                </div>
+                <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.8)]" />
+                  On-Time Delivery
+                </div>
+                <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
+                  Affordable Pricing
                 </div>
               </div>
-            )}
+            </div>
 
             {/* Services Grid (8 Services) */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-2.5 max-w-4xl mx-auto pointer-events-auto">

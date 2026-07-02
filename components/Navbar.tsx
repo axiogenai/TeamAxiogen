@@ -108,70 +108,7 @@ export const Navbar = () => {
           Let&apos;s Talk
         </button>
 
-        {/* Mobile Hamburger */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden p-2.5 bg-black/85 backdrop-blur-xl border border-white/10 rounded-full text-white/80 hover:text-white transition-all cursor-pointer"
-          aria-label="Toggle navigation menu"
-        >
-          {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-        </button>
       </div>
-
-      {/* Mobile Navigation Overlay */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-center gap-6 md:hidden"
-          >
-            {/* Mobile Logo */}
-            <button 
-              onClick={() => { scrollToFrame(frames[0] ?? 42); setMobileOpen(false); }}
-              className="text-2xl font-black tracking-tighter uppercase bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent mb-4"
-            >
-              AXIOGEN
-            </button>
-
-            {navItems.map((item, index) => {
-              const isActive = activeSection === item.id;
-              return (
-                <motion.button
-                  key={item.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  onClick={() => { scrollToFrame(item.frame); setMobileOpen(false); }}
-                  className={`text-2xl font-bold uppercase tracking-widest transition-all ${
-                    isActive 
-                      ? 'text-white scale-110' 
-                      : 'text-white/40 hover:text-white/70'
-                  }`}
-                >
-                  {item.label}
-                  {isActive && (
-                    <div className="h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mt-1" />
-                  )}
-                </motion.button>
-              );
-            })}
-
-            {/* Mobile CTA */}
-            <motion.button
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              onClick={() => { scrollToFrame(frames[3 + P] ?? 461); setMobileOpen(false); }}
-              className="mt-6 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-sm font-bold uppercase tracking-widest text-white shadow-[0_4px_20px_rgba(168,85,247,0.4)] hover:scale-105 transition-transform"
-            >
-              Let&apos;s Talk
-            </motion.button>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 };
