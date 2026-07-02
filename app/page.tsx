@@ -14,42 +14,97 @@ const LightPillar = dynamic(() => import('../components/LightPillar'), {
   ssr: false,
 });
 
+const Galaxy = dynamic(() => import('../components/Galaxy'), {
+  ssr: false,
+});
+
 // Fixed wrapper component that dynamically updates opacity and unmounts the WebGL canvas when invisible
 const LightPillarBackground = () => {
   const { showHero } = useSectionVisibility();
   const [isMobile, setIsMobile] = useState(false);
+  const [isLightTheme, setIsLightTheme] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+
+    const checkTheme = () => {
+      const isLight = document.documentElement.classList.contains('theme-light');
+      setIsLightTheme(isLight);
+    };
+    checkTheme();
+
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      observer.disconnect();
+    };
   }, []);
+
+  const topColor = isLightTheme ? "#FBBF24" : "#5227FF";
+  const bottomColor = isLightTheme ? "#B45309" : "#FF9FFC";
 
   return (
     <AnimatePresence>
       {showHero && (
         <motion.div 
-          className="fixed inset-0 pointer-events-none overflow-hidden"
-          style={{ zIndex: -9 }}
+          className="fixed inset-0 pointer-events-none overflow-hidden light-pillar-wrapper"
+          style={{ zIndex: -8 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.90 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         >
           <LightPillar 
-            topColor="#5227FF"
-            bottomColor="#FF9FFC"
-            intensity={1}
-            rotationSpeed={0.3}
-            glowAmount={isMobile ? 0.0025 : 0.002}
+            topColor={topColor}
+            bottomColor={bottomColor}
+            intensity={1.0}
+            rotationSpeed={isLightTheme ? 0.2 : 0.3}
+            glowAmount={isMobile ? 0.003 : 0.002}
             pillarWidth={isMobile ? 2.8 : 3.0}
             pillarHeight={isMobile ? 0.40 : 0.40}
             noiseIntensity={0.5}
             pillarRotation={isMobile ? 12 : 25}
             interactive={false}
-            mixBlendMode="screen"
+            mixBlendMode={isLightTheme ? "normal" : "screen"}
             quality="high"
+          />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+// Galaxy starfield wrapper that only mounts and renders on the Hero section
+const GalaxyBackground = () => {
+  const { showHero } = useSectionVisibility();
+
+  return (
+    <AnimatePresence>
+      {showHero && (
+        <motion.div 
+          className="fixed inset-0 pointer-events-none overflow-hidden select-none"
+          style={{ zIndex: -9 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.85 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Galaxy 
+            density={1.2}
+            starSpeed={0.4}
+            rotationSpeed={0.06}
+            glowIntensity={0.35}
+            twinkleIntensity={0.4}
+            hueShift={140}
+            saturation={0.1}
+            transparent={true}
           />
         </motion.div>
       )}
@@ -61,16 +116,22 @@ export default function Home() {
   const TOTAL_FRAMES = 502;
   const [mounted, setMounted] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-  const projectCount = useProjectCount();
+  const { showHero } = useSectionVisibility();
 
   useEffect(() => {
     setMounted(true);
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    if (showHero) {
+      document.documentElement.classList.add('on-hero');
+      document.documentElement.classList.remove('off-hero');
+    } else {
+      document.documentElement.classList.add('off-hero');
+      document.documentElement.classList.remove('on-hero');
+    }
+  }, [showHero, mounted]);
 
   const totalStates = getTotalStates();
   const dynamicMinHeight = `${(totalStates - 1) * 100}vh`;
@@ -80,7 +141,7 @@ export default function Home() {
   return (
     <>
       <main 
-        className="relative transition-colors duration-1000"
+        className="relative"
         style={{ minHeight: dynamicMinHeight }}
       >
         <div className="animate-page-fade-in">
@@ -88,6 +149,9 @@ export default function Home() {
           
           {/* Scroll-Linked Fixed Background Shader */}
           <LightPillarBackground />
+          
+          {/* Cosmic Galaxy Starfield Background - Hero Page Only */}
+          <GalaxyBackground />
           
           {/* Fixed UI Overlays */}
           <ScrollProgressBar />
@@ -98,10 +162,10 @@ export default function Home() {
 
           {/* Premium Simple Background */}
           <div 
-            className="fixed inset-0 w-full h-full bg-[var(--background)] transition-colors duration-1000 select-none pointer-events-none overflow-hidden"
+            className="fixed inset-0 w-full h-full bg-[var(--portfolio-bg)] select-none pointer-events-none overflow-hidden"
             style={{ zIndex: -10 }}
           >
-            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--bg-gradient-from)] via-[var(--bg-gradient-via)] to-[var(--bg-gradient-to)] transition-colors duration-1000" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--portfolio-gradient-from)] via-[var(--portfolio-gradient-via)] to-[var(--portfolio-gradient-to)]" />
           </div>
         </div>
       </main>

@@ -13,14 +13,24 @@ interface SplashScreenProps {
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // 1.8 seconds of visible logo
+    // Animate progress bar from 0 to 100 over 1.6s
+    const startTime = performance.now();
+    const duration = 1600;
+    const animateProgress = (now: number) => {
+      const elapsed = now - startTime;
+      const pct = Math.min(Math.round((elapsed / duration) * 100), 100);
+      setProgress(pct);
+      if (elapsed < duration) requestAnimationFrame(animateProgress);
+    };
+    requestAnimationFrame(animateProgress);
+
     const timer1 = setTimeout(() => {
       setIsAnimatingOut(true);
     }, 1800);
 
-    // 0.8 seconds of slide-up transition, then trigger unmount callback
     const timer2 = setTimeout(() => {
       onComplete();
     }, 2600);
@@ -48,13 +58,20 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
         .animate-loading-slide {
           animation: loadingSlide 1.5s ease-in-out forwards;
         }
+        @keyframes scaleIn {
+          from { transform: scale(0.85); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
+        }
+        .animate-scale-in {
+          animation: scaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
       `}</style>
 
       {/* Dynamic Cosmic Portal Shader Background */}
       <ShaderAnimation />
 
       {/* Logo container */}
-      <div className="relative flex flex-col items-center gap-4 z-10">
+      <div className="relative flex flex-col items-center gap-4 z-10 animate-scale-in">
         <div className="relative flex items-center justify-center">
           <h1 className="text-5xl md:text-7xl font-black tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-300 to-indigo-200 drop-shadow-[0_4px_12px_rgba(0,0,0,0.50)] uppercase">
             AXIOGEN
@@ -67,11 +84,17 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
         </p>
       </div>
 
-      {/* Clean progress loading line at the bottom */}
-      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 w-48 h-[1px] bg-white/10 overflow-hidden">
-        <div 
-          className="absolute top-0 bottom-0 w-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent animate-loading-slide"
-        />
+      {/* Progress loading bar at the bottom */}
+      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-10">
+        <span className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-semibold tabular-nums">
+          {progress}%
+        </span>
+        <div className="w-48 h-[2px] bg-white/10 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 rounded-full transition-all duration-100 ease-out"
+            style={{ width: `${progress}%`, boxShadow: '0 0 12px rgba(168, 85, 247, 0.6)' }}
+          />
+        </div>
       </div>
     </div>
   );

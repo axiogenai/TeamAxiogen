@@ -1,56 +1,60 @@
 @import "tailwindcss";
 
 :root {
-  --background: #07070c;
-  --bg-gradient-from: #020205;
-  --bg-gradient-via: #07070c;
-  --bg-gradient-to: #0d0714;
-  --foreground: #ffffff;
+  --portfolio-bg: #07070c;
+  --portfolio-gradient-from: #020205;
+  --portfolio-gradient-via: #07070c;
+  --portfolio-gradient-to: #0d0714;
+  --portfolio-fg: #ffffff;
   --font-outfit: "Outfit", sans-serif;
   --card-bg: rgba(0, 0, 0, 0.75);
   --card-border: rgba(255, 255, 255, 0.1);
   --theme-accent: rgba(168, 85, 247, 0.4);
+  --theme-accent-solid: #a855f7;
+  --glow-purple: rgba(168, 85, 247, 0.3);
+  --glow-pink: rgba(236, 72, 153, 0.3);
+  --glow-blue: rgba(59, 130, 246, 0.3);
 }
 
-html.theme-midnight {
-  --background: #080d1a;
-  --bg-gradient-from: #030611;
-  --bg-gradient-via: #080d1a;
-  --bg-gradient-to: #0e162d;
-  --card-bg: rgba(3, 8, 20, 0.75);
-  --card-border: rgba(59, 130, 246, 0.15);
-  --theme-accent: rgba(59, 130, 246, 0.4);
+html.theme-light.off-hero {
+  --portfolio-bg: #faf8fd;
+  --portfolio-gradient-from: #f0e7f7;
+  --portfolio-gradient-via: #faf8fd;
+  --portfolio-gradient-to: #e5ecfc;
+  --portfolio-fg: #1c1936;
+  --card-bg: rgba(255, 255, 255, 0.65);
+  --card-border: rgba(255, 255, 255, 0.5);
+  --theme-accent: rgba(124, 58, 237, 0.1);
+  --theme-accent-solid: #6d28d9;
+  --glow-purple: rgba(139, 92, 246, 0.2);
+  --glow-pink: rgba(244, 63, 94, 0.15);
+  --glow-blue: rgba(14, 165, 233, 0.15);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--portfolio-bg);
+  --color-foreground: var(--portfolio-fg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-outfit: var(--font-outfit);
 }
 
-
 html, body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--portfolio-bg);
+  color: var(--portfolio-fg);
+  font-family: "Outfit", "Inter", Arial, Helvetica, sans-serif;
   overflow-anchor: none;
   overflow-x: hidden;
   max-width: 100%;
-  
-  /* Hide scrollbar globally for Firefox and IE/Edge */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
-/* Hide scrollbar globally for Chrome, Safari, and WebKit browsers */
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none;
 }
 
-/* Custom scrollbar utility */
 .custom-scrollbar::-webkit-scrollbar {
   width: 5px;
 }
@@ -66,7 +70,6 @@ body::-webkit-scrollbar {
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* Hide scrollbar utility */
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
@@ -75,7 +78,19 @@ body::-webkit-scrollbar {
   scrollbar-width: none;
 }
 
-/* ─── Page fade-in (replaces Framer Motion on page.tsx) ─── */
+/* --- Focus-visible accessibility --- */
+*:focus-visible {
+  outline: 2px solid var(--theme-accent-solid);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+input:focus-visible,
+textarea:focus-visible {
+  outline: none;
+}
+
+/* --- Page fade-in --- */
 @keyframes pageFadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -84,8 +99,62 @@ body::-webkit-scrollbar {
   animation: pageFadeIn 1.5s ease-out forwards;
 }
 
-/* ─── AmbientGlow CSS Animations (replaces Framer Motion JS) ─── */
-/* These run entirely on the GPU compositor thread — zero JS cost */
+/* --- Film Grain Overlay --- */
+.film-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* --- Glassmorphism Card --- */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* --- Animated Gradient Border --- */
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rotateGradient {
+  to { --gradient-angle: 360deg; }
+}
+
+.gradient-border {
+  position: relative;
+  border-radius: 1.5rem;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--gradient-angle), transparent 40%, var(--theme-accent-solid) 50%, transparent 60%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: rotateGradient 4s linear infinite;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.gradient-border:hover::before {
+  opacity: 1;
+}
+
+/* --- AmbientGlow CSS Animations --- */
 @keyframes ambientGlow1 {
   0%, 100% { transform: translate3d(0, 0, 0); }
   33% { transform: translate3d(50px, -40px, 0); }
@@ -100,4 +169,208 @@ body::-webkit-scrollbar {
   0%, 100% { transform: translate3d(0, 0, 0); }
   33% { transform: translate3d(40px, 60px, 0); }
   66% { transform: translate3d(-50px, -30px, 0); }
+}
+
+/* --- Floating animation for particles --- */
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  25% { transform: translateY(-20px) translateX(10px); }
+  50% { transform: translateY(-10px) translateX(-15px); }
+  75% { transform: translateY(-25px) translateX(5px); }
+}
+
+/* --- Bounce animation for scroll indicator --- */
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+.animate-bounce-down {
+  animation: bounceDown 2s ease-in-out infinite;
+}
+
+/* --- Pulse glow animation --- */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 8px var(--glow-purple); }
+  50% { box-shadow: 0 0 20px var(--glow-purple), 0 0 40px var(--glow-pink); }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* --- True Light Mode CSS Overrides --- */
+html.theme-light.off-hero body {
+  background: var(--portfolio-bg);
+  color: var(--portfolio-fg);
+}
+
+/* Force headings to map to luxury deep cosmic indigo for rich typography */
+html.theme-light.off-hero h1,
+html.theme-light.off-hero h2,
+html.theme-light.off-hero h3,
+html.theme-light.off-hero h4 {
+  color: #1c1936 !important;
+}
+
+/* Force standard paragraphs, labels, and text-white elements to purple-slate gray */
+html.theme-light.off-hero [class*="text-white"],
+html.theme-light.off-hero span,
+html.theme-light.off-hero p,
+html.theme-light.off-hero li,
+html.theme-light.off-hero a {
+  color: #4e4870 !important;
+}
+
+/* Specific elements that need deep dark color */
+html.theme-light.off-hero button,
+html.theme-light.off-hero .font-bold,
+html.theme-light.off-hero .font-black {
+  color: #1c1936 !important;
+}
+
+/* Logo text in light mode - deep solid look */
+html.theme-light.off-hero .text-transparent {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  color: #1c1936 !important;
+  -webkit-text-fill-color: #1c1936 !important;
+}
+
+/* Opacity overrides mapping to purple-slate gray shades */
+html.theme-light.off-hero [class*="text-white/95"] { color: rgba(28, 25, 54, 0.95) !important; }
+html.theme-light.off-hero [class*="text-white/90"] { color: rgba(28, 25, 54, 0.9) !important; }
+html.theme-light.off-hero [class*="text-white/80"] { color: rgba(28, 25, 54, 0.8) !important; }
+html.theme-light.off-hero [class*="text-white/70"] { color: rgba(28, 25, 54, 0.7) !important; }
+html.theme-light.off-hero [class*="text-white/60"] { color: rgba(28, 25, 54, 0.6) !important; }
+html.theme-light.off-hero [class*="text-white/50"] { color: rgba(28, 25, 54, 0.5) !important; }
+html.theme-light.off-hero [class*="text-white/40"] { color: rgba(28, 25, 54, 0.4) !important; }
+html.theme-light.off-hero [class*="text-white/30"] { color: rgba(28, 25, 54, 0.3) !important; }
+html.theme-light.off-hero [class*="text-white/20"] { color: rgba(28, 25, 54, 0.2) !important; }
+
+/* Frosted glass capsule and card overlays */
+html.theme-light.off-hero [class*="bg-black"] {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 10px 40px rgba(28, 25, 54, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  color: #1c1936 !important;
+}
+
+html.theme-light.off-hero .glass-card {
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(30px) !important;
+  -webkit-backdrop-filter: blur(30px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 30px 60px rgba(28, 25, 54, 0.08), 0 2px 8px rgba(0, 0, 0, 0.01), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  color: #4e4870 !important;
+}
+
+html.theme-light.off-hero [class*="bg-white/10"] {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(28, 25, 54, 0.08) !important;
+  color: #1c1936 !important;
+}
+
+html.theme-light.off-hero [class*="bg-white/5"] {
+  background: rgba(0, 0, 0, 0.03) !important;
+  border-color: rgba(28, 25, 54, 0.06) !important;
+  color: #4e4870 !important;
+}
+
+/* Force border overrides */
+html.theme-light.off-hero [class*="border-white"] {
+  border-color: rgba(28, 25, 54, 0.08) !important;
+}
+
+/* Button hover offsets */
+html.theme-light.off-hero .hover\:bg-white:hover {
+  background-color: #1c1936 !important;
+  color: #ffffff !important;
+}
+
+html.theme-light.off-hero button.bg-white,
+html.theme-light.off-hero a.bg-white {
+  background: #1c1936 !important;
+  color: #ffffff !important;
+}
+
+html.theme-light.off-hero .bg-white {
+  background: #ffffff !important;
+  color: #1c1936 !important;
+}
+
+html.theme-light.off-hero .btn-view-profile {
+  color: #ffffff !important;
+}
+
+html.theme-light.off-hero .btn-view-profile * {
+  color: #ffffff !important;
+}
+
+/* Form controls styling */
+html.theme-light.off-hero input,
+html.theme-light.off-hero textarea {
+  background: rgba(255, 255, 255, 0.8) !important;
+  color: #1c1936 !important;
+  border-color: rgba(28, 25, 54, 0.1) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+}
+
+html.theme-light.off-hero input::placeholder,
+html.theme-light.off-hero textarea::placeholder {
+  color: rgba(28, 25, 54, 0.4) !important;
+}
+
+html.theme-light.off-hero input:focus,
+html.theme-light.off-hero textarea:focus {
+  border-color: #6d28d9 !important;
+  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.15) !important;
+}
+
+/* Make Galaxy Background faint on Light theme */
+html.theme-light.off-hero .galaxy-container {
+  opacity: 0.15 !important;
+}
+
+/* Custom scrollbar alignment */
+html.theme-light.off-hero .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(28, 25, 54, 0.15) !important;
+}
+html.theme-light.off-hero .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(28, 25, 54, 0.3) !important;
+}
+html.theme-light.off-hero .custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(28, 25, 54, 0.03) !important;
+}
+
+/* Stats counter specific coloring */
+html.theme-light.off-hero .text-purple-400 { color: #8b5cf6 !important; }
+html.theme-light.off-hero .text-indigo-400 { color: #6366f1 !important; }
+html.theme-light.off-hero .text-cyan-400 { color: #0d9488 !important; }
+html.theme-light.off-hero .text-pink-400 { color: #ec4899 !important; }
+html.theme-light.off-hero .text-purple-300 { color: #7c3aed !important; }
+html.theme-light.off-hero .text-pink-300 { color: #7c3aed !important; }
+
+/* ============================================================
+   LIGHT MODE SHIELD — The critical layer that blocks dark
+   Galaxy/LightPillar particles from bleeding through during
+   section transitions. Lives inside the z-40 PortfolioContent
+   container (behind sections via z-index:-1) but above all
+   background WebGL layers. NO transition — instant activation.
+   ============================================================ */
+.light-mode-shield {
+  background: transparent;
+}
+
+html.theme-light.off-hero .light-mode-shield {
+  background: linear-gradient(to top right, #f0e7f7, #faf8fd, #e5ecfc) !important;
+}
+
+/* Scoped Light background color applied directly to individual sections */
+html.theme-light.off-hero .section-bg-adapt {
+  background: #faf8fd !important;
+  background-image: linear-gradient(to top right, #f0e7f7, #faf8fd, #e5ecfc) !important;
 }
