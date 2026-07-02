@@ -27,7 +27,7 @@
 }
 
 html, body {
-  background: transparent;
+  background: var(--portfolio-bg);
   color: var(--portfolio-fg);
   font-family: "Outfit", "Inter", Arial, Helvetica, sans-serif;
   overflow-anchor: none;

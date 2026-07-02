@@ -164,7 +164,7 @@ export default function Home() {
           <div 
             className="fixed inset-0 w-full h-full select-none pointer-events-none overflow-hidden"
             style={{ 
-              zIndex: -10,
+              zIndex: -5,
               backgroundColor: 'var(--portfolio-bg)',
             }}
           >
