@@ -878,7 +878,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- ABOUT SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex items-center justify-center px-6 md:px-16 text-white pt-24 pb-8 section-bg-adapt overflow-hidden"
+        className="absolute inset-0 flex items-center justify-center px-6 md:px-16 text-white pt-14 md:pt-24 pb-4 md:pb-8 section-bg-adapt overflow-hidden"
         style={{ pointerEvents: showAbout ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -888,11 +888,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="flex flex-col items-center max-w-7xl w-full gap-5 md:gap-6 justify-center">
+        <div className="flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-center">
           <div 
             data-scroll-container
             data-lenis-prevent
-            className="grid grid-cols-12 gap-4 md:gap-8 items-start w-full max-h-[76vh] md:max-h-[80vh] overflow-y-auto scrollbar-none px-2 py-2"
+            className="grid grid-cols-12 gap-3 md:gap-8 items-start w-full max-h-[82vh] md:max-h-[80vh] overflow-y-auto scrollbar-none px-2 py-2"
           >
             <AnimatePresence mode={isMobile ? "wait" : "sync"}>
               {/* Bio statement */}
@@ -903,26 +903,26 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={isMobile ? { opacity: 0, y: -15 } : undefined}
                   transition={{ duration: 0.25 }}
-                  className="col-span-12 lg:col-span-5 text-white bg-[var(--card-bg)] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] glass-card gradient-border"
+                  className="col-span-12 lg:col-span-5 text-white bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] glass-card gradient-border"
                 >
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="flex items-center gap-2 mb-1.5 md:mb-2">
                     <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
                   </div>
-                  <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tighter mb-3 leading-none whitespace-nowrap">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tighter mb-2 md:mb-3 leading-none whitespace-nowrap">
                     TEAM AXIOGEN.
                   </h2>
-                  <p className="text-xs sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-4">
+                  <p className="text-xs sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-3 md:mb-4">
                     We are a full-cycle software engineering team delivering end-to-end digital solutions. Our expertise spans web and mobile development, bespoke AI integration, scalable cloud architecture, and immersive user experiences.
                   </p>
-                  <p className="text-[10px] sm:text-xs md:text-sm text-white/60 font-normal leading-relaxed mb-5">
+                  <p className="text-[10px] sm:text-xs md:text-sm text-white/60 font-normal leading-relaxed mb-3 md:mb-5 hidden md:block">
                     From high-performance databases and automated research systems to advanced voice synthesis, document intelligence, and GPU-accelerated interfaces, we craft solutions tailored for both academic innovation and enterprise scale.
                   </p>
-                  <div className="flex gap-4 mb-5 md:mb-6">
+                  <div className="flex gap-4 mb-3 md:mb-6">
                     <a 
                       href="https://www.instagram.com/axiogen.in?igsh=OGQ5ZDc2ODk2ZA==" 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="px-5 py-2.5 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(255,255,255,0.25)] hover:scale-105 btn-view-profile"
+                      className="px-4 py-2 md:px-5 md:py-2.5 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(255,255,255,0.25)] hover:scale-105 btn-view-profile"
                     >
                       <BookOpen className="w-4 h-4" />
                       <span>View Profile</span>
@@ -974,18 +974,18 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                       <LogoLoop logos={loopLogos} />
                     </div>
                   )}
-                  <div className="flex flex-col bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[170px] sm:min-h-[300px] md:min-h-[380px] glass-card gradient-border">
-                    <div className="flex justify-between items-center mb-3 md:mb-6">
+                  <div className="flex flex-col bg-[var(--card-bg)] p-3.5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[140px] sm:min-h-[300px] md:min-h-[380px] glass-card gradient-border">
+                    <div className="flex justify-between items-center mb-2 md:mb-6">
                       <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Skills</h3>
                     </div>
   
                     {/* Selector tabs */}
-                    <div className="relative z-20 flex flex-row flex-nowrap gap-1 mb-3 md:mb-6 bg-white/5 p-1 rounded-xl md:rounded-2xl border border-white/5 pointer-events-auto w-full justify-between items-center">
+                    <div className="relative z-20 flex flex-row flex-nowrap gap-1 mb-2 md:mb-6 bg-white/5 p-1 rounded-xl md:rounded-2xl border border-white/5 pointer-events-auto w-full justify-between items-center">
                       {(['languages', 'mobile', 'web', 'systems'] as const).map((tab) => (
                         <button
                           key={tab}
                           onClick={() => setActiveTab(tab)}
-                          className={`flex-1 text-center px-1 sm:px-3 py-2 md:py-2.5 rounded-lg md:rounded-xl text-[8px] sm:text-xs uppercase tracking-normal sm:tracking-widest font-extrabold transition-all duration-200 cursor-pointer pointer-events-auto select-none ${
+                          className={`flex-1 text-center px-1 sm:px-3 py-1.5 md:py-2.5 rounded-lg md:rounded-xl text-[8px] sm:text-xs uppercase tracking-normal sm:tracking-widest font-extrabold transition-all duration-200 cursor-pointer pointer-events-auto select-none ${
                             activeTab === tab 
                               ? 'bg-white text-black shadow-[0_4px_15px_rgba(255,255,255,0.2)]' 
                               : 'text-white/60 hover:text-white hover:bg-white/5'
@@ -1016,19 +1016,19 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                           {techData[activeTab].map((skill, index) => (
                             <div 
                               key={index}
-                              className="p-3 md:p-5 rounded-lg md:rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/10 flex flex-col md:justify-center gap-1.5 shadow-lg group relative overflow-hidden"
+                              className="p-2 md:p-5 rounded-lg md:rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/10 flex flex-col md:justify-center gap-1 md:gap-1.5 shadow-lg group relative overflow-hidden"
                             >
                               {/* Glow outline hover effect */}
                               <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
                               
                               <div className="flex items-center justify-between md:mb-1.5 w-full">
-                                <div className="flex items-center gap-2.5">
+                                <div className="flex items-center gap-2">
                                   <SkillIcon name={skill.name} />
-                                  <span className="font-bold text-[10px] sm:text-xs md:text-sm text-white group-hover:text-purple-300 transition-colors">{skill.name}</span>
+                                  <span className="font-bold text-[9px] sm:text-xs md:text-sm text-white group-hover:text-purple-300 transition-colors">{skill.name}</span>
                                 </div>
                                 <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-60 group-hover:translate-x-0 transition-all text-purple-300 block" />
                               </div>
-                              <p className="text-[9px] sm:text-xs text-white/60 leading-relaxed font-normal block">{skill.desc}</p>
+                              <p className="text-[9px] sm:text-xs text-white/60 leading-relaxed font-normal hidden md:block">{skill.desc}</p>
                             </div>
                           ))}
                         </motion.div>
@@ -1359,29 +1359,6 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </div>
 
             <div className="space-y-3.5 md:space-y-4">
-              <a 
-                href="mailto:axiogen01@gmail.com" 
-                className="flex items-center space-x-2 md:space-x-3 text-xs sm:text-sm hover:text-purple-300 transition-colors pointer-events-auto border-b border-white/5 pb-2 hover:border-purple-300/30 font-semibold"
-              >
-                <Mail className="w-4 h-4 text-pink-400 shrink-0" />
-                <span>axiogen01@gmail.com</span>
-              </a>
-              <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-2 border-b border-white/5 pb-2">
-                <a 
-                  href="tel:+918010127704" 
-                  className="flex items-center space-x-2 md:space-x-3 text-xs sm:text-sm hover:text-purple-300 transition-colors pointer-events-auto font-semibold"
-                >
-                  <Phone className="w-4 h-4 text-pink-400 shrink-0" />
-                  <span>8010127704</span>
-                </a>
-                <a 
-                  href="tel:+917972884083" 
-                  className="flex items-center space-x-2 md:space-x-3 text-xs sm:text-sm hover:text-purple-300 transition-colors pointer-events-auto font-semibold"
-                >
-                  <Phone className="w-4 h-4 text-pink-400 shrink-0" />
-                  <span>7972884083</span>
-                </a>
-              </div>
 
               {/* Shuffled Social Buttons to the Bottom of Left Panel */}
               <div className="flex items-center gap-2 pt-1 pointer-events-auto">
