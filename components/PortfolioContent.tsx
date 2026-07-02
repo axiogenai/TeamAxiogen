@@ -1183,7 +1183,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         </motion.section>
       {/* ----------------- SERVICES SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-20 md:justify-center md:pt-0 px-6 md:px-16 section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
+        className="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-16 section-bg-adapt overflow-hidden"
         style={{ pointerEvents: showServices ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1238,13 +1238,13 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             )}
 
             {/* Services Grid (8 Services) */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3.5 max-w-4xl mx-auto">
+            <div className="flex md:grid md:grid-cols-4 gap-2.5 md:gap-3.5 max-w-4xl mx-auto overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-none snap-x snap-mandatory pointer-events-auto">
               {servicesData.map((item, index) => {
                 const IconComponent = item.icon;
                 return (
                   <div 
                     key={index}
-                    className="relative group pointer-events-auto"
+                    className="min-w-[75%] sm:min-w-[45%] md:min-w-0 snap-align-start shrink-0 relative group pointer-events-auto"
                   >
                     <motion.div 
                       whileHover="hover"
@@ -1298,11 +1298,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               <div className="text-center mb-2.5">
                 <span className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/40">Perfect Solutions For</span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-3 pointer-events-auto">
+              <div className="flex md:grid md:grid-cols-3 gap-2.5 md:gap-3 overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-none snap-x snap-mandatory pointer-events-auto">
                 {perfectForData.map((item, index) => {
                   const IconComponent = item.icon;
                   return (
-                    <div key={index} className="p-2 md:p-3.5 bg-black/40 border border-white/10 rounded-xl flex gap-2 md:gap-3.5 items-start text-left hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
+                    <div key={index} className="min-w-[85%] md:min-w-0 snap-align-start shrink-0 p-2 md:p-3.5 bg-black/40 border border-white/10 rounded-xl flex gap-2 md:gap-3.5 items-start text-left hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
                       <div className={`p-1.5 md:p-2 rounded-lg shrink-0 ${item.color}`}>
                         <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </div>
