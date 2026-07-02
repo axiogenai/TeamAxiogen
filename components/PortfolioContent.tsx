@@ -1132,12 +1132,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                        className={`group relative min-h-[160px] md:min-h-[270px] rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto block glass-card gradient-border ${project.link ? 'cursor-pointer' : 'select-none'}`}
                        whileHover={{ 
                          scale: 1.02, 
-                         y: -6,
-                         rotateX: 4,
-                         rotateY: -4,
-                         z: 10
+                         y: -8,
                        }}
-                       transition={{ type: 'spring' as const, stiffness: 260, damping: 20 }}
+                       transition={{ type: 'spring' as const, stiffness: 300, damping: 22 }}
                      >
                        <div className="p-4 md:p-6 flex flex-col justify-between flex-1 relative z-10">
                          {/* Glow effect blob behind card on hover */}
