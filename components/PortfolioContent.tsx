@@ -1238,51 +1238,55 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             )}
 
             {/* Services Grid (8 Services) */}
-            <div className="flex md:grid md:grid-cols-4 gap-2.5 md:gap-3.5 max-w-4xl mx-auto overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-none snap-x snap-mandatory pointer-events-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3.5 max-w-4xl mx-auto pointer-events-auto">
               {servicesData.map((item, index) => {
                 const IconComponent = item.icon;
                 return (
                   <div 
                     key={index}
-                    className="min-w-[75%] sm:min-w-[45%] md:min-w-0 snap-align-start shrink-0 relative group pointer-events-auto"
+                    className="relative group pointer-events-auto"
                   >
                     <motion.div 
                       whileHover="hover"
-                      className="relative overflow-hidden p-3 md:p-4 rounded-xl bg-black/40 border border-white/10 hover:border-white/20 transition-all hover:bg-black/60 flex flex-col h-full justify-between shadow-md cursor-default glass-card gradient-border"
+                      className="relative overflow-hidden p-2.5 md:p-4 rounded-xl bg-black/40 border border-white/10 hover:border-white/20 transition-all hover:bg-black/60 flex flex-col h-full justify-between shadow-md cursor-default glass-card gradient-border"
                     >
                       {/* Glow effect blob inside card on hover */}
                       <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/5 via-transparent to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
                       
                       <div className="relative z-10 flex flex-col h-full justify-between">
                         <div>
-                          <div className="flex items-center gap-1.5 mb-1.5">
+                          <div className="flex items-center gap-1.5 mb-0.5 md:mb-1.5">
                             {/* Motion-animated icon wrapper */}
                             <motion.div 
                               variants={getIconVariants(item.title)}
                               className="inline-block shrink-0"
                             >
-                              <IconComponent className="w-4 h-4 text-white/70 group-hover:text-purple-300 transition-colors" />
+                              <IconComponent className="w-3.5 h-3.5 md:w-4 md:h-4 text-white/70 group-hover:text-purple-300 transition-colors" />
                             </motion.div>
-                            <h3 className="text-[10px] sm:text-xs font-black text-white group-hover:text-purple-300 transition-colors leading-tight">
+                            <h3 className="text-[9px] sm:text-xs font-black text-white group-hover:text-purple-300 transition-colors leading-tight">
                               {item.title}
                             </h3>
                           </div>
-                          <p className="text-[9px] sm:text-[10px] leading-relaxed text-white/50 font-normal line-clamp-3 mb-2">
-                            {item.desc}
-                          </p>
+                          {!isMobile && (
+                            <p className="text-[9px] sm:text-[10px] leading-relaxed text-white/50 font-normal line-clamp-3 mb-2">
+                              {item.desc}
+                            </p>
+                          )}
                         </div>
 
                         {/* Technology tags for each service */}
-                        <div className="flex flex-wrap gap-1 mt-auto pt-2 border-t border-white/5 opacity-70 group-hover:opacity-100 transition-opacity">
-                          {item.tags.map((tag) => (
-                            <span 
-                              key={tag} 
-                              className="text-[7px] sm:text-[8px] bg-white/5 border border-white/5 rounded px-1 py-0.2 font-semibold text-white/60"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
+                        {!isMobile && (
+                          <div className="flex flex-wrap gap-1 mt-auto pt-2 border-t border-white/5 opacity-70 group-hover:opacity-100 transition-opacity">
+                            {item.tags.map((tag) => (
+                              <span 
+                                key={tag} 
+                                className="text-[7px] sm:text-[8px] bg-white/5 border border-white/5 rounded px-1 py-0.2 font-semibold text-white/60"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </motion.div>
                   </div>
@@ -1291,24 +1295,26 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </div>
 
             {/* Divider */}
-            <div className="bg-gradient-to-r from-transparent via-white/10 to-transparent h-[1px] my-4 w-full max-w-4xl mx-auto" />
+            <div className="bg-gradient-to-r from-transparent via-white/10 to-transparent h-[1px] my-3 md:my-4 w-full max-w-4xl mx-auto" />
 
             {/* Perfect For Section */}
             <div className="max-w-4xl mx-auto w-full">
-              <div className="text-center mb-2.5">
+              <div className="text-center mb-2">
                 <span className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/40">Perfect Solutions For</span>
               </div>
-              <div className="flex md:grid md:grid-cols-3 gap-2.5 md:gap-3 overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-none snap-x snap-mandatory pointer-events-auto">
+              <div className="grid grid-cols-3 gap-2 md:gap-3 pointer-events-auto">
                 {perfectForData.map((item, index) => {
                   const IconComponent = item.icon;
                   return (
-                    <div key={index} className="min-w-[85%] md:min-w-0 snap-align-start shrink-0 p-2 md:p-3.5 bg-black/40 border border-white/10 rounded-xl flex gap-2 md:gap-3.5 items-start text-left hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
-                      <div className={`p-1.5 md:p-2 rounded-lg shrink-0 ${item.color}`}>
+                    <div key={index} className="p-1.5 md:p-3.5 bg-black/40 border border-white/10 rounded-xl flex flex-col items-center justify-center text-center md:flex-row md:items-start md:text-left hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
+                      <div className={`p-1 md:p-2 rounded-lg shrink-0 mb-1 md:mb-0 ${item.color}`}>
                         <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </div>
                       <div>
-                        <h4 className="text-[9px] sm:text-[10px] md:text-xs font-black text-white leading-tight md:mb-0.5">{item.title}</h4>
-                        <p className="text-[8px] sm:text-[10px] text-white/50 leading-relaxed font-normal block">{item.desc}</p>
+                        <h4 className="text-[8px] sm:text-[10px] md:text-xs font-black text-white leading-tight">{item.title}</h4>
+                        {!isMobile && (
+                          <p className="text-[8px] sm:text-[10px] text-white/50 leading-relaxed font-normal mt-0.5">{item.desc}</p>
+                        )}
                       </div>
                     </div>
                   );
