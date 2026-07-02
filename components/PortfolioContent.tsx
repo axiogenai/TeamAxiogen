@@ -877,7 +877,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- ABOUT SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex items-center justify-center px-6 md:px-16 text-white pt-24 pb-8 section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
+        className="absolute inset-0 flex items-center justify-center px-6 md:px-16 text-white pt-24 pb-8 section-bg-adapt overflow-hidden"
         style={{ pointerEvents: showAbout ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -891,11 +891,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           <div 
             data-scroll-container
             data-lenis-prevent
-            className={`grid grid-cols-12 gap-4 md:gap-8 items-start w-full ${
-              isMobile 
-                ? 'max-h-none overflow-visible scrollbar-none' 
-                : 'max-h-[60vh] lg:max-h-none overflow-y-auto lg:overflow-visible scrollbar-none'
-            } px-2 py-2`}
+            className="grid grid-cols-12 gap-4 md:gap-8 items-start w-full max-h-[76vh] md:max-h-[80vh] overflow-y-auto scrollbar-none px-2 py-2"
           >
             <AnimatePresence mode={isMobile ? "wait" : "sync"}>
               {/* Bio statement */}
