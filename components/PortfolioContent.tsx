@@ -355,6 +355,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         const { data, error } = await supabase
           .from('projects')
           .select('*')
+          .neq('hidden', true)
           .order('display_order', { ascending: true })
           .order('created_at', { ascending: false });
 
