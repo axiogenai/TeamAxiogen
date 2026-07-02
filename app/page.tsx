@@ -165,7 +165,6 @@ export default function Home() {
             className="fixed inset-0 w-full h-full select-none pointer-events-none overflow-hidden"
             style={{ 
               zIndex: -5,
-              backgroundColor: 'var(--portfolio-bg)',
             }}
           >
             {/* Background image layer — fades in off-hero via CSS */}
