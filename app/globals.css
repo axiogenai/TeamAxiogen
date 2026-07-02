@@ -27,7 +27,7 @@
 }
 
 html, body {
-  background: transparent;
+  background: #020205;
   color: var(--portfolio-fg);
   font-family: "Outfit", "Inter", Arial, Helvetica, sans-serif;
   overflow-anchor: none;
@@ -35,6 +35,7 @@ html, body {
   max-width: 100%;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
+  overscroll-behavior: none;
 }
 
 html::-webkit-scrollbar,
