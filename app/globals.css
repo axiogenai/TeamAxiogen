@@ -7,29 +7,16 @@
   --portfolio-gradient-to: #0d0714;
   --portfolio-fg: #ffffff;
   --font-outfit: "Outfit", sans-serif;
-  --card-bg: rgba(0, 0, 0, 0.75);
+  --card-bg: rgba(0, 0, 0, 0.88);
   --card-border: rgba(255, 255, 255, 0.1);
   --theme-accent: rgba(168, 85, 247, 0.4);
   --theme-accent-solid: #a855f7;
   --glow-purple: rgba(168, 85, 247, 0.3);
   --glow-pink: rgba(236, 72, 153, 0.3);
   --glow-blue: rgba(59, 130, 246, 0.3);
+  --portfolio-bg-image: url("/BG/nightmode.webp");
 }
 
-html.theme-light.off-hero {
-  --portfolio-bg: #faf8fd;
-  --portfolio-gradient-from: #f0e7f7;
-  --portfolio-gradient-via: #faf8fd;
-  --portfolio-gradient-to: #e5ecfc;
-  --portfolio-fg: #1c1936;
-  --card-bg: rgba(255, 255, 255, 0.65);
-  --card-border: rgba(255, 255, 255, 0.5);
-  --theme-accent: rgba(124, 58, 237, 0.1);
-  --theme-accent-solid: #6d28d9;
-  --glow-purple: rgba(139, 92, 246, 0.2);
-  --glow-pink: rgba(244, 63, 94, 0.15);
-  --glow-blue: rgba(14, 165, 233, 0.15);
-}
 
 @theme inline {
   --color-background: var(--portfolio-bg);
@@ -40,7 +27,7 @@ html.theme-light.off-hero {
 }
 
 html, body {
-  background: var(--portfolio-bg);
+  background: transparent;
   color: var(--portfolio-fg);
   font-family: "Outfit", "Inter", Arial, Helvetica, sans-serif;
   overflow-anchor: none;
@@ -118,11 +105,11 @@ textarea:focus-visible {
 
 /* --- Glassmorphism Card --- */
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: rgba(10, 10, 15, 0.82) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 /* --- Animated Gradient Border --- */
@@ -205,178 +192,19 @@ textarea:focus-visible {
   animation: pulseGlow 3s ease-in-out infinite;
 }
 
-/* --- True Light Mode CSS Overrides --- */
-html.theme-light.off-hero body {
-  background: var(--portfolio-bg);
-  color: var(--portfolio-fg);
+/* --- Ambient Background Image Layer --- */
+.portfolio-bg-image-layer {
+  position: absolute;
+  inset: 0;
+  background-image: var(--portfolio-bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease-in-out;
 }
 
-/* Force headings to map to luxury deep cosmic indigo for rich typography */
-html.theme-light.off-hero h1,
-html.theme-light.off-hero h2,
-html.theme-light.off-hero h3,
-html.theme-light.off-hero h4 {
-  color: #1c1936 !important;
-}
-
-/* Force standard paragraphs, labels, and text-white elements to purple-slate gray */
-html.theme-light.off-hero [class*="text-white"],
-html.theme-light.off-hero span,
-html.theme-light.off-hero p,
-html.theme-light.off-hero li,
-html.theme-light.off-hero a {
-  color: #4e4870 !important;
-}
-
-/* Specific elements that need deep dark color */
-html.theme-light.off-hero button,
-html.theme-light.off-hero .font-bold,
-html.theme-light.off-hero .font-black {
-  color: #1c1936 !important;
-}
-
-/* Logo text in light mode - deep solid look */
-html.theme-light.off-hero .text-transparent {
-  background: none !important;
-  -webkit-background-clip: unset !important;
-  background-clip: unset !important;
-  color: #1c1936 !important;
-  -webkit-text-fill-color: #1c1936 !important;
-}
-
-/* Opacity overrides mapping to purple-slate gray shades */
-html.theme-light.off-hero [class*="text-white/95"] { color: rgba(28, 25, 54, 0.95) !important; }
-html.theme-light.off-hero [class*="text-white/90"] { color: rgba(28, 25, 54, 0.9) !important; }
-html.theme-light.off-hero [class*="text-white/80"] { color: rgba(28, 25, 54, 0.8) !important; }
-html.theme-light.off-hero [class*="text-white/70"] { color: rgba(28, 25, 54, 0.7) !important; }
-html.theme-light.off-hero [class*="text-white/60"] { color: rgba(28, 25, 54, 0.6) !important; }
-html.theme-light.off-hero [class*="text-white/50"] { color: rgba(28, 25, 54, 0.5) !important; }
-html.theme-light.off-hero [class*="text-white/40"] { color: rgba(28, 25, 54, 0.4) !important; }
-html.theme-light.off-hero [class*="text-white/30"] { color: rgba(28, 25, 54, 0.3) !important; }
-html.theme-light.off-hero [class*="text-white/20"] { color: rgba(28, 25, 54, 0.2) !important; }
-
-/* Frosted glass capsule and card overlays */
-html.theme-light.off-hero [class*="bg-black"] {
-  background: rgba(255, 255, 255, 0.7) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.5) !important;
-  box-shadow: 0 10px 40px rgba(28, 25, 54, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
-  color: #1c1936 !important;
-}
-
-html.theme-light.off-hero .glass-card {
-  background: rgba(255, 255, 255, 0.65) !important;
-  backdrop-filter: blur(30px) !important;
-  -webkit-backdrop-filter: blur(30px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.6) !important;
-  box-shadow: 0 30px 60px rgba(28, 25, 54, 0.08), 0 2px 8px rgba(0, 0, 0, 0.01), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
-  color: #4e4870 !important;
-}
-
-html.theme-light.off-hero [class*="bg-white/10"] {
-  background: rgba(0, 0, 0, 0.05) !important;
-  border-color: rgba(28, 25, 54, 0.08) !important;
-  color: #1c1936 !important;
-}
-
-html.theme-light.off-hero [class*="bg-white/5"] {
-  background: rgba(0, 0, 0, 0.03) !important;
-  border-color: rgba(28, 25, 54, 0.06) !important;
-  color: #4e4870 !important;
-}
-
-/* Force border overrides */
-html.theme-light.off-hero [class*="border-white"] {
-  border-color: rgba(28, 25, 54, 0.08) !important;
-}
-
-/* Button hover offsets */
-html.theme-light.off-hero .hover\:bg-white:hover {
-  background-color: #1c1936 !important;
-  color: #ffffff !important;
-}
-
-html.theme-light.off-hero button.bg-white,
-html.theme-light.off-hero a.bg-white {
-  background: #1c1936 !important;
-  color: #ffffff !important;
-}
-
-html.theme-light.off-hero .bg-white {
-  background: #ffffff !important;
-  color: #1c1936 !important;
-}
-
-html.theme-light.off-hero .btn-view-profile {
-  color: #ffffff !important;
-}
-
-html.theme-light.off-hero .btn-view-profile * {
-  color: #ffffff !important;
-}
-
-/* Form controls styling */
-html.theme-light.off-hero input,
-html.theme-light.off-hero textarea {
-  background: rgba(255, 255, 255, 0.8) !important;
-  color: #1c1936 !important;
-  border-color: rgba(28, 25, 54, 0.1) !important;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02) !important;
-}
-
-html.theme-light.off-hero input::placeholder,
-html.theme-light.off-hero textarea::placeholder {
-  color: rgba(28, 25, 54, 0.4) !important;
-}
-
-html.theme-light.off-hero input:focus,
-html.theme-light.off-hero textarea:focus {
-  border-color: #6d28d9 !important;
-  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.15) !important;
-}
-
-/* Make Galaxy Background faint on Light theme */
-html.theme-light.off-hero .galaxy-container {
-  opacity: 0.15 !important;
-}
-
-/* Custom scrollbar alignment */
-html.theme-light.off-hero .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(28, 25, 54, 0.15) !important;
-}
-html.theme-light.off-hero .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(28, 25, 54, 0.3) !important;
-}
-html.theme-light.off-hero .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(28, 25, 54, 0.03) !important;
-}
-
-/* Stats counter specific coloring */
-html.theme-light.off-hero .text-purple-400 { color: #8b5cf6 !important; }
-html.theme-light.off-hero .text-indigo-400 { color: #6366f1 !important; }
-html.theme-light.off-hero .text-cyan-400 { color: #0d9488 !important; }
-html.theme-light.off-hero .text-pink-400 { color: #ec4899 !important; }
-html.theme-light.off-hero .text-purple-300 { color: #7c3aed !important; }
-html.theme-light.off-hero .text-pink-300 { color: #7c3aed !important; }
-
-/* ============================================================
-   LIGHT MODE SHIELD — The critical layer that blocks dark
-   Galaxy/LightPillar particles from bleeding through during
-   section transitions. Lives inside the z-40 PortfolioContent
-   container (behind sections via z-index:-1) but above all
-   background WebGL layers. NO transition — instant activation.
-   ============================================================ */
-.light-mode-shield {
-  background: transparent;
-}
-
-html.theme-light.off-hero .light-mode-shield {
-  background: linear-gradient(to top right, #f0e7f7, #faf8fd, #e5ecfc) !important;
-}
-
-/* Scoped Light background color applied directly to individual sections */
-html.theme-light.off-hero .section-bg-adapt {
-  background: #faf8fd !important;
-  background-image: linear-gradient(to top right, #f0e7f7, #faf8fd, #e5ecfc) !important;
+html.off-hero .portfolio-bg-image-layer {
+  opacity: 1;
 }

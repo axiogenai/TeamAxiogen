@@ -162,10 +162,14 @@ export default function Home() {
 
           {/* Premium Simple Background */}
           <div 
-            className="fixed inset-0 w-full h-full bg-[var(--portfolio-bg)] select-none pointer-events-none overflow-hidden"
-            style={{ zIndex: -10 }}
+            className="fixed inset-0 w-full h-full select-none pointer-events-none overflow-hidden"
+            style={{ 
+              zIndex: -10,
+              backgroundColor: 'var(--portfolio-bg)',
+            }}
           >
-            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--portfolio-gradient-from)] via-[var(--portfolio-gradient-via)] to-[var(--portfolio-gradient-to)]" />
+            {/* Background image layer — fades in off-hero via CSS */}
+            <div className="portfolio-bg-image-layer" />
           </div>
         </div>
       </main>
