@@ -1183,7 +1183,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         </motion.section>
       {/* ----------------- SERVICES SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-16 section-bg-adapt overflow-hidden"
+        className={`absolute inset-0 flex flex-col items-center justify-start pt-20 md:pt-24 px-6 md:px-16 section-bg-adapt ${isMobile ? 'overflow-y-auto services-no-scrollbar' : 'overflow-hidden'}`}
         style={{ pointerEvents: showServices ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1193,6 +1193,17 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
+        <style>{`
+          .services-no-scrollbar::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+          }
+          .services-no-scrollbar {
+            -ms-overflow-style: none !important;
+            scrollbar-width: none !important;
+          }
+        `}</style>
 
 
         <div className="w-full max-w-5xl text-white">
@@ -1200,45 +1211,41 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           <div 
             data-scroll-container
             data-lenis-prevent
-            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-none overflow-visible scrollbar-none touch-pan-y glass-card"
+            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-4 md:py-5 md:px-7 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-none overflow-visible services-no-scrollbar touch-pan-y glass-card"
           >
             {/* Main Title - Inside the card */}
-            <div className="text-center mb-3 md:mb-5">
+            <div className="text-center mb-2 md:mb-3">
               <h2 className="text-xl md:text-3xl lg:text-4xl font-black tracking-tighter mb-1 bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Services We Provide</h2>
-              {!isMobile && (
-                <p className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/50">
-                  AI, Web, Mobile, Cloud & Intelligent Systems
-                </p>
-              )}
+              <p className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/50">
+                AI, Web, Mobile, Cloud & Intelligent Systems
+              </p>
             </div>
 
             {/* Description & Badges */}
-            {!isMobile && (
-              <div className="text-center mb-4 md:mb-6">
-                <p className="text-[10px] md:text-xs text-white/70 max-w-2xl mx-auto leading-relaxed font-normal mb-3 md:mb-4">
-                  From research to deployment — we build powerful, intelligent digital products for enterprises, startups &amp; students. You envision it, we engineer it.
-                </p>
-                
-                {/* Trust Badges */}
-                <div className="flex flex-wrap gap-1.5 md:gap-2.5 justify-center text-[8px] md:text-[10px] pointer-events-auto">
-                  <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-                    Production-Grade Code
-                  </div>
-                  <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.8)]" />
-                    On-Time Delivery
-                  </div>
-                  <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
-                    Affordable Pricing
-                  </div>
+            <div className="text-center mb-3 md:mb-4">
+              <p className="text-[10px] md:text-xs text-white/70 max-w-2xl mx-auto leading-relaxed font-normal mb-2 md:mb-3">
+                From research to deployment — we build powerful, intelligent digital products for enterprises, startups &amp; students. You envision it, we engineer it.
+              </p>
+              
+              {/* Trust Badges */}
+              <div className="flex flex-wrap gap-1.5 md:gap-2.5 justify-center text-[8px] md:text-[10px] pointer-events-auto">
+                <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                  Production-Grade Code
+                </div>
+                <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.8)]" />
+                  On-Time Delivery
+                </div>
+                <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
+                  Affordable Pricing
                 </div>
               </div>
-            )}
+            </div>
 
             {/* Services Grid (8 Services) */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3.5 max-w-4xl mx-auto pointer-events-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-2.5 max-w-4xl mx-auto pointer-events-auto">
               {servicesData.map((item, index) => {
                 const IconComponent = item.icon;
                 return (
@@ -1248,14 +1255,14 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   >
                     <motion.div 
                       whileHover="hover"
-                      className="relative overflow-hidden p-2.5 md:p-4 rounded-xl bg-black/40 border border-white/10 hover:border-white/20 transition-all hover:bg-black/60 flex flex-col h-full justify-between shadow-md cursor-default glass-card gradient-border"
+                      className="relative overflow-hidden p-2.5 md:py-2.5 md:px-3 rounded-xl bg-black/40 border border-white/10 hover:border-white/20 transition-all hover:bg-black/60 flex flex-col h-full justify-between shadow-md cursor-default glass-card gradient-border"
                     >
                       {/* Glow effect blob inside card on hover */}
                       <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/5 via-transparent to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
                       
                       <div className="relative z-10 flex flex-col h-full justify-between">
                         <div>
-                          <div className="flex items-center gap-1.5 mb-0.5 md:mb-1.5">
+                          <div className="flex items-center gap-1.5 mb-1 md:mb-1.5">
                             {/* Motion-animated icon wrapper */}
                             <motion.div 
                               variants={getIconVariants(item.title)}
@@ -1267,26 +1274,22 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                               {item.title}
                             </h3>
                           </div>
-                          {!isMobile && (
-                            <p className="text-[9px] sm:text-[10px] leading-relaxed text-white/50 font-normal line-clamp-3 mb-2">
-                              {item.desc}
-                            </p>
-                          )}
+                          <p className="text-[9px] sm:text-[10px] leading-relaxed text-white/50 font-normal line-clamp-2 mb-1.5">
+                            {item.desc}
+                          </p>
                         </div>
 
                         {/* Technology tags for each service */}
-                        {!isMobile && (
-                          <div className="flex flex-wrap gap-1 mt-auto pt-2 border-t border-white/5 opacity-70 group-hover:opacity-100 transition-opacity">
-                            {item.tags.map((tag) => (
-                              <span 
-                                key={tag} 
-                                className="text-[7px] sm:text-[8px] bg-white/5 border border-white/5 rounded px-1 py-0.2 font-semibold text-white/60"
-                              >
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
+                        <div className="flex flex-wrap gap-1 mt-auto pt-1.5 border-t border-white/5 opacity-70 group-hover:opacity-100 transition-opacity">
+                          {item.tags.map((tag) => (
+                            <span 
+                              key={tag} 
+                              className="text-[7px] sm:text-[8px] bg-white/5 border border-white/5 rounded px-1 py-0.2 font-semibold text-white/60"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </motion.div>
                   </div>
@@ -1295,26 +1298,24 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </div>
 
             {/* Divider */}
-            <div className="bg-gradient-to-r from-transparent via-white/10 to-transparent h-[1px] my-3 md:my-4 w-full max-w-4xl mx-auto" />
+            <div className="bg-gradient-to-r from-transparent via-white/10 to-transparent h-[1px] my-2.5 md:my-3 w-full max-w-4xl mx-auto" />
 
-            {/* Perfect For Section */}
+            {/* Perfect Solutions Section */}
             <div className="max-w-4xl mx-auto w-full">
-              <div className="text-center mb-2">
+              <div className="text-center mb-1.5 md:mb-2">
                 <span className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/40">Perfect Solutions For</span>
               </div>
-              <div className="grid grid-cols-3 gap-2 md:gap-3 pointer-events-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-2.5 pointer-events-auto">
                 {perfectForData.map((item, index) => {
                   const IconComponent = item.icon;
                   return (
-                    <div key={index} className="p-1.5 md:p-3.5 bg-black/40 border border-white/10 rounded-xl flex flex-col items-center justify-center text-center md:flex-row md:items-start md:text-left hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
-                      <div className={`p-1 md:p-2 rounded-lg shrink-0 mb-1 md:mb-0 ${item.color}`}>
+                    <div key={index} className="p-1.5 md:py-2 md:px-3 bg-black/40 border border-white/10 rounded-xl flex gap-2 md:gap-3 items-start text-left hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
+                      <div className={`p-1 md:p-1.5 rounded-lg shrink-0 ${item.color}`}>
                         <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </div>
                       <div>
                         <h4 className="text-[8px] sm:text-[10px] md:text-xs font-black text-white leading-tight">{item.title}</h4>
-                        {!isMobile && (
-                          <p className="text-[8px] sm:text-[10px] text-white/50 leading-relaxed font-normal mt-0.5">{item.desc}</p>
-                        )}
+                        <p className="text-[8px] sm:text-[10px] text-white/50 leading-relaxed font-normal mt-0.5">{item.desc}</p>
                       </div>
                     </div>
                   );
@@ -1323,16 +1324,14 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </div>
 
             {/* Tech Stack Row */}
-            {!isMobile && (
-              <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold text-white/30 max-w-4xl mx-auto pointer-events-auto">
-                <span>Tech Stack :</span>
-                {['Python', 'React', 'Node.js', 'Next.js', 'Java', 'TensorFlow', 'AWS / GCP', 'PostgreSQL', '.NET'].map((tech) => (
-                  <span key={tech} className="px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full text-white/60 font-medium cursor-default hover:border-white/20 transition-colors">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            )}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3 md:mt-3.5 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold text-white/30 max-w-4xl mx-auto pointer-events-auto">
+              <span>Tech Stack :</span>
+              {['Python', 'React', 'Node.js', 'Next.js', 'Java', 'TensorFlow', 'AWS / GCP', 'PostgreSQL', '.NET'].map((tech) => (
+                <span key={tech} className="px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full text-white/60 font-medium cursor-default hover:border-white/20 transition-colors">
+                  {tech}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </motion.section>
