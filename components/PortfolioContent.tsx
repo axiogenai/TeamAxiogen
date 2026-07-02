@@ -1183,7 +1183,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         </motion.section>
       {/* ----------------- SERVICES SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-20 md:pt-24 px-6 md:px-16 section-bg-adapt ${isMobile ? 'overflow-y-auto services-no-scrollbar' : 'overflow-hidden'}`}
+        className="absolute inset-0 flex flex-col items-center justify-start pt-20 md:pt-24 px-6 md:px-16 section-bg-adapt overflow-hidden"
         style={{ pointerEvents: showServices ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1211,38 +1211,42 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           <div 
             data-scroll-container
             data-lenis-prevent
-            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-4 md:py-5 md:px-7 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-none overflow-visible services-no-scrollbar touch-pan-y glass-card"
+            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-4 md:py-5 md:px-7 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[82vh] overflow-y-auto md:max-h-none md:overflow-visible services-no-scrollbar touch-pan-y glass-card"
           >
             {/* Main Title - Inside the card */}
             <div className="text-center mb-2 md:mb-3">
               <h2 className="text-xl md:text-3xl lg:text-4xl font-black tracking-tighter mb-1 bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Services We Provide</h2>
-              <p className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/50">
-                AI, Web, Mobile, Cloud & Intelligent Systems
-              </p>
+              {!isMobile && (
+                <p className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/50">
+                  AI, Web, Mobile, Cloud & Intelligent Systems
+                </p>
+              )}
             </div>
 
             {/* Description & Badges */}
-            <div className="text-center mb-3 md:mb-4">
-              <p className="text-[10px] md:text-xs text-white/70 max-w-2xl mx-auto leading-relaxed font-normal mb-2 md:mb-3">
-                From research to deployment — we build powerful, intelligent digital products for enterprises, startups &amp; students. You envision it, we engineer it.
-              </p>
-              
-              {/* Trust Badges */}
-              <div className="flex flex-wrap gap-1.5 md:gap-2.5 justify-center text-[8px] md:text-[10px] pointer-events-auto">
-                <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-                  Production-Grade Code
-                </div>
-                <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.8)]" />
-                  On-Time Delivery
-                </div>
-                <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
-                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
-                  Affordable Pricing
+            {!isMobile && (
+              <div className="text-center mb-3 md:mb-4">
+                <p className="text-[10px] md:text-xs text-white/70 max-w-2xl mx-auto leading-relaxed font-normal mb-2 md:mb-3">
+                  From research to deployment — we build powerful, intelligent digital products for enterprises, startups &amp; students. You envision it, we engineer it.
+                </p>
+                
+                {/* Trust Badges */}
+                <div className="flex flex-wrap gap-1.5 md:gap-2.5 justify-center text-[8px] md:text-[10px] pointer-events-auto">
+                  <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                    Production-Grade Code
+                  </div>
+                  <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.8)]" />
+                    On-Time Delivery
+                  </div>
+                  <div className="flex items-center gap-1 px-2.5 py-0.5 md:px-3 md:py-1 bg-white/5 border border-white/10 rounded-full font-semibold text-white/80">
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
+                    Affordable Pricing
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Services Grid (8 Services) */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-2.5 max-w-4xl mx-auto pointer-events-auto">
@@ -1260,36 +1264,22 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                       {/* Glow effect blob inside card on hover */}
                       <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/5 via-transparent to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
                       
-                      <div className="relative z-10 flex flex-col h-full justify-between">
-                        <div>
-                          <div className="flex items-center gap-1.5 mb-1 md:mb-1.5">
-                            {/* Motion-animated icon wrapper */}
-                            <motion.div 
-                              variants={getIconVariants(item.title)}
-                              className="inline-block shrink-0"
-                            >
-                              <IconComponent className="w-3.5 h-3.5 md:w-4 md:h-4 text-white/70 group-hover:text-purple-300 transition-colors" />
-                            </motion.div>
-                            <h3 className="text-[9px] sm:text-xs font-black text-white group-hover:text-purple-300 transition-colors leading-tight">
-                              {item.title}
-                            </h3>
-                          </div>
-                          <p className="text-[9px] sm:text-[10px] leading-relaxed text-white/50 font-normal line-clamp-2 mb-1.5">
-                            {item.desc}
-                          </p>
+                      <div className="relative z-10">
+                        <div className="flex items-center gap-1.5 mb-1 md:mb-1.5">
+                          {/* Motion-animated icon wrapper */}
+                          <motion.div 
+                            variants={getIconVariants(item.title)}
+                            className="inline-block shrink-0"
+                          >
+                            <IconComponent className="w-3.5 h-3.5 md:w-4 md:h-4 text-white/70 group-hover:text-purple-300 transition-colors" />
+                          </motion.div>
+                          <h3 className="text-[9px] sm:text-xs font-black text-white group-hover:text-purple-300 transition-colors leading-tight">
+                            {item.title}
+                          </h3>
                         </div>
-
-                        {/* Technology tags for each service */}
-                        <div className="flex flex-wrap gap-1 mt-auto pt-1.5 border-t border-white/5 opacity-70 group-hover:opacity-100 transition-opacity">
-                          {item.tags.map((tag) => (
-                            <span 
-                              key={tag} 
-                              className="text-[7px] sm:text-[8px] bg-white/5 border border-white/5 rounded px-1 py-0.2 font-semibold text-white/60"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
+                        <p className="text-[8px] sm:text-[9px] md:text-[10px] leading-relaxed text-white/50 font-normal line-clamp-3">
+                          {item.desc}
+                        </p>
                       </div>
                     </motion.div>
                   </div>
@@ -1324,7 +1314,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </div>
 
             {/* Tech Stack Row */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3 md:mt-3.5 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold text-white/30 max-w-4xl mx-auto pointer-events-auto">
+            <div className="hidden md:flex flex-wrap items-center justify-center gap-1.5 mt-3 md:mt-3.5 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold text-white/30 max-w-4xl mx-auto pointer-events-auto">
               <span>Tech Stack :</span>
               {['Python', 'React', 'Node.js', 'Next.js', 'Java', 'TensorFlow', 'AWS / GCP', 'PostgreSQL', '.NET'].map((tech) => (
                 <span key={tech} className="px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full text-white/60 font-medium cursor-default hover:border-white/20 transition-colors">
