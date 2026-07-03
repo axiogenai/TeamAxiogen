@@ -1357,6 +1357,32 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </div>
 
             <div className="space-y-3.5 md:space-y-4">
+              <a 
+                href="mailto:axiogen01@gmail.com" 
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center space-x-2 md:space-x-3 text-xs sm:text-sm hover:text-purple-300 transition-colors pointer-events-auto border-b border-white/5 pb-2 hover:border-purple-300/30 font-semibold cursor-pointer"
+              >
+                <Mail className="w-4 h-4 text-pink-400 shrink-0" />
+                <span>axiogen01@gmail.com</span>
+              </a>
+              <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-2 border-b border-white/5 pb-2">
+                <a 
+                  href="tel:+918010127704" 
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex items-center space-x-2 md:space-x-3 text-xs sm:text-sm hover:text-purple-300 transition-colors pointer-events-auto font-semibold cursor-pointer"
+                >
+                  <Phone className="w-4 h-4 text-pink-400 shrink-0" />
+                  <span>8010127704</span>
+                </a>
+                <a 
+                  href="tel:+917972884083" 
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex items-center space-x-2 md:space-x-3 text-xs sm:text-sm hover:text-purple-300 transition-colors pointer-events-auto font-semibold cursor-pointer"
+                >
+                  <Phone className="w-4 h-4 text-pink-400 shrink-0" />
+                  <span>7972884083</span>
+                </a>
+              </div>
 
               {/* Shuffled Social Buttons to the Bottom of Left Panel */}
               <div className="flex items-center gap-2 pt-1 pointer-events-auto">
