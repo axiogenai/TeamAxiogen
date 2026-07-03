@@ -903,7 +903,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={isMobile ? { opacity: 0, y: -15 } : undefined}
                   transition={{ duration: 0.25 }}
-                  className="col-span-12 lg:col-span-5 text-white bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] glass-card gradient-border flex flex-col justify-between lg:h-full"
+                  className="col-span-12 lg:col-span-6 text-white bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] glass-card gradient-border flex flex-col justify-between h-full"
                 >
                   <div className="flex flex-col flex-1">
                     <div className="flex items-center gap-2 mb-1.5 md:mb-2">
@@ -969,14 +969,14 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={isMobile ? { opacity: 0, y: -15 } : undefined}
                   transition={{ duration: 0.25 }}
-                  className="col-span-12 lg:col-span-7 flex flex-col gap-2 md:gap-4 w-full h-full"
+                  className="col-span-12 lg:col-span-6 flex flex-col gap-2 md:gap-4 w-full h-full"
                 >
                   {isMobile && (
                     <div className="w-full select-none pointer-events-auto h-16 flex items-center">
                       <LogoLoop logos={loopLogos} />
                     </div>
                   )}
-                  <div className="flex flex-col bg-[var(--card-bg)] p-3.5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full h-full min-h-[140px] sm:min-h-[300px] md:min-h-[380px] glass-card gradient-border">
+                  <div className="flex flex-col bg-[var(--card-bg)] p-3.5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full flex-1 min-h-[140px] sm:min-h-[300px] md:min-h-[380px] glass-card gradient-border">
                     <div className="flex justify-between items-center mb-2 md:mb-6">
                       <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Skills</h3>
                     </div>
