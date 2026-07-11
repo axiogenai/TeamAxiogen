@@ -5,9 +5,10 @@ import dynamic from 'next/dynamic';
 import { DynamicVignette } from '../components/DynamicVignette';
 import { Navbar } from '../components/Navbar';
 import { PortfolioContent } from '../components/PortfolioContent';
-import { useProjectCount, useSectionVisibility, getTotalStates } from '../hooks/useScroll';
+import { useProjectCount, useSectionVisibility, getTotalStates, useNavSection } from '../hooks/useScroll';
 import { SplashScreen } from '../components/SplashScreen';
 import { ScrollProgressBar } from '../components/ScrollProgressBar';
+import { SoundEngine } from '../components/SoundEngine';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LightPillar = dynamic(() => import('../components/LightPillar'), {
@@ -117,6 +118,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const { showHero } = useSectionVisibility();
+  const activeSection = useNavSection();
 
   useEffect(() => {
     setMounted(true);
@@ -172,6 +174,9 @@ export default function Home() {
           </div>
         </div>
       </main>
+      
+      {/* Fable-tier: Sound design engine */}
+      <SoundEngine sectionChanged={activeSection} />
       
       {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
     </>

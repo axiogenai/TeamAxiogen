@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   useSectionVisibility, 
@@ -15,6 +15,8 @@ import { supabase } from '../lib/supabaseClient';
 import { LogoLoop } from './LogoLoop';
 import { ScrollVelocity } from './ScrollVelocity';
 import { AnimatedCounter } from './AnimatedCounter';
+import { TextReveal } from './TextReveal';
+import { MagneticButton } from './MagneticButton';
 
 import { 
   ArrowDown, 
@@ -1141,7 +1143,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.35, ease: "easeInOut" }}
+              transition={{ duration: 0.35, ease: "easeInOut", staggerChildren: 0.08 }}
               data-scroll-container={!isMobile ? "" : undefined}
               data-lenis-prevent={!isMobile ? "" : undefined}
               className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pointer-events-auto w-full items-start ${
@@ -1153,7 +1155,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             >
               {projects
                 .slice(projectPage * (isMobile ? 3 : 6), (projectPage + 1) * (isMobile ? 3 : 6))
-                .map((project) => {
+                .map((project, cardIdx) => {
                   const CardComponent = project.link ? motion.a : motion.div;
                   const linkProps = project.link ? {
                     href: project.link,
@@ -1165,9 +1167,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     <CardComponent
                       key={project.name}
                       {...linkProps}
-                    className={`group relative h-[160px] md:h-[270px] rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto glass-card gradient-border ${project.link ? 'cursor-pointer' : 'select-none'}`}
+                      className={`group relative h-[160px] md:h-[270px] rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto glass-card gradient-border ${project.link ? 'cursor-pointer' : 'select-none'}`}
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ type: 'spring' as const, stiffness: 200, damping: 20, delay: cardIdx * 0.1 }}
                       whileHover={{ scale: 1.02, y: -8 }}
-                      transition={{ type: 'spring' as const, stiffness: 300, damping: 22 }}
                     >
                       <div className="p-4 md:p-6 flex flex-col justify-between flex-1 relative z-10">
                         {/* Glow effect */}
@@ -1276,7 +1280,10 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               {servicesData.map((item, index) => {
                 const IconComponent = item.icon;
                 return (
-                  <div 
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={showServices ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                    transition={{ duration: 0.4, delay: index * 0.06, ease: 'easeOut' }}
                     key={index}
                     className="relative group pointer-events-auto"
                   >
@@ -1305,7 +1312,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                         </p>
                       </div>
                     </motion.div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>

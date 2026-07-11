@@ -11,6 +11,7 @@ import {
   getSectionFrames 
 } from '../hooks/useScroll';
 import { ThemeToggle } from './ThemeToggle';
+import { MagneticButton } from './MagneticButton';
 import { Menu, X } from 'lucide-react';
 
 const TOTAL_FRAMES = 502;
@@ -101,13 +102,14 @@ export const Navbar = () => {
       </div>
 
       <div className="fixed top-6 right-4 md:right-8 z-50 pointer-events-auto flex items-center gap-3">
-        <button 
-          onClick={() => scrollToFrame(frames[3 + P] ?? 461)}
-          className="hidden md:block px-5 py-2.5 bg-white/10 border border-white/20 rounded-full text-xs font-semibold uppercase tracking-widest text-white hover:bg-white hover:text-black hover:border-white transition-all shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
-        >
-          Let&apos;s Talk
-        </button>
-
+        <MagneticButton as="div" strength={0.35} radius={80}>
+          <button 
+            onClick={() => scrollToFrame(frames[3 + P] ?? 461)}
+            className="hidden md:block px-5 py-2.5 bg-white/10 border border-white/20 rounded-full text-xs font-semibold uppercase tracking-widest text-white hover:bg-white hover:text-black hover:border-white transition-all shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
+          >
+            Let&apos;s Talk
+          </button>
+        </MagneticButton>
       </div>
     </>
   );

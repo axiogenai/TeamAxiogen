@@ -104,6 +104,7 @@ textarea:focus-visible {
   mix-blend-mode: overlay;
 }
 
+
 /* --- Glassmorphism Card --- */
 .glass-card {
   background: rgba(10, 10, 15, 0.82) !important;
