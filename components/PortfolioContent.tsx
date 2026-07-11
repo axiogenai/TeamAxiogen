@@ -1088,7 +1088,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- PROJECTS SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-12 md:justify-center md:pt-0 px-6 md:px-16 section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
+        className={`absolute inset-0 flex flex-col items-center justify-start pt-12 md:pt-16 px-6 md:px-16 section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
         style={{ pointerEvents: showProjects ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1136,79 +1136,76 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           </div>
           
           <AnimatePresence mode="wait">
-            <motion.div 
-               key={projectPage}
-               initial={{ opacity: 0, y: 15 }}
-               animate={{ opacity: 1, y: 0 }}
-               exit={{ opacity: 0, y: -15 }}
-               transition={{ duration: 0.35, ease: "easeInOut" }}
-               data-scroll-container={!isMobile ? "" : undefined}
-               data-lenis-prevent={!isMobile ? "" : undefined}
-               className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pointer-events-auto ${
-                 isMobile 
-                   ? 'max-h-none overflow-visible pr-0 py-0' 
-                   : 'max-h-[62vh] md:max-h-none pr-2 py-2 overflow-y-auto custom-scrollbar touch-pan-y'
-               }`}
-               style={{ perspective: 1000 }}
-             >
-               {projects
-                 .slice(projectPage * (isMobile ? 3 : 6), (projectPage + 1) * (isMobile ? 3 : 6))
-                 .map((project) => {
-                   const CardComponent = project.link ? motion.a : motion.div;
-                   const linkProps = project.link ? {
-                     href: project.link,
-                     target: '_blank',
-                     rel: 'noopener noreferrer'
-                   } : {};
+            <motion.div
+              key={projectPage}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.35, ease: "easeInOut" }}
+              data-scroll-container={!isMobile ? "" : undefined}
+              data-lenis-prevent={!isMobile ? "" : undefined}
+              className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pointer-events-auto w-full items-start ${
+                isMobile
+                  ? 'max-h-none overflow-visible pr-0 py-0'
+                  : 'max-h-[62vh] md:max-h-none pr-2 py-2 overflow-y-auto custom-scrollbar touch-pan-y'
+              }`}
+              style={{ perspective: 1000 }}
+            >
+              {projects
+                .slice(projectPage * (isMobile ? 3 : 6), (projectPage + 1) * (isMobile ? 3 : 6))
+                .map((project) => {
+                  const CardComponent = project.link ? motion.a : motion.div;
+                  const linkProps = project.link ? {
+                    href: project.link,
+                    target: '_blank',
+                    rel: 'noopener noreferrer'
+                  } : {};
 
-                   return (
-                     <CardComponent 
-                       key={project.name} 
-                       {...linkProps}
-                       className={`group relative min-h-[160px] md:min-h-[270px] rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto block glass-card gradient-border ${project.link ? 'cursor-pointer' : 'select-none'}`}
-                       whileHover={{ 
-                         scale: 1.02, 
-                         y: -8,
-                       }}
-                       transition={{ type: 'spring' as const, stiffness: 300, damping: 22 }}
-                     >
-                       <div className="p-4 md:p-6 flex flex-col justify-between flex-1 relative z-10">
-                         {/* Glow effect blob behind card on hover */}
-                         <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/10 via-indigo-500/5 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
+                  return (
+                    <CardComponent
+                      key={project.name}
+                      {...linkProps}
+                    className={`group relative h-[160px] md:h-[270px] rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto glass-card gradient-border ${project.link ? 'cursor-pointer' : 'select-none'}`}
+                      whileHover={{ scale: 1.02, y: -8 }}
+                      transition={{ type: 'spring' as const, stiffness: 300, damping: 22 }}
+                    >
+                      <div className="p-4 md:p-6 flex flex-col justify-between flex-1 relative z-10">
+                        {/* Glow effect */}
+                        <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/10 via-indigo-500/5 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
 
-                         <div className="flex justify-between items-start mb-2.5">
-                           <span className="px-2.5 py-0.5 md:px-3.5 md:py-1 rounded-full border border-white/10 text-[8px] sm:text-[9px] tracking-wider uppercase font-bold bg-white/5 text-white/80 group-hover:border-purple-500/30 group-hover:text-purple-300 transition-colors">
-                             {project.category}
-                           </span>
-                           <span className="opacity-60 text-[8px] sm:text-[10px] md:text-xs bg-white/5 px-2 py-0.5 rounded border border-white/5 font-semibold tabular-nums">{project.year}</span>
-                         </div>
-                         
-                         <div className="mt-auto">
-                           <div className="flex items-center gap-1">
-                             <h3 className="text-base sm:text-lg md:text-2xl font-black tracking-tight mb-1 md:mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-purple-200 group-hover:to-pink-300 transition-all duration-500 leading-tight">
-                               {project.name}
-                             </h3>
-                             {project.link && (
-                               <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-purple-300 shrink-0 mb-1" />
-                             )}
-                           </div>
-                           <p className="text-[10px] sm:text-xs text-white/60 mb-4 group-hover:text-white/80 transition-colors leading-relaxed line-clamp-3">
-                             {project.desc}
-                           </p>
-                           
-                           {/* Tech tags */}
-                           <div className="flex flex-wrap gap-1.5 opacity-75 group-hover:opacity-100 transition-opacity">
-                             {project.tech.map((tag, tIndex) => (
-                               <span key={tIndex} className="text-[8px] sm:text-[9px] bg-white/5 border border-white/10 rounded px-2 py-0.5 font-semibold">{tag}</span>
-                             ))}
-                           </div>
-                         </div>
-                       </div>
-                     </CardComponent>
-                   );
-                 })}
-             </motion.div>
-           </AnimatePresence>
+                        <div className="flex justify-between items-start mb-2.5">
+                          <span className="px-2.5 py-0.5 md:px-3.5 md:py-1 rounded-full border border-white/10 text-[8px] sm:text-[9px] tracking-wider uppercase font-bold bg-white/5 text-white/80 group-hover:border-purple-500/30 group-hover:text-purple-300 transition-colors">
+                            {project.category}
+                          </span>
+                          <span className="opacity-60 text-[8px] sm:text-[10px] md:text-xs bg-white/5 px-2 py-0.5 rounded border border-white/5 font-semibold tabular-nums">{project.year}</span>
+                        </div>
+
+                        <div className="mt-auto">
+                          <div className="flex items-center gap-1">
+                            <h3 className="text-base sm:text-lg md:text-2xl font-black tracking-tight mb-1 md:mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-purple-200 group-hover:to-pink-300 transition-all duration-500 leading-tight">
+                              {project.name}
+                            </h3>
+                            {project.link && (
+                              <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-purple-300 shrink-0 mb-1" />
+                            )}
+                          </div>
+                          <p className="text-[10px] sm:text-xs text-white/60 mb-4 group-hover:text-white/80 transition-colors leading-relaxed line-clamp-3">
+                            {project.desc}
+                          </p>
+
+                          {/* Tech tags */}
+                          <div className="flex flex-wrap gap-1.5 opacity-75 group-hover:opacity-100 transition-opacity">
+                            {project.tech.map((tag, tIndex) => (
+                              <span key={tIndex} className="text-[8px] sm:text-[9px] bg-white/5 border border-white/10 rounded px-2 py-0.5 font-semibold">{tag}</span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </CardComponent>
+                  );
+                })}
+            </motion.div>
+          </AnimatePresence>
           </div>
         </motion.section>
       {/* ----------------- SERVICES SECTION ----------------- */}
