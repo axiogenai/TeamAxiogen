@@ -349,18 +349,47 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   }, []);
 
   useEffect(() => {
+    const CACHE_KEY = 'axiogen_projects_cache';
+
     async function fetchProjects() {
-      if (!supabase) return;
+      // Load cached projects immediately so the UI is never empty
       try {
-        const { data, error } = await supabase
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setProjects(parsed);
+            setProjectCount(parsed.length);
+          }
+        }
+      } catch (_) { /* ignore localStorage errors */ }
+
+      if (!supabase) return; // No Supabase configured — stay on cache/fallback
+
+      try {
+        // Race between the Supabase request and a 6-second timeout
+        const timeoutPromise = new Promise<null>((resolve) =>
+          setTimeout(() => resolve(null), 6000)
+        );
+        const fetchPromise = supabase
           .from('projects')
           .select('*')
           .neq('hidden', true)
           .order('display_order', { ascending: true })
           .order('created_at', { ascending: false });
 
+        const result = await Promise.race([fetchPromise, timeoutPromise]);
+
+        // Timeout won — Supabase is offline, cached projects already shown
+        if (!result) {
+          console.warn('Supabase timed out — showing cached/fallback projects');
+          return;
+        }
+
+        const { data, error } = result as any;
+
         if (error) {
-          console.error('Error fetching projects:', error);
+          console.warn('Supabase error — showing cached/fallback projects:', error.message);
           return;
         }
 
@@ -382,11 +411,16 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             link: p.link || undefined,
             preview: p.preview || gradients[index % gradients.length]
           }));
+          // Update UI with fresh data
           setProjects(formatted);
           setProjectCount(data.length);
+          // Save to localStorage for future offline visits
+          try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify(formatted));
+          } catch (_) { /* ignore quota errors */ }
         }
       } catch (err) {
-        console.error('Failed to load projects:', err);
+        console.warn('Supabase unreachable — cached/fallback projects shown:', err);
       }
     }
 

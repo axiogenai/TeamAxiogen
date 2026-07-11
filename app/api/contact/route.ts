@@ -13,11 +13,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
     }
 
-    // 1. Try to save to Supabase contact_submissions table
+    // 1. Try to save to Supabase contact_submissions table (non-blocking — fails silently if offline)
     if (supabase) {
-      await supabase
-        .from('contact_submissions')
-        .insert([{ name, email, message }]);
+      try {
+        await supabase
+          .from('contact_submissions')
+          .insert([{ name, email, message }]);
+      } catch (sbErr) {
+        console.warn('Supabase contact insert failed (offline?) — continuing:', sbErr);
+      }
     }
 
     // 2. Try to send email via Web3Forms in the background
