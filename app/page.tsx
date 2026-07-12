@@ -130,6 +130,13 @@ export default function Home() {
         if (d.activeBg) setActiveBg(d.activeBg);
       })
       .catch(() => {});
+
+    // Track visitor (non-blocking, fire-and-forget)
+    fetch('/api/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page: window.location.pathname }),
+    }).catch(() => {});
   }, []);
 
   useEffect(() => {
