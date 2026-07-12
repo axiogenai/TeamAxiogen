@@ -385,7 +385,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             const res = await fetch('/projects.json');
             if (res.ok) {
               const staticData = await res.json();
-              if (Array.isArray(staticData) && staticData.length > 0) {
+              // Filter out hidden projects
+              const visibleData = Array.isArray(staticData) ? staticData.filter((p: any) => !p.hidden) : [];
+              if (visibleData.length > 0) {
                 const gradients = [
                   'from-purple-600 to-indigo-600',
                   'from-blue-600 to-teal-600',
@@ -394,7 +396,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   'from-teal-600 to-emerald-600',
                   'from-yellow-600 to-amber-600'
                 ];
-                const formatted = staticData.map((p: any, index: number) => ({
+                const formatted = visibleData.map((p: any, index: number) => ({
                   name: p.name,
                   category: p.category,
                   year: p.year,
@@ -404,7 +406,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   preview: p.preview || gradients[index % gradients.length]
                 }));
                 setProjects(formatted);
-                setProjectCount(staticData.length);
+                setProjectCount(visibleData.length);
                 try {
                   localStorage.setItem(CACHE_KEY, JSON.stringify(formatted));
                 } catch (_) {}
@@ -466,7 +468,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             const res = await fetch('/projects.json');
             if (res.ok) {
               const staticData = await res.json();
-              if (Array.isArray(staticData) && staticData.length > 0) {
+              // Filter out hidden projects
+              const visibleData = Array.isArray(staticData) ? staticData.filter((p: any) => !p.hidden) : [];
+              if (visibleData.length > 0) {
                 const gradients = [
                   'from-purple-600 to-indigo-600',
                   'from-blue-600 to-teal-600',
@@ -475,7 +479,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   'from-teal-600 to-emerald-600',
                   'from-yellow-600 to-amber-600'
                 ];
-                const formatted = staticData.map((p: any, index: number) => ({
+                const formatted = visibleData.map((p: any, index: number) => ({
                   name: p.name,
                   category: p.category,
                   year: p.year,
@@ -485,7 +489,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   preview: p.preview || gradients[index % gradients.length]
                 }));
                 setProjects(formatted);
-                setProjectCount(staticData.length);
+                setProjectCount(visibleData.length);
                 try {
                   localStorage.setItem('axiogen_projects_cache', JSON.stringify(formatted));
                 } catch (_) {}
