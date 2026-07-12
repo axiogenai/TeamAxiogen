@@ -147,7 +147,7 @@ export default function Home() {
         style={{ minHeight: dynamicMinHeight }}
       >
         <div className="animate-page-fade-in">
-          <Navbar />
+          <Navbar ready={!showSplash} />
           
           {/* Scroll-Linked Fixed Background Shader */}
           <LightPillarBackground />

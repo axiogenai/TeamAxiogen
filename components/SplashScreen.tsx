@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { motion } from 'framer-motion';
 
 const ShaderAnimation = dynamic(() => import('./ShaderAnimation').then((m) => m.ShaderAnimation), {
   ssr: false,
@@ -72,6 +73,94 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
 
       {/* Logo container */}
       <div className="relative flex flex-col items-center gap-4 z-10 animate-scale-in">
+        {/* ASCII Symbol — Staggered line reveal */}
+        <motion.pre
+          className="text-white/70 leading-none select-none pointer-events-none mb-2"
+          style={{
+            fontFamily: 'monospace',
+            fontSize: '5.2px',
+            lineHeight: '5.6px',
+            letterSpacing: '0.8px',
+            whiteSpace: 'pre',
+            textShadow: '0 0 12px rgba(168, 130, 255, 0.45)',
+          }}
+          aria-hidden="true"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.015,
+                delayChildren: 0.1,
+              }
+            }
+          }}
+          initial="hidden"
+          animate="visible"
+        >
+          {`                                                            ##                                                             
+                                                            ###                                                            
+                                                          ######                                                           
+                                                         _________                                                         
+                                                        ###########                                                        
+                                                       #############                                                       
+                                                      ###############                                                      
+                                                     #################                                                     
+                                                    ###################                                                    
+                                                   #####################                                                   
+                                                  #######################                                                  
+                                                 #########################                                                 
+                                                ############################                                               
+                                               ##############################                                              
+                                              ################################                                             
+                                             ##################################                                            
+                                            ####################################                                           
+                                           ######################################                                          
+                                          ########################################                                         
+                                         ##########################################                                        
+                                           #########################################                                       
+                                                 ##############  ####################                                      
+                                                   *##########    ####################                                     
+                                                     ########      ####################                                    
+                                     ###########       #####         ####################                                  
+                                  #################      #              ##################                                 
+                                 ###################                     ##################                                
+                               #######################           #####     #################                               
+                              *#######################         ###########  #################                              
+                             #########################            ########### ################                             
+                            ##########################              ###########################                            
+                            ##########################                ##########################                           
+                           ###########################                 ##########################                          
+                          ###########################                   ##########################*                        
+                        *###########################                     ###########################                       
+                       ############################                       *##########################                      
+                       ###########################                          ##########################                     
+                      ###########################                            ##########################                    
+                    ############################                              ##########################                   
+                   *###########################                                ##########################                  
+                   ###########################                                  ##########################                 
+                  ###########################                                     #########################                
+                  ###########################                                       #########################               
+                 ###########################                                         #########################              
+                ###########################                                           #########################`.split('\n').map((line, i) => (
+            <motion.span
+              key={i}
+              className="block"
+              variants={{
+                hidden: { opacity: 0, y: 3, filter: 'blur(2px)' },
+                visible: { 
+                  opacity: 1, 
+                  y: 0, 
+                  filter: 'blur(0px)',
+                  transition: { type: 'spring', stiffness: 200, damping: 15 }
+                }
+              }}
+            >
+              {line}
+            </motion.span>
+          ))}
+        </motion.pre>
+
         <div className="relative flex items-center justify-center">
           <h1 className="text-5xl md:text-7xl font-black tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-300 to-indigo-200 drop-shadow-[0_4px_12px_rgba(0,0,0,0.50)] uppercase">
             AXIOGEN

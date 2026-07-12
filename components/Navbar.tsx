@@ -16,7 +16,7 @@ import { Menu, X } from 'lucide-react';
 
 const TOTAL_FRAMES = 502;
 
-export const Navbar = () => {
+export const Navbar = ({ ready = true }: { ready?: boolean }) => {
   const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const lenis = useLenis();
@@ -61,9 +61,16 @@ export const Navbar = () => {
       <div className="hidden md:flex fixed top-6 left-4 md:left-8 z-50 pointer-events-auto select-none items-center gap-2.5">
         <button 
           onClick={() => scrollToFrame(frames[0] ?? 42)}
-          className="text-sm font-black tracking-tighter text-white uppercase bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent hover:opacity-85 transition-opacity cursor-pointer"
+          className="hover:opacity-85 transition-opacity cursor-pointer flex items-center gap-2"
         >
-          AXIOGEN
+          <img 
+            src="/axiogen-logo.png" 
+            alt="Axiogen" 
+            className="w-7 h-7 invert brightness-200"
+          />
+          <span className="text-sm font-black tracking-tighter text-white uppercase bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">
+            AXIOGEN
+          </span>
         </button>
       </div>
 
@@ -71,7 +78,7 @@ export const Navbar = () => {
       <div className="hidden md:flex fixed top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-max px-4 pointer-events-none">
         <motion.div 
           initial={{ y: -100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
+          animate={ready ? { y: 0, opacity: 1 } : { y: -100, opacity: 0 }}
           transition={{ duration: 1, ease: 'easeOut', delay: 0.2 }}
           className="flex items-center space-x-1 bg-black/85 backdrop-blur-xl border border-white/10 rounded-full p-1.5 shadow-[0_10px_40px_rgba(0,0,0,0.6)] pointer-events-auto"
         >

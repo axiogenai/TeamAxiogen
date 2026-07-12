@@ -1149,7 +1149,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pointer-events-auto w-full items-start ${
                 isMobile
                   ? 'max-h-none overflow-visible pr-0 py-0'
-                  : 'max-h-[62vh] md:max-h-none pr-2 py-2 overflow-y-auto custom-scrollbar touch-pan-y'
+                  : 'max-h-[62vh] md:max-h-none pr-2 py-2 overflow-y-auto scrollbar-none touch-pan-y'
               }`}
               style={{ perspective: 1000 }}
             >
