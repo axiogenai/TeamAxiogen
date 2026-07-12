@@ -20,30 +20,42 @@ function playWhoosh() {
   const ctx = getAudioContext();
   if (!ctx) return;
 
-  const duration = 0.3;
-  const noise = ctx.createBufferSource();
-  const buffer = ctx.createBuffer(1, ctx.sampleRate * duration, ctx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < data.length; i++) {
-    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 2);
-  }
-  noise.buffer = buffer;
-
+  const duration = 0.6; // Longer, smoother cinematic swell
+  const osc1 = ctx.createOscillator();
+  const osc2 = ctx.createOscillator();
+  const gain = ctx.createGain();
   const filter = ctx.createBiquadFilter();
-  filter.type = 'bandpass';
-  filter.frequency.setValueAtTime(2000, ctx.currentTime);
-  filter.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + duration);
+
+  // Warm triangle/sine blend for sub-bass air movement
+  osc1.type = 'triangle';
+  osc2.type = 'sine';
+
+  osc1.frequency.setValueAtTime(60, ctx.currentTime);
+  osc1.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + duration);
+
+  osc2.frequency.setValueAtTime(90, ctx.currentTime);
+  osc2.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + duration);
+
+  // Smooth filter sweep to remove all harsh highs
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(120, ctx.currentTime);
+  filter.frequency.exponentialRampToValueAtTime(350, ctx.currentTime + duration);
   filter.Q.value = 1;
 
-  const gain = ctx.createGain();
-  gain.gain.setValueAtTime(0.06, ctx.currentTime);
+  // Very gentle gain curve — starting from silent, swelling, then decaying
+  gain.gain.setValueAtTime(0.001, ctx.currentTime);
+  gain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + duration * 0.4);
   gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
 
-  noise.connect(filter);
+  osc1.connect(filter);
+  osc2.connect(filter);
   filter.connect(gain);
   gain.connect(ctx.destination);
-  noise.start();
-  noise.stop(ctx.currentTime + duration);
+
+  osc1.start();
+  osc2.start();
+  osc1.stop(ctx.currentTime + duration);
+  osc2.stop(ctx.currentTime + duration);
 }
 
 function playClick() {
@@ -51,18 +63,22 @@ function playClick() {
   if (!ctx) return;
 
   const osc = ctx.createOscillator();
-  osc.frequency.setValueAtTime(2200, ctx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(1800, ctx.currentTime + 0.06);
-  osc.type = 'sine';
-
   const gain = ctx.createGain();
-  gain.gain.setValueAtTime(0.04, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+
+  // Low warm sine wave at 130Hz — mimics high-end physical haptic engines (like Apple Taptic Engine)
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(130, ctx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.025);
+
+  // Micro duration to prevent any ringing
+  gain.gain.setValueAtTime(0.09, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.028);
 
   osc.connect(gain);
   gain.connect(ctx.destination);
+
   osc.start();
-  osc.stop(ctx.currentTime + 0.08);
+  osc.stop(ctx.currentTime + 0.03);
 }
 
 /**
