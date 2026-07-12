@@ -116,11 +116,20 @@ export default function Home() {
   const TOTAL_FRAMES = 502;
   const [mounted, setMounted] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
+  const [activeBg, setActiveBg] = useState('');
   const { showHero } = useSectionVisibility();
   const activeSection = useNavSection();
 
   useEffect(() => {
     setMounted(true);
+
+    // Fetch active background from settings
+    fetch('/api/settings')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.activeBg) setActiveBg(d.activeBg);
+      })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -136,6 +145,9 @@ export default function Home() {
 
   const totalStates = getTotalStates();
   const dynamicMinHeight = `${(totalStates - 1) * 100}vh`;
+
+  // Build the bg image CSS value — use dynamic if set, else fall back to the CSS var default
+  const bgImageStyle = activeBg ? `url("${activeBg}")` : undefined;
 
   if (!mounted) return null;
 
@@ -169,7 +181,10 @@ export default function Home() {
             }}
           >
             {/* Background image layer — fades in off-hero via CSS */}
-            <div className="portfolio-bg-image-layer" />
+            <div 
+              className="portfolio-bg-image-layer"
+              style={bgImageStyle ? { backgroundImage: bgImageStyle } : undefined}
+            />
           </div>
         </div>
       </main>
