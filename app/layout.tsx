@@ -20,7 +20,7 @@ export default function RootLayout({
         <meta property="og:title" content="Axiogen | Creative Engineering Studio" />
         <meta property="og:description" content="Immersive, high-performance digital spaces at the intersection of cinematic design and web engineering." />
         <meta property="og:type" content="website" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon.png" type="image/png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
