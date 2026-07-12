@@ -380,18 +380,55 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           .order('display_order', { ascending: true })
           .order('created_at', { ascending: false });
 
+        const loadStaticFallback = async () => {
+          try {
+            const res = await fetch('/projects.json');
+            if (res.ok) {
+              const staticData = await res.json();
+              if (Array.isArray(staticData) && staticData.length > 0) {
+                const gradients = [
+                  'from-purple-600 to-indigo-600',
+                  'from-blue-600 to-teal-600',
+                  'from-red-600 to-orange-600',
+                  'from-pink-600 to-rose-600',
+                  'from-teal-600 to-emerald-600',
+                  'from-yellow-600 to-amber-600'
+                ];
+                const formatted = staticData.map((p: any, index: number) => ({
+                  name: p.name,
+                  category: p.category,
+                  year: p.year,
+                  desc: p.desc,
+                  tech: Array.isArray(p.tech) ? p.tech : JSON.parse(p.tech || '[]'),
+                  link: p.link || undefined,
+                  preview: p.preview || gradients[index % gradients.length]
+                }));
+                setProjects(formatted);
+                setProjectCount(staticData.length);
+                try {
+                  localStorage.setItem(CACHE_KEY, JSON.stringify(formatted));
+                } catch (_) {}
+              }
+            }
+          } catch (err) {
+            console.warn('Failed to load static fallback projects.json:', err);
+          }
+        };
+
         const result = await Promise.race([fetchPromise, timeoutPromise]);
 
-        // Timeout won — Supabase is offline, cached projects already shown
+        // Timeout won — Supabase is offline, try projects.json fallback
         if (!result) {
-          console.warn('Supabase timed out — showing cached/fallback projects');
+          console.warn('Supabase timed out — trying static fallback projects.json');
+          await loadStaticFallback();
           return;
         }
 
         const { data, error } = result as any;
 
         if (error) {
-          console.warn('Supabase error — showing cached/fallback projects:', error.message);
+          console.warn('Supabase error — trying static fallback projects.json:', error.message);
+          await loadStaticFallback();
           return;
         }
 
@@ -422,7 +459,43 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           } catch (_) { /* ignore quota errors */ }
         }
       } catch (err) {
-        console.warn('Supabase unreachable — cached/fallback projects shown:', err);
+        console.warn('Supabase unreachable — trying static fallback projects.json:', err);
+        // Try static fallback
+        const loadStaticFallback = async () => {
+          try {
+            const res = await fetch('/projects.json');
+            if (res.ok) {
+              const staticData = await res.json();
+              if (Array.isArray(staticData) && staticData.length > 0) {
+                const gradients = [
+                  'from-purple-600 to-indigo-600',
+                  'from-blue-600 to-teal-600',
+                  'from-red-600 to-orange-600',
+                  'from-pink-600 to-rose-600',
+                  'from-teal-600 to-emerald-600',
+                  'from-yellow-600 to-amber-600'
+                ];
+                const formatted = staticData.map((p: any, index: number) => ({
+                  name: p.name,
+                  category: p.category,
+                  year: p.year,
+                  desc: p.desc,
+                  tech: Array.isArray(p.tech) ? p.tech : JSON.parse(p.tech || '[]'),
+                  link: p.link || undefined,
+                  preview: p.preview || gradients[index % gradients.length]
+                }));
+                setProjects(formatted);
+                setProjectCount(staticData.length);
+                try {
+                  localStorage.setItem('axiogen_projects_cache', JSON.stringify(formatted));
+                } catch (_) {}
+              }
+            }
+          } catch (e) {
+            console.warn('Failed to load static fallback projects.json:', e);
+          }
+        };
+        await loadStaticFallback();
       }
     }
 
