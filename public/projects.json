@@ -1,0 +1,209 @@
+[
+  {
+    "id": "69d396a1-5015-4bb7-8a7f-39ebd46b6804",
+    "name": "SEOHub",
+    "category": "SEO Tool",
+    "year": "2026",
+    "desc": "An all-in-one enterprise SEO platform that audits, fixes, and monitors website search performance. Features include crawl analysis, keyword research via Gemini AI, accessibility scanning, PageSpeed insights, and competitor comparison.",
+    "tech": [
+      "Cheerio",
+      "Axios",
+      "Puppeteer",
+      "PageSpeed API"
+    ],
+    "link": "https://seohubpro.vercel.app",
+    "display_order": 0,
+    "hidden": false
+  },
+  {
+    "id": "98841ed3-8aea-4032-965a-b875b6b1105a",
+    "name": "CyberStrike Suite",
+    "category": "Security Dashboard",
+    "year": "2026",
+    "desc": "A web-based monitoring dashboard designed to simulate security check scenarios and visualize real-time request metrics.",
+    "tech": [
+      "FastAPI",
+      "Uvicorn",
+      "JavaScript",
+      "HTML",
+      "CSS"
+    ],
+    "display_order": 1,
+    "hidden": false
+  },
+  {
+    "id": "fa1fa611-83c0-4d1d-9c57-ae6cd98d796d",
+    "name": "Rebuildly",
+    "category": "Developer Tool",
+    "year": "2026",
+    "desc": "Rebuildly audits websites for code quality, design, and accessibility. It provides actionable insights to developers.",
+    "tech": [
+      "Express",
+      "JavaScript",
+      "Vanilla CSS",
+      "typescript"
+    ],
+    "link": "https://rebuildly.vercel.app",
+    "display_order": 2,
+    "hidden": false
+  },
+  {
+    "id": "43b0d16f-5f4b-4b24-92dc-62af9b2b04e4",
+    "name": "Invenscope",
+    "category": "Artificial Intelligence",
+    "year": "2026",
+    "desc": "AI-powered patent analyzer that scans global registries, evaluates novelty using vector embeddings, and generates novel invention combinations.",
+    "tech": [
+      "React",
+      "chromadb",
+      "TypeScript",
+      "SQLite"
+    ],
+    "link": "https://invenscope.vercel.app/",
+    "display_order": 3,
+    "hidden": false
+  },
+  {
+    "id": "0c30ee15-3788-4fa3-afe3-857c54f6bbf3",
+    "name": "Axiogen AI",
+    "category": "Artificial Intelligence",
+    "year": "2026",
+    "desc": "Core neural network training workspace powering predictive analytics and cognitive assistant agents.",
+    "tech": [
+      "Python",
+      "FastAPI",
+      "PyTorch",
+      "Docker"
+    ],
+    "link": "https://axiogen.in",
+    "display_order": 4,
+    "hidden": false
+  },
+  {
+    "id": "53fffcec-f649-4163-b8e7-283c0608ad44",
+    "name": "RansomGuard AI",
+    "category": "Cybersecurity AI",
+    "year": "2026",
+    "desc": "Real-time ransomware detection and response engine powered by watchdog traps, entropy analysis, and an ML ensemble.",
+    "tech": [
+      "Python",
+      "Flask",
+      "XGBoost",
+      "Socket.IO",
+      "SQLite"
+    ],
+    "display_order": 5,
+    "hidden": false
+  },
+  {
+    "id": "485f659f-53e7-448d-b94a-0de93e5ff5f8",
+    "name": "OmniDx",
+    "category": "Digital Health AI",
+    "year": "2026",
+    "desc": "Advanced medical X-ray pathology classification using DenseNet121 and Grad-CAM visual heatmaps for explainability.",
+    "tech": [
+      "PyTorch",
+      "Next.js",
+      "FastAPI",
+      "PostgreSQL",
+      "Docker"
+    ],
+    "display_order": 6,
+    "hidden": false
+  },
+  {
+    "id": "ef77beb2-9fa9-4579-a192-264280dae3a7",
+    "name": "CodeWeaver AI",
+    "category": "AI Development Tools",
+    "year": "2026",
+    "desc": "AI system that auto-generates production-ready code, tests, and full project structures from natural language specifications.",
+    "tech": [
+      "TypeScript",
+      "Express.js",
+      "Vitest",
+      "Node.js"
+    ],
+    "display_order": 7,
+    "hidden": false
+  },
+  {
+    "id": "22a3ff2d-4d43-4c77-82c8-b0ecc7f09e27",
+    "name": "TruthLens",
+    "category": "AI Tool",
+    "year": "2026",
+    "desc": "TruthLens is an AI-powered fake news detector built on Axiogen. It analyzes articles, documents, and screenshots, delivering a forensic breakdown with manipulation heatmaps, spread risk prediction, and AI content detection.",
+    "tech": [
+      "FastAPI",
+      "Python",
+      "JavaScript",
+      "CSS"
+    ],
+    "link": "https://truth-lenspro.vercel.app/",
+    "display_order": 8,
+    "hidden": false
+  },
+  {
+    "id": "d43f52a4-772f-4e51-bc12-d5cca5555e3f",
+    "name": "Blockchain Forge",
+    "category": "Web3 Infrastructure",
+    "year": "2025",
+    "desc": "High-performance cryptographic sandbox tool for generating, mining, and auditing distributed chains.",
+    "tech": [
+      "TypeScript",
+      "Node.js",
+      "Framer Motion",
+      "TailwindCSS"
+    ],
+    "link": "https://blockchainforge.vercel.app",
+    "display_order": 9,
+    "hidden": false
+  },
+  {
+    "id": "943acf79-4c55-41f7-9449-85f035277b0c",
+    "name": "NAAC Platform",
+    "category": "Enterprise SaaS",
+    "year": "2025",
+    "desc": "Advanced academic accreditation suite streamlining documentation, criteria metrics, and reporting.",
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "Prisma ORM",
+      "PostgreSQL"
+    ],
+    "link": "https://naac-nine.vercel.app",
+    "display_order": 10,
+    "hidden": false
+  },
+  {
+    "id": "ade338d2-93f7-43df-a30b-8901f3703784",
+    "name": "SessionWarden",
+    "category": "Authentication Audit",
+    "year": "2025",
+    "desc": "Active session protection agent intercepting hijack attempts and managing token rotation in real-time.",
+    "tech": [
+      "JavaScript",
+      "Express",
+      "JWT Security",
+      "TailwindCSS"
+    ],
+    "link": "https://sessionwarden.in",
+    "display_order": 11,
+    "hidden": false
+  },
+  {
+    "id": "f2ff19cf-9e0e-477d-8bc9-31993677b518",
+    "name": "Lumina Backgrounds",
+    "category": "Creative UI Assets",
+    "year": "2025",
+    "desc": "Library of fluid particle simulations and interactive canvas shaders built for premium web graphics.",
+    "tech": [
+      "WebGL",
+      "GLSL",
+      "Canvas API",
+      "Vanilla CSS"
+    ],
+    "link": "https://luminabackgrounds.vercel.app",
+    "display_order": 12,
+    "hidden": false
+  }
+]
