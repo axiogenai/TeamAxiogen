@@ -8,7 +8,6 @@ import { PortfolioContent } from '../components/PortfolioContent';
 import { useProjectCount, useSectionVisibility, getTotalStates, useNavSection } from '../hooks/useScroll';
 import { SplashScreen } from '../components/SplashScreen';
 import { ScrollProgressBar } from '../components/ScrollProgressBar';
-import { SoundEngine } from '../components/SoundEngine';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LightPillar = dynamic(() => import('../components/LightPillar'), {
@@ -174,10 +173,7 @@ export default function Home() {
           </div>
         </div>
       </main>
-      
-      {/* Fable-tier: Sound design engine */}
-      <SoundEngine sectionChanged={activeSection} />
-      
+
       {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
     </>
   );
