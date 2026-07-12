@@ -148,6 +148,7 @@ export default function Home() {
 
   // Build the bg image CSS value — use dynamic if set, else fall back to the CSS var default
   const bgImageStyle = activeBg ? `url("${activeBg}")` : undefined;
+  const isVideoBg = activeBg && /\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(activeBg);
 
   if (!mounted) return null;
 
@@ -180,11 +181,23 @@ export default function Home() {
               zIndex: -5,
             }}
           >
-            {/* Background image layer — fades in off-hero via CSS */}
-            <div 
-              className="portfolio-bg-image-layer"
-              style={bgImageStyle ? { backgroundImage: bgImageStyle } : undefined}
-            />
+            {isVideoBg ? (
+              <video
+                key={activeBg}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="portfolio-bg-image-layer object-cover w-full h-full"
+              >
+                <source src={activeBg} type={activeBg.includes('.webm') ? 'video/webm' : 'video/mp4'} />
+              </video>
+            ) : (
+              <div 
+                className="portfolio-bg-image-layer"
+                style={bgImageStyle ? { backgroundImage: bgImageStyle } : undefined}
+              />
+            )}
           </div>
         </div>
       </main>
