@@ -6,18 +6,27 @@ export async function POST(request: Request) {
   try {
     const headersList = await headers();
     
-    // Extract IP
+    // Extract IP (supports IPv4 and IPv6)
     const forwarded = headersList.get('x-forwarded-for');
     const ip = forwarded ? forwarded.split(',')[0].trim() : headersList.get('x-real-ip') || 'unknown';
     
-    // Extract metadata
+    // Extract metadata from headers
     const userAgent = headersList.get('user-agent') || '';
     const referrer = headersList.get('referer') || '';
     
-    // Parse body for page info and optional GPS coordinates
+    // Parse full body payload
     let page = '/';
     let clientLat: number | null = null;
     let clientLon: number | null = null;
+    let gpsAccuracy: number | null = null;
+    let screenWidth: number | null = null;
+    let screenHeight: number | null = null;
+    let language = '';
+    let timezone = '';
+    let platform = '';
+    let connectionType = '';
+    let locationSource = 'ip';
+
     try {
       const body = await request.json();
       if (body.page) page = body.page;
@@ -25,15 +34,23 @@ export async function POST(request: Request) {
         clientLat = body.latitude;
         clientLon = body.longitude;
       }
+      if (typeof body.gps_accuracy === 'number') gpsAccuracy = body.gps_accuracy;
+      if (typeof body.screen_width === 'number') screenWidth = body.screen_width;
+      if (typeof body.screen_height === 'number') screenHeight = body.screen_height;
+      if (body.language) language = body.language;
+      if (body.timezone) timezone = body.timezone;
+      if (body.platform) platform = body.platform;
+      if (body.connection_type) connectionType = body.connection_type;
+      if (body.location_source) locationSource = body.location_source;
     } catch {
-      // No body or invalid JSON is fine
+      // No body or invalid JSON
     }
     
-    // Parse Vercel headers (they support both IPv4 and IPv6 perfectly when deployed)
+    // Parse Vercel geo headers (IPv4 + IPv6 supported)
     const vercelLat = parseFloat(headersList.get('x-vercel-ip-latitude') || '0');
     const vercelLon = parseFloat(headersList.get('x-vercel-ip-longitude') || '0');
 
-    // Geolocation: prefer client GPS coordinates (99% accurate) over IP-based lookup
+    // Build geolocation data with priority chain
     let geoData = {
       latitude: clientLat ?? (vercelLat !== 0 ? vercelLat : 0),
       longitude: clientLon ?? (vercelLon !== 0 ? vercelLon : 0),
@@ -43,20 +60,23 @@ export async function POST(request: Request) {
       country_code: headersList.get('x-vercel-ip-country') || '',
       isp: '',
       org: '',
+      is_vpn: false,
+      is_proxy: false,
+      is_tor: false,
+      ip_type: '',
     };
     
-    // Fallback: Call ipwho.is (Supports IPv4 and IPv6) for ISP and location data enrichment
+    // ipwho.is: Full IPv4/IPv6 geolocation + security flags
     if (ip !== 'unknown' && ip !== '127.0.0.1' && ip !== '::1') {
       try {
         const geoRes = await fetch(
-          `https://ipwho.is/${ip}`,
-          { signal: AbortSignal.timeout(3000) }
+          `https://ipwho.is/${ip}?fields=success,type,latitude,longitude,city,region,country,country_code,connection,security`,
+          { signal: AbortSignal.timeout(4000) }
         );
         if (geoRes.ok) {
           const geo = await geoRes.json();
           if (geo.success) {
             geoData = {
-              // Priority: 1. Client GPS -> 2. ipwho.is IP Geolocation -> 3. Vercel Header -> 4. Zero
               latitude: clientLat ?? geo.latitude ?? geoData.latitude,
               longitude: clientLon ?? geo.longitude ?? geoData.longitude,
               city: geo.city || geoData.city,
@@ -65,15 +85,44 @@ export async function POST(request: Request) {
               country_code: geo.country_code || geoData.country_code,
               isp: geo.connection?.isp || '',
               org: geo.connection?.org || '',
+              is_vpn: geo.security?.vpn ?? false,
+              is_proxy: geo.security?.proxy ?? false,
+              is_tor: geo.security?.tor ?? false,
+              ip_type: geo.type || '',
             };
           }
         }
       } catch {
-        // Geo lookup failed, rely on client GPS and Vercel fallback headers
+        // Geo lookup failed — use client GPS + Vercel headers
+      }
+    }
+
+    // Reverse Geocode client GPS coordinates if available to get the actual city/town names
+    if (clientLat !== null && clientLon !== null) {
+      try {
+        const revRes = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${clientLat}&lon=${clientLon}&zoom=12&addressdetails=1`,
+          {
+            headers: { 'User-Agent': 'Axiogen-Portfolio-Tracker/1.0' },
+            signal: AbortSignal.timeout(3000),
+          }
+        );
+        if (revRes.ok) {
+          const revData = await revRes.json();
+          if (revData && revData.address) {
+            const addr = revData.address;
+            geoData.city = addr.city || addr.town || addr.village || addr.suburb || addr.municipality || addr.county || geoData.city;
+            geoData.region = addr.state || geoData.region;
+            geoData.country = addr.country || geoData.country;
+            geoData.country_code = addr.country_code ? addr.country_code.toUpperCase() : geoData.country_code;
+          }
+        }
+      } catch {
+        // Reverse geocoding failed, fall back to the IP-based city name
       }
     }
     
-    // Store in Supabase
+    // Store everything in Supabase
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     
@@ -95,6 +144,18 @@ export async function POST(request: Request) {
         user_agent: userAgent,
         page,
         referrer,
+        screen_width: screenWidth,
+        screen_height: screenHeight,
+        language,
+        timezone,
+        platform,
+        connection_type: connectionType,
+        gps_accuracy: gpsAccuracy,
+        is_vpn: geoData.is_vpn,
+        is_proxy: geoData.is_proxy,
+        is_tor: geoData.is_tor,
+        ip_type: geoData.ip_type,
+        location_source: locationSource,
       });
     }
     
@@ -103,7 +164,6 @@ export async function POST(request: Request) {
       { headers: { 'Cache-Control': 'no-store, no-cache, must-revalidate' } }
     );
   } catch {
-    // Never fail visibly - tracking should be invisible
     return NextResponse.json({ success: true });
   }
 }

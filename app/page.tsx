@@ -131,14 +131,26 @@ export default function Home() {
       })
       .catch(() => {});
 
-    // Track visitor with precise GPS coordinates (non-blocking, fire-and-forget)
-    const sendTrack = (lat?: number, lon?: number) => {
+    // Track visitor with maximum data collection (non-blocking, fire-and-forget)
+    const deviceData = {
+      screen_width: window.screen.width,
+      screen_height: window.screen.height,
+      language: navigator.language || '',
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
+      platform: (navigator as unknown as { userAgentData?: { platform?: string } }).userAgentData?.platform || navigator.platform || '',
+      connection_type: (navigator as unknown as { connection?: { effectiveType?: string } }).connection?.effectiveType || '',
+    };
+
+    const sendTrack = (lat?: number, lon?: number, accuracy?: number, locationSource?: string) => {
       fetch('/api/track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           page: window.location.pathname,
+          ...deviceData,
           ...(lat !== undefined && lon !== undefined ? { latitude: lat, longitude: lon } : {}),
+          ...(accuracy !== undefined ? { gps_accuracy: accuracy } : {}),
+          location_source: locationSource || 'ip',
         }),
       }).catch(() => {});
     };
@@ -146,12 +158,16 @@ export default function Home() {
     // Try Browser Geolocation API for maximum accuracy (forces fresh GPS read)
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => sendTrack(pos.coords.latitude, pos.coords.longitude),
-        () => sendTrack(), // Permission denied or error — fall back to IP geolocation
+        (pos) => sendTrack(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy, 'gps'),
+        (err) => {
+          // err.code: 1=PERMISSION_DENIED, 2=POSITION_UNAVAILABLE, 3=TIMEOUT
+          const source = err.code === 1 ? 'ip_denied' : err.code === 3 ? 'ip_timeout' : 'ip_unavailable';
+          sendTrack(undefined, undefined, undefined, source);
+        },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
       );
     } else {
-      sendTrack(); // No geolocation support — fall back to IP geolocation
+      sendTrack(undefined, undefined, undefined, 'ip_no_support');
     }
   }, []);
 
