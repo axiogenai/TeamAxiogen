@@ -29,10 +29,14 @@ export async function POST(request: Request) {
       // No body or invalid JSON is fine
     }
     
+    // Parse Vercel headers (they support both IPv4 and IPv6 perfectly when deployed)
+    const vercelLat = parseFloat(headersList.get('x-vercel-ip-latitude') || '0');
+    const vercelLon = parseFloat(headersList.get('x-vercel-ip-longitude') || '0');
+
     // Geolocation: prefer client GPS coordinates (99% accurate) over IP-based lookup
     let geoData = {
-      latitude: clientLat ?? 0,
-      longitude: clientLon ?? 0,
+      latitude: clientLat ?? (vercelLat !== 0 ? vercelLat : 0),
+      longitude: clientLon ?? (vercelLon !== 0 ? vercelLon : 0),
       city: headersList.get('x-vercel-ip-city') || '',
       region: headersList.get('x-vercel-ip-region') || '',
       country: headersList.get('x-vercel-ip-country') || '',
@@ -41,32 +45,31 @@ export async function POST(request: Request) {
       org: '',
     };
     
-    // Always call ip-api for city/region/country/ISP metadata enrichment
-    // If client sent GPS coords, we still want the metadata but keep the precise lat/lon
+    // Fallback: Call ipwho.is (Supports IPv4 and IPv6) for ISP and location data enrichment
     if (ip !== 'unknown' && ip !== '127.0.0.1' && ip !== '::1') {
       try {
         const geoRes = await fetch(
-          `http://ip-api.com/json/${ip}?fields=status,country,countryCode,regionName,city,lat,lon,isp,org`,
+          `https://ipwho.is/${ip}`,
           { signal: AbortSignal.timeout(3000) }
         );
         if (geoRes.ok) {
           const geo = await geoRes.json();
-          if (geo.status === 'success') {
+          if (geo.success) {
             geoData = {
-              // Use client GPS if available (meter-level accuracy), otherwise IP-based
-              latitude: clientLat ?? geo.lat ?? 0,
-              longitude: clientLon ?? geo.lon ?? 0,
+              // Priority: 1. Client GPS -> 2. ipwho.is IP Geolocation -> 3. Vercel Header -> 4. Zero
+              latitude: clientLat ?? geo.latitude ?? geoData.latitude,
+              longitude: clientLon ?? geo.longitude ?? geoData.longitude,
               city: geo.city || geoData.city,
-              region: geo.regionName || geoData.region,
+              region: geo.region || geoData.region,
               country: geo.country || geoData.country,
-              country_code: geo.countryCode || geoData.country_code,
-              isp: geo.isp || '',
-              org: geo.org || '',
+              country_code: geo.country_code || geoData.country_code,
+              isp: geo.connection?.isp || '',
+              org: geo.connection?.org || '',
             };
           }
         }
       } catch {
-        // Geo lookup failed, use client GPS + Vercel fallback data
+        // Geo lookup failed, rely on client GPS and Vercel fallback headers
       }
     }
     
