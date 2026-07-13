@@ -111,7 +111,7 @@ export async function POST(request: Request) {
           const revData = await revRes.json();
           if (revData && revData.address) {
             const addr = revData.address;
-            geoData.city = addr.city || addr.town || addr.village || addr.suburb || addr.municipality || addr.county || geoData.city;
+            geoData.city = addr.city || addr.town || addr.village || addr.municipality || addr.suburb || addr.neighbourhood || addr.hamlet || geoData.city;
             geoData.region = addr.state || geoData.region;
             geoData.country = addr.country || geoData.country;
             geoData.country_code = addr.country_code ? addr.country_code.toUpperCase() : geoData.country_code;
