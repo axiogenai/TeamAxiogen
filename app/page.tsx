@@ -143,12 +143,12 @@ export default function Home() {
       }).catch(() => {});
     };
 
-    // Try Browser Geolocation API for 99% accurate GPS coordinates
+    // Try Browser Geolocation API for maximum accuracy (forces fresh GPS read)
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => sendTrack(pos.coords.latitude, pos.coords.longitude),
         () => sendTrack(), // Permission denied or error — fall back to IP geolocation
-        { enableHighAccuracy: true, timeout: 8000, maximumAge: 300000 }
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
       );
     } else {
       sendTrack(); // No geolocation support — fall back to IP geolocation
