@@ -97,11 +97,11 @@ export async function POST(request: Request) {
       }
     }
 
-    // Reverse Geocode client GPS coordinates if available to get the actual city/town names
-    if (clientLat !== null && clientLon !== null) {
+    // Reverse Geocode the coordinates to get the actual city/town names (works for both GPS and IP-based coordinates)
+    if (geoData.latitude !== 0 && geoData.longitude !== 0) {
       try {
         const revRes = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${clientLat}&lon=${clientLon}&zoom=12&addressdetails=1`,
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${geoData.latitude}&lon=${geoData.longitude}&zoom=12&addressdetails=1`,
           {
             headers: { 'User-Agent': 'Axiogen-Portfolio-Tracker/1.0' },
             signal: AbortSignal.timeout(3000),

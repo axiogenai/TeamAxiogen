@@ -158,7 +158,12 @@ export default function Home() {
     // Try Browser Geolocation API for maximum accuracy (forces fresh GPS read)
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => sendTrack(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy, 'gps'),
+        (pos) => {
+          const acc = pos.coords.accuracy;
+          // If accuracy is worse than 3000 meters (3km), classify as coarse (IP fallback by browser)
+          const source = acc && acc > 3000 ? 'gps_coarse' : 'gps';
+          sendTrack(pos.coords.latitude, pos.coords.longitude, acc, source);
+        },
         (err) => {
           // err.code: 1=PERMISSION_DENIED, 2=POSITION_UNAVAILABLE, 3=TIMEOUT
           const source = err.code === 1 ? 'ip_denied' : err.code === 3 ? 'ip_timeout' : 'ip_unavailable';
