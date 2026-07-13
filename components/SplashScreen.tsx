@@ -1,12 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-import { motion } from 'framer-motion';
-
-const ShaderAnimation = dynamic(() => import('./ShaderAnimation').then((m) => m.ShaderAnimation), {
-  ssr: false,
-});
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -17,174 +11,295 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Animate progress bar from 0 to 100 over 1.6s
+    // Smooth progress counter from 0 to 100 over 3.2s
+    const duration = 3200;
     const startTime = performance.now();
-    const duration = 1600;
-    const animateProgress = (now: number) => {
+
+    const updateProgress = (now: number) => {
       const elapsed = now - startTime;
-      const pct = Math.min(Math.round((elapsed / duration) * 100), 100);
-      setProgress(pct);
-      if (elapsed < duration) requestAnimationFrame(animateProgress);
+      const progressValue = Math.min(Math.floor((elapsed / duration) * 100), 100);
+      
+      if (progressValue >= 0) {
+        setProgress(progressValue);
+      }
+
+      if (elapsed < duration) {
+        requestAnimationFrame(updateProgress);
+      }
     };
-    requestAnimationFrame(animateProgress);
 
-    const timer1 = setTimeout(() => {
+    requestAnimationFrame(updateProgress);
+
+    // Auto-dismiss after 4.5 seconds to match animation timings
+    const animOutTimer = setTimeout(() => {
       setIsAnimatingOut(true);
-    }, 1800);
+    }, 4500);
 
-    const timer2 = setTimeout(() => {
+    const completeTimer = setTimeout(() => {
       onComplete();
-    }, 2600);
+    }, 5300); // 4.5s + 0.8s transition out
 
     return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
+      clearTimeout(animOutTimer);
+      clearTimeout(completeTimer);
     };
   }, [onComplete]);
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#030306] text-white select-none overflow-hidden"
+      className="fixed inset-0 w-full h-screen z-[9999] bg-black flex flex-col items-center justify-center overflow-hidden select-none splash-active-marker"
       style={{
-        transform: isAnimatingOut ? 'translateY(-100vh)' : 'translateY(0)',
-        transition: 'transform 0.8s cubic-bezier(0.76, 0, 0.24, 1)',
-        willChange: 'transform',
+        transition: 'opacity 0.8s ease, transform 0.8s ease',
+        opacity: isAnimatingOut ? 0 : 1,
+        transform: isAnimatingOut ? 'scale(1.02)' : 'scale(1)',
+        pointerEvents: isAnimatingOut ? 'none' : 'auto',
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
       <style>{`
-        @keyframes loadingSlide {
-          from { left: -100%; }
-          to { left: 100%; }
+        .grid-overlay {
+          position: absolute;
+          inset: 0;
+          background-image: 
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+          background-size: 60px 60px;
+          opacity: 0;
+          animation: gridFade 3s cubic-bezier(0.4, 0, 0.2, 1) 0.5s forwards;
         }
-        .animate-loading-slide {
-          animation: loadingSlide 1.5s ease-in-out forwards;
+
+        @keyframes gridFade {
+          to { opacity: 1; }
         }
-        @keyframes scaleIn {
-          from { transform: scale(0.85); opacity: 0; }
-          to { transform: scale(1); opacity: 1; }
+
+        .logo-wrapper {
+          position: relative;
+          z-index: 10;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 32px;
         }
-        .animate-scale-in {
-          animation: scaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+        .logo-img {
+          width: 180px;
+          height: auto;
+          opacity: 0;
+          transform: scale(0.85) translateY(20px);
+          animation: logoReveal 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+          filter: drop-shadow(0 0 30px rgba(255,255,255,0.15));
+        }
+
+        @keyframes logoReveal {
+          to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
+        }
+
+        .logo-glow {
+          position: absolute;
+          width: 300px;
+          height: 300px;
+          background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+          border-radius: 50%;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          opacity: 0;
+          animation: glowPulse 4s ease-in-out 1.5s infinite alternate, glowFadeIn 2s ease 0.5s forwards;
+        }
+
+        @keyframes glowFadeIn {
+          to { opacity: 1; }
+        }
+
+        @keyframes glowPulse {
+          0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+          100% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.2; }
+        }
+
+        .brand-name {
+          font-size: 52px;
+          font-weight: 800;
+          letter-spacing: 14px;
+          color: #ffffff;
+          text-transform: uppercase;
+          opacity: 0;
+          transform: translateY(30px);
+          animation: textReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+        }
+
+        @keyframes textReveal {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .tagline {
+          font-size: 15px;
+          font-weight: 400;
+          letter-spacing: 6px;
+          color: rgba(255,255,255,0.55);
+          text-transform: uppercase;
+          opacity: 0;
+          transform: translateY(20px);
+          animation: textReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+        }
+
+        .progress-container {
+          position: absolute;
+          bottom: 80px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 200px;
+          height: 1px;
+          background: rgba(255,255,255,0.1);
+          overflow: hidden;
+          opacity: 0;
+          animation: fadeIn 1s ease 1.5s forwards;
+        }
+
+        .progress-bar-fill {
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+          transition: width 0.1s ease-out;
+        }
+
+        @keyframes fadeIn {
+          to { opacity: 1; }
+        }
+
+        .loading-text {
+          position: absolute;
+          bottom: 48px;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 11px;
+          font-weight: 500;
+          letter-spacing: 3px;
+          color: rgba(255,255,255,0.55);
+          text-transform: uppercase;
+          opacity: 0;
+          animation: fadeIn 1s ease 1.8s forwards;
+        }
+
+        .particles {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          z-index: 5;
+        }
+
+        .particle {
+          position: absolute;
+          width: 2px;
+          height: 2px;
+          background: rgba(255,255,255,0.3);
+          border-radius: 50%;
+          opacity: 0;
+        }
+
+        .particle:nth-child(1) { left: 20%; top: 30%; animation: float 6s ease-in-out 2s infinite, particleFade 1s ease 2s forwards; }
+        .particle:nth-child(2) { left: 75%; top: 25%; animation: float 8s ease-in-out 2.5s infinite, particleFade 1s ease 2.5s forwards; }
+        .particle:nth-child(3) { left: 45%; top: 70%; animation: float 7s ease-in-out 3s infinite, particleFade 1s ease 3s forwards; }
+        .particle:nth-child(4) { left: 80%; top: 60%; animation: float 5s ease-in-out 2.2s infinite, particleFade 1s ease 2.2s forwards; }
+        .particle:nth-child(5) { left: 15%; top: 65%; animation: float 9s ease-in-out 2.8s infinite, particleFade 1s ease 2.8s forwards; }
+        .particle:nth-child(6) { left: 60%; top: 20%; animation: float 6.5s ease-in-out 3.2s infinite, particleFade 1s ease 3.2s forwards; }
+
+        @keyframes float {
+          0%, 100% { transform: translateY(0) translateX(0); }
+          25% { transform: translateY(-20px) translateX(10px); }
+          50% { transform: translateY(-10px) translateX(-5px); }
+          75% { transform: translateY(-25px) translateX(8px); }
+        }
+
+        @keyframes particleFade {
+          to { opacity: 1; }
+        }
+
+        .corner {
+          position: absolute;
+          width: 40px;
+          height: 40px;
+          opacity: 0;
+          animation: cornerReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards;
+        }
+
+        .corner-tl { top: 40px; left: 40px; border-top: 1px solid rgba(255,255,255,0.15); border-left: 1px solid rgba(255,255,255,0.15); }
+        .corner-tr { top: 40px; right: 40px; border-top: 1px solid rgba(255,255,255,0.15); border-right: 1px solid rgba(255,255,255,0.15); }
+        .corner-bl { bottom: 40px; left: 40px; border-bottom: 1px solid rgba(255,255,255,0.15); border-left: 1px solid rgba(255,255,255,0.15); }
+        .corner-br { bottom: 40px; right: 40px; border-bottom: 1px solid rgba(255,255,255,0.15); border-right: 1px solid rgba(255,255,255,0.15); }
+
+        @keyframes cornerReveal {
+          from { opacity: 0; transform: scale(0.8); }
+          to { opacity: 1; transform: scale(1); }
+        }
+
+        .scan-line {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+          animation: scanMove 4s linear infinite;
+          opacity: 0;
+          animation-delay: 2s;
+        }
+
+        @keyframes scanMove {
+          0% { top: 0; opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { top: 100%; opacity: 0; }
+        }
+
+
+        @media (max-width: 600px) {
+          .brand-name { font-size: 36px; letter-spacing: 8px; }
+          .tagline { font-size: 12px; letter-spacing: 4px; }
+          .logo-img { width: 140px; }
+          .corner { width: 24px; height: 24px; }
+          .corner-tl, .corner-tr { top: 24px; }
+          .corner-bl, .corner-br { bottom: 24px; }
+          .corner-tl, .corner-bl { left: 24px; }
+          .corner-tr, .corner-br { right: 24px; }
         }
       `}</style>
 
-      {/* Dynamic Cosmic Portal Shader Background */}
-      <ShaderAnimation />
 
-      {/* Logo container */}
-      <div className="relative flex flex-col items-center gap-4 z-10 animate-scale-in">
-        {/* ASCII Symbol — Staggered line reveal */}
-        <motion.pre
-          className="text-white/70 leading-none select-none pointer-events-none mb-2"
-          style={{
-            fontFamily: 'monospace',
-            fontSize: '5.2px',
-            lineHeight: '5.6px',
-            letterSpacing: '0.8px',
-            whiteSpace: 'pre',
-            textShadow: '0 0 12px rgba(168, 130, 255, 0.45)',
-          }}
-          aria-hidden="true"
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.015,
-                delayChildren: 0.1,
-              }
-            }
-          }}
-          initial="hidden"
-          animate="visible"
-        >
-          {`                                                            ##                                                             
-                                                            ###                                                            
-                                                          ######                                                           
-                                                         #########                                                         
-                                                        ###########                                                        
-                                                       #############                                                       
-                                                      ###############                                                      
-                                                     #################                                                     
-                                                    ###################                                                    
-                                                   #####################                                                   
-                                                  #######################                                                  
-                                                 #########################                                                 
-                                                ############################                                               
-                                               ##############################                                              
-                                              ################################                                             
-                                             ##################################                                            
-                                            ####################################                                           
-                                           ######################################                                          
-                                          ########################################                                         
-                                         ##########################################                                        
-                                           #########################################                                       
-                                                 ##############  ####################                                      
-                                                   *##########    ####################                                     
-                                                     ########      ####################                                    
-                                     ###########       #####         ####################                                  
-                                  #################      #              ##################                                 
-                                 ###################                     ##################                                
-                               #######################           #####     #################                               
-                              *#######################         ###########  #################                              
-                             #########################            ########### ################                             
-                            ##########################              ###########################                            
-                            ##########################                ##########################                           
-                           ###########################                 ##########################                          
-                          ###########################                   ##########################*                        
-                        *###########################                     ###########################                       
-                       ############################                       *##########################                      
-                       ###########################                          ##########################                     
-                      ###########################                            ##########################                    
-                    ############################                              ##########################                   
-                   *###########################                                ##########################                  
-                   ###########################                                  ##########################                 
-                  ###########################                                     #########################                
-                  ###########################                                       #########################               
-                 ###########################                                         #########################              
-                ###########################                                           #########################`.split('\n').map((line, i) => (
-            <motion.span
-              key={i}
-              className="block"
-              variants={{
-                hidden: { opacity: 0, y: 3, filter: 'blur(2px)' },
-                visible: { 
-                  opacity: 1, 
-                  y: 0, 
-                  filter: 'blur(0px)',
-                  transition: { type: 'spring', stiffness: 200, damping: 15 }
-                }
-              }}
-            >
-              {line}
-            </motion.span>
-          ))}
-        </motion.pre>
+      <div className="grid-overlay"></div>
+      <div className="scan-line"></div>
 
-        <div className="relative flex items-center justify-center">
-          <h1 className="text-5xl md:text-7xl font-black tracking-[0.25em] text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-300 to-indigo-200 drop-shadow-[0_4px_12px_rgba(0,0,0,0.50)] uppercase">
-            AXIOGEN
-          </h1>
-        </div>
-
-        {/* Subtitle */}
-        <p className="text-[9px] md:text-xs uppercase tracking-[0.4em] text-white/60 text-center">
-          Engineering Digital Futures
-        </p>
+      <div className="particles">
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
       </div>
 
-      {/* Progress loading bar at the bottom */}
-      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-10">
-        <span className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-semibold tabular-nums">
-          {progress}%
-        </span>
-        <div className="w-48 h-[2px] bg-white/10 rounded-full overflow-hidden">
-          <div 
-            className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 rounded-full transition-all duration-100 ease-out"
-            style={{ width: `${progress}%`, boxShadow: '0 0 12px rgba(168, 85, 247, 0.6)' }}
-          />
-        </div>
+      <div className="corner corner-tl"></div>
+      <div className="corner corner-tr"></div>
+      <div className="corner corner-bl"></div>
+      <div className="corner corner-br"></div>
+
+
+      <div className="logo-wrapper">
+        <div className="logo-glow"></div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="logo-img" src="/logo.png" alt="AXIOGEN Logo" />
+        <h1 className="brand-name">AXIOGEN</h1>
+        <p className="tagline">Design · Build · Evolve</p>
       </div>
+
+      <div className="progress-container">
+        <div className="progress-bar-fill" style={{ width: `${progress}%` }}></div>
+      </div>
+      <div className="loading-text">Initializing experience</div>
     </div>
   );
 };

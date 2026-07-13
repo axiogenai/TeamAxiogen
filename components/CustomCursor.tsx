@@ -54,6 +54,17 @@ export const CustomCursor = () => {
     }
 
     function animate() {
+      // If splash screen is loading, disable custom cursor rendering and mouse glow
+      const isSplashActive = typeof document !== 'undefined' && document.querySelector('.splash-active-marker');
+      if (isSplashActive) {
+        ctx.clearRect(0, 0, canvas!.width / dpr, canvas!.height / dpr);
+        if (cursor) cursor.style.opacity = '0';
+        rafRef.current = requestAnimationFrame(animate);
+        return;
+      } else {
+        if (cursor) cursor.style.opacity = '1';
+      }
+
       const mouse = mouseRef.current;
       const current = currentRef.current;
       const hovering = isHoveringRef.current;
