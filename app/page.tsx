@@ -131,12 +131,28 @@ export default function Home() {
       })
       .catch(() => {});
 
-    // Track visitor (non-blocking, fire-and-forget)
-    fetch('/api/track', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ page: window.location.pathname }),
-    }).catch(() => {});
+    // Track visitor with precise GPS coordinates (non-blocking, fire-and-forget)
+    const sendTrack = (lat?: number, lon?: number) => {
+      fetch('/api/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          page: window.location.pathname,
+          ...(lat !== undefined && lon !== undefined ? { latitude: lat, longitude: lon } : {}),
+        }),
+      }).catch(() => {});
+    };
+
+    // Try Browser Geolocation API for 99% accurate GPS coordinates
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => sendTrack(pos.coords.latitude, pos.coords.longitude),
+        () => sendTrack(), // Permission denied or error — fall back to IP geolocation
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 300000 }
+      );
+    } else {
+      sendTrack(); // No geolocation support — fall back to IP geolocation
+    }
   }, []);
 
   useEffect(() => {

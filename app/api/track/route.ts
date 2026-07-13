@@ -14,19 +14,25 @@ export async function POST(request: Request) {
     const userAgent = headersList.get('user-agent') || '';
     const referrer = headersList.get('referer') || '';
     
-    // Parse body for page info
+    // Parse body for page info and optional GPS coordinates
     let page = '/';
+    let clientLat: number | null = null;
+    let clientLon: number | null = null;
     try {
       const body = await request.json();
       if (body.page) page = body.page;
+      if (typeof body.latitude === 'number' && typeof body.longitude === 'number') {
+        clientLat = body.latitude;
+        clientLon = body.longitude;
+      }
     } catch {
       // No body or invalid JSON is fine
     }
     
-    // Geolocation via ip-api.com (free, no key needed, returns lat/lon)
+    // Geolocation: prefer client GPS coordinates (99% accurate) over IP-based lookup
     let geoData = {
-      latitude: 0,
-      longitude: 0,
+      latitude: clientLat ?? 0,
+      longitude: clientLon ?? 0,
       city: headersList.get('x-vercel-ip-city') || '',
       region: headersList.get('x-vercel-ip-region') || '',
       country: headersList.get('x-vercel-ip-country') || '',
@@ -35,19 +41,21 @@ export async function POST(request: Request) {
       org: '',
     };
     
-    // Only call ip-api for real IPs (not localhost/unknown)
+    // Always call ip-api for city/region/country/ISP metadata enrichment
+    // If client sent GPS coords, we still want the metadata but keep the precise lat/lon
     if (ip !== 'unknown' && ip !== '127.0.0.1' && ip !== '::1') {
       try {
         const geoRes = await fetch(
           `http://ip-api.com/json/${ip}?fields=status,country,countryCode,regionName,city,lat,lon,isp,org`,
-          { signal: AbortSignal.timeout(3000) } // 3s timeout
+          { signal: AbortSignal.timeout(3000) }
         );
         if (geoRes.ok) {
           const geo = await geoRes.json();
           if (geo.status === 'success') {
             geoData = {
-              latitude: geo.lat || 0,
-              longitude: geo.lon || 0,
+              // Use client GPS if available (meter-level accuracy), otherwise IP-based
+              latitude: clientLat ?? geo.lat ?? 0,
+              longitude: clientLon ?? geo.lon ?? 0,
               city: geo.city || geoData.city,
               region: geo.regionName || geoData.region,
               country: geo.country || geoData.country,
@@ -58,7 +66,7 @@ export async function POST(request: Request) {
           }
         }
       } catch {
-        // Geo lookup failed, use Vercel fallback data
+        // Geo lookup failed, use client GPS + Vercel fallback data
       }
     }
     
