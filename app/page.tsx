@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { DynamicVignette } from '../components/DynamicVignette';
 import { Navbar } from '../components/Navbar';
@@ -111,6 +111,100 @@ const GalaxyBackground = () => {
     </AnimatePresence>
   );
 };
+const SeamlessVideoComponent = ({ src }: { src: string }) => {
+  const videoARef = useRef<HTMLVideoElement>(null);
+  const videoBRef = useRef<HTMLVideoElement>(null);
+  const activeRef = useRef<'A' | 'B'>('A');
+  const swappingRef = useRef(false);
+  const rafRef = useRef<number>(0);
+
+  useEffect(() => {
+    const vA = videoARef.current;
+    const vB = videoBRef.current;
+    if (!vA || !vB) return;
+
+    // Identical source on both
+    vA.src = src;
+    vB.src = src;
+    vA.load();
+    vB.load();
+
+    // A starts visible, B hidden and ready at frame 0
+    vA.style.opacity = '1';
+    vB.style.opacity = '0';
+    vB.currentTime = 0.001;
+    activeRef.current = 'A';
+    swappingRef.current = false;
+
+    const checkLoop = () => {
+      const active = activeRef.current === 'A' ? vA : vB;
+      const standby = activeRef.current === 'A' ? vB : vA;
+
+      if (active.readyState >= 2 && active.duration && !swappingRef.current) {
+        const remaining = active.duration - active.currentTime;
+
+        // At 150ms before end: instant-swap with micro crossfade
+        if (remaining <= 0.15) {
+          swappingRef.current = true;
+
+          // Ensure standby is at frame 0 and playing
+          standby.currentTime = 0.001;
+          standby.play().catch(() => {});
+
+          // Instant swap — 150ms is imperceptible
+          standby.style.opacity = '1';
+          active.style.opacity = '0';
+
+          // After swap settles, pause the old one and prep it as next standby
+          setTimeout(() => {
+            active.pause();
+            active.currentTime = 0.001;
+            activeRef.current = activeRef.current === 'A' ? 'B' : 'A';
+            swappingRef.current = false;
+          }, 200);
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(checkLoop);
+    };
+
+    const onReady = () => {
+      vA.play().catch(() => {});
+      rafRef.current = requestAnimationFrame(checkLoop);
+    };
+
+    vA.addEventListener('canplay', onReady, { once: true });
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      vA.removeEventListener('canplay', onReady);
+    };
+  }, [src]);
+
+  const videoStyle: React.CSSProperties = {
+    position: 'absolute',
+    top: 0, left: 0, width: '100%', height: '100%',
+    objectFit: 'cover',
+    transition: 'opacity 0.15s linear',
+  };
+
+  return (
+    <div className="absolute inset-0 w-full h-full overflow-hidden">
+      <video
+        ref={videoARef}
+        autoPlay muted playsInline preload="auto"
+        className="select-none pointer-events-none"
+        style={{ ...videoStyle, opacity: 1, zIndex: 1 }}
+      />
+      <video
+        ref={videoBRef}
+        muted playsInline preload="auto"
+        className="select-none pointer-events-none"
+        style={{ ...videoStyle, opacity: 0, zIndex: 2 }}
+      />
+    </div>
+  );
+};
 
 export default function Home() {
   const TOTAL_FRAMES = 502;
@@ -127,7 +221,8 @@ export default function Home() {
     fetch('/api/settings')
       .then((r) => r.json())
       .then((d) => {
-        if (d.activeBg) setActiveBg(d.activeBg);
+        const cleanBg = d.activeBg && !d.activeBg.includes('nightmode.webp') ? d.activeBg : '';
+        setActiveBg(cleanBg);
       })
       .catch(() => {});
 
@@ -192,7 +287,7 @@ export default function Home() {
 
   // Build the bg image CSS value — use dynamic if set, else fall back to the CSS var default
   const bgImageStyle = activeBg ? `url("${activeBg}")` : undefined;
-  const isVideoBg = activeBg && /\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(activeBg);
+  const isVideoBg = activeBg ? /\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(activeBg) : false;
 
   if (!mounted) return null;
 
@@ -226,16 +321,12 @@ export default function Home() {
             }}
           >
             {isVideoBg ? (
-              <video
-                key={activeBg}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="portfolio-bg-image-layer object-cover w-full h-full"
+              <div 
+                className="portfolio-bg-image-layer w-full h-full relative"
+                style={{ backgroundImage: 'none' }}
               >
-                <source src={activeBg} type={activeBg.includes('.webm') ? 'video/webm' : 'video/mp4'} />
-              </video>
+                <SeamlessVideoComponent src={activeBg} />
+              </div>
             ) : (
               <div 
                 className="portfolio-bg-image-layer"

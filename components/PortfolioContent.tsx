@@ -551,7 +551,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       if (animatingTimeout) clearTimeout(animatingTimeout);
       animatingTimeout = setTimeout(() => {
         isAnimating = false;
-      }, 2000); // Safety: unlock after 2 seconds no matter what
+      }, 750); // Safety: unlock after 750ms no matter what
     };
 
     const unlockAnimation = () => {
@@ -634,10 +634,10 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         const targetY = (targetFrame / 502) * maxScroll;
 
         lenis.scrollTo(targetY, { 
-          duration: 0.7, 
+          duration: 0.45, 
           easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
           onComplete: () => {
-            setTimeout(() => unlockAnimation(), 100);
+            unlockAnimation();
           }
         });
       }
@@ -657,7 +657,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       wheelAccumulator += e.deltaY;
       if (wheelResetTimer) clearTimeout(wheelResetTimer);
-      wheelResetTimer = setTimeout(() => { wheelAccumulator = 0; }, 200);
+      wheelResetTimer = setTimeout(() => { wheelAccumulator = 0; }, 80);
 
       if (Math.abs(wheelAccumulator) < 30) return;
 
