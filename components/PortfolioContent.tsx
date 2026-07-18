@@ -943,14 +943,18 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             className="text-6xl md:text-8xl lg:text-9xl font-black tracking-normal text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] leading-none"
             style={{ fontFamily: "'Turbo Driver', sans-serif" }}
           >
-            <motion.span variants={charVariants} className="inline-block mr-4 md:mr-6">
+            <motion.span 
+              variants={charVariants} 
+              className="inline-block mr-4 md:mr-6"
+              style={{ paddingRight: '0.1em' }}
+            >
               TEAM
             </motion.span>
             <br />
             <motion.span 
               variants={charVariants} 
-              className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-orange-600"
-              style={{ paddingBottom: '0.1em' }}
+              className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-400 to-indigo-400"
+              style={{ paddingBottom: '0.15em', paddingRight: '0.25em', marginRight: '-0.25em' }}
             >
               AXIOGEN
             </motion.span>
@@ -972,9 +976,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           initial="hidden"
           animate={showHero ? "visible" : "hidden"}
           onClick={() => scrollToFrame(getSectionFrames()[2] ?? 209)}
-          className="group px-7 py-3 bg-gradient-to-r from-orange-500/20 to-rose-500/20 border border-white/20 hover:border-white/40 rounded-full text-xs md:text-sm font-bold uppercase tracking-widest text-white hover:bg-white/10 transition-all shadow-[0_4px_30px_rgba(249,115,22,0.15)] hover:shadow-[0_4px_40px_rgba(249,115,22,0.3)] hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
+          className="group px-7 py-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-white/20 hover:border-white/40 rounded-full text-xs md:text-sm font-bold uppercase tracking-widest text-white hover:bg-white/10 transition-all shadow-[0_4px_30px_rgba(168,85,247,0.15)] hover:shadow-[0_4px_40px_rgba(168,85,247,0.3)] hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
         >
-          <Sparkles className="w-4 h-4 text-orange-400 group-hover:text-orange-300 transition-colors" />
+          <Sparkles className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
           <span>Explore Projects</span>
         </motion.button>
 
