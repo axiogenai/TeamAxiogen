@@ -1224,9 +1224,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.35, ease: "easeInOut", staggerChildren: 0.08 }}
-              data-scroll-container={!isMobile ? "" : undefined}
-              data-lenis-prevent={!isMobile ? "" : undefined}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pointer-events-auto w-full items-start max-h-[65vh] pr-2 py-2 overflow-y-auto scrollbar-none touch-pan-y"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 project-grid pointer-events-auto w-full items-start"
               style={{ perspective: 1000 }}
             >
               {projects
@@ -1243,7 +1241,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     <CardComponent
                       key={project.name}
                       {...linkProps}
-                      className={`group relative h-[160px] md:h-[270px] rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto glass-card gradient-border ${project.link ? 'cursor-pointer' : 'select-none'}`}
+                      className={`group relative h-[160px] md:h-[270px] project-card rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto glass-card gradient-border ${project.link ? 'cursor-pointer' : 'select-none'}`}
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ type: 'spring' as const, stiffness: 200, damping: 20, delay: cardIdx * 0.1 }}
@@ -1316,9 +1314,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         <div className="w-full max-w-5xl text-white">
           {/* Unified Card Container Wrapper */}
           <div 
-            data-scroll-container
-            data-lenis-prevent
-            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-3.5 md:py-5 md:px-7 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[75vh] overflow-y-auto services-no-scrollbar touch-pan-y glass-card"
+            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-3.5 md:py-5 md:px-7 services-card rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] services-no-scrollbar touch-pan-y glass-card"
           >
             {/* Main Title - Inside the card */}
             <div className="text-center mb-1.5 md:mb-3">
@@ -1394,10 +1390,10 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </div>
 
             {/* Divider */}
-            <div className="bg-gradient-to-r from-transparent via-white/10 to-transparent h-[1px] my-2.5 md:my-3 w-full max-w-4xl mx-auto" />
+            <div className="bg-gradient-to-r from-transparent via-white/10 to-transparent h-[1px] my-2.5 md:my-3 w-full max-w-4xl mx-auto hide-on-short" />
 
             {/* Perfect Solutions Section */}
-            <div className="max-w-4xl mx-auto w-full">
+            <div className="max-w-4xl mx-auto w-full hide-on-short">
               <div className="text-center mb-1.5 md:mb-2">
                 <span className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/40">Perfect Solutions For</span>
               </div>
@@ -1420,7 +1416,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </div>
 
             {/* Tech Stack Row */}
-            <div className="hidden md:flex flex-wrap items-center justify-center gap-1.5 mt-3 md:mt-3.5 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold text-white/30 max-w-4xl mx-auto pointer-events-auto">
+            <div className="hidden md:flex flex-wrap items-center justify-center gap-1.5 mt-3 md:mt-3.5 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold text-white/30 max-w-4xl mx-auto pointer-events-auto hide-on-short">
               <span>Tech Stack :</span>
               {['Python', 'React', 'Node.js', 'Next.js', 'Java', 'TensorFlow', 'AWS / GCP', 'PostgreSQL', '.NET'].map((tech) => (
                 <span key={tech} className="px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full text-white/60 font-medium cursor-default hover:border-white/20 transition-colors">
@@ -1447,9 +1443,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
 
         <div 
-          data-scroll-container={!isMobile ? "" : undefined}
-          data-lenis-prevent={!isMobile ? "" : undefined}
-          className="text-white bg-[var(--card-bg)] p-4 md:p-8 lg:p-10 rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--card-border)] shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-12 gap-5 md:gap-8 items-stretch justify-center glass-card gradient-border max-h-[78vh] overflow-y-auto scrollbar-none touch-pan-y"
+          className="text-white bg-[var(--card-bg)] p-4 md:p-8 lg:p-10 contact-card rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--card-border)] shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-12 gap-5 md:gap-8 items-stretch justify-center glass-card gradient-border touch-pan-y"
         >
           
           {/* Left panel - details */}
@@ -1525,7 +1519,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 </a>
               </div>
 
-              <div className="pt-2 select-none pointer-events-none overflow-hidden max-w-xs md:max-w-sm">
+              <div className="pt-2 select-none pointer-events-none overflow-hidden max-w-xs md:max-w-sm hide-on-short">
                 <ScrollVelocity
                   texts={['THANK YOU', 'VISIT AGAIN']} 
                   velocity={100}
