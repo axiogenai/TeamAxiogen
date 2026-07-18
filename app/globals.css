@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Rostex';
+  src: url('/fonts/rostex.regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --portfolio-bg: #07070c;
   --portfolio-gradient-from: #020205;
