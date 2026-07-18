@@ -940,7 +940,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           className="mb-6"
         >
           <h1 
-            className="text-6xl md:text-8xl lg:text-9xl font-black tracking-normal text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] leading-none"
+            className="text-5xl md:text-7xl lg:text-8xl font-black tracking-normal text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] leading-none"
             style={{ fontFamily: "'Turbo Driver', sans-serif" }}
           >
             <motion.span 
