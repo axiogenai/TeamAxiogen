@@ -144,10 +144,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
             initial={{ scaleX: 0, opacity: 0 }}
             animate={{ 
               scaleX: showText ? 1 : 0,
-              opacity: showText ? 0.35 : 0
+              opacity: showText ? 0.8 : 0
             }}
             transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 0.05 }}
-            className="h-[1px] w-full bg-gradient-to-r from-transparent via-white to-transparent my-1.5"
+            className="h-[1px] w-24 md:w-32 bg-gradient-to-r from-transparent via-white/80 to-transparent my-2"
             style={{ originX: 0.5 }}
           />
 
