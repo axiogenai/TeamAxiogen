@@ -20,121 +20,13 @@ const Galaxy = dynamic(() => import('../components/Galaxy'), {
 
 // Fixed wrapper component that dynamically updates opacity and unmounts the WebGL canvas when invisible
 const LightPillarBackground = () => {
-  const { showHero } = useSectionVisibility();
-  const [isMobile, setIsMobile] = useState(false);
-  const [isLightTheme, setIsLightTheme] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    const checkTheme = () => {
-      const isLight = document.documentElement.classList.contains('theme-light');
-      setIsLightTheme(isLight);
-    };
-    checkTheme();
-
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    return () => {
-      window.removeEventListener('resize', checkMobile);
-      observer.disconnect();
-    };
-  }, []);
-
-  const topColor = isLightTheme ? "#FBBF24" : "#5227FF";
-  const bottomColor = isLightTheme ? "#B45309" : "#FF9FFC";
-
-  return (
-    <AnimatePresence>
-      {showHero && (
-        <motion.div 
-          className="fixed inset-0 pointer-events-none overflow-hidden light-pillar-wrapper"
-          style={{ zIndex: -8 }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.90 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <LightPillar 
-            topColor={topColor}
-            bottomColor={bottomColor}
-            intensity={1.0}
-            rotationSpeed={isLightTheme ? 0.2 : 0.3}
-            glowAmount={isMobile ? 0.003 : 0.002}
-            pillarWidth={isMobile ? 2.8 : 3.0}
-            pillarHeight={isMobile ? 0.40 : 0.40}
-            noiseIntensity={0.5}
-            pillarRotation={isMobile ? 12 : 25}
-            interactive={false}
-            mixBlendMode={isLightTheme ? "normal" : "screen"}
-            quality="high"
-          />
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
+  return null;
 };
 
 // Galaxy starfield wrapper that only mounts and renders on the Hero section
 const GalaxyBackground = () => {
-  const { showHero } = useSectionVisibility();
-
-  return (
-    <AnimatePresence>
-      {showHero && (
-        <motion.div 
-          className="fixed inset-0 pointer-events-none overflow-hidden select-none"
-          style={{ zIndex: -9 }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.85 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <Galaxy 
-            density={1.2}
-            starSpeed={0.4}
-            rotationSpeed={0.06}
-            glowIntensity={0.35}
-            twinkleIntensity={0.4}
-            hueShift={140}
-            saturation={0.1}
-            transparent={true}
-          />
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
+  return null;
 };
-
-// Fixed background image for the Hero section
-const HeroBackgroundImage = () => {
-  const { showHero } = useSectionVisibility();
-
-  return (
-    <AnimatePresence>
-      {showHero && (
-        <motion.div 
-          className="fixed inset-0 pointer-events-none overflow-hidden select-none bg-cover bg-center"
-          style={{ 
-            zIndex: -10,
-            backgroundImage: 'url("/BG/hero-bg.jpg")'
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.55 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        />
-      )}
-    </AnimatePresence>
-  );
-};
-
 const SeamlessVideoComponent = ({ src }: { src: string }) => {
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
@@ -329,9 +221,6 @@ export default function Home() {
           
           {/* Cosmic Galaxy Starfield Background - Hero Page Only */}
           <GalaxyBackground />
-          
-          {/* Unique Atmospheric Cosmic Nebula Background - Hero Page Only */}
-          <HeroBackgroundImage />
           
           {/* Fixed UI Overlays */}
           <ScrollProgressBar />
