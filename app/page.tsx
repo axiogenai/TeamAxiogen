@@ -111,6 +111,30 @@ const GalaxyBackground = () => {
     </AnimatePresence>
   );
 };
+
+// Fixed background image for the Hero section
+const HeroBackgroundImage = () => {
+  const { showHero } = useSectionVisibility();
+
+  return (
+    <AnimatePresence>
+      {showHero && (
+        <motion.div 
+          className="fixed inset-0 pointer-events-none overflow-hidden select-none bg-cover bg-center"
+          style={{ 
+            zIndex: -10,
+            backgroundImage: 'url("/BG/hero-bg.jpg")'
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.55 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        />
+      )}
+    </AnimatePresence>
+  );
+};
+
 const SeamlessVideoComponent = ({ src }: { src: string }) => {
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
@@ -305,6 +329,9 @@ export default function Home() {
           
           {/* Cosmic Galaxy Starfield Background - Hero Page Only */}
           <GalaxyBackground />
+          
+          {/* Unique Atmospheric Cosmic Nebula Background - Hero Page Only */}
+          <HeroBackgroundImage />
           
           {/* Fixed UI Overlays */}
           <ScrollProgressBar />
