@@ -23,15 +23,15 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
       setShowText(true);
     }, 2000);
 
-    // Trigger exit wipe at 4.2s
+    // Trigger exit wipe at 5.7s
     const exitTimer = setTimeout(() => {
       setIsExiting(true);
-    }, 4200);
+    }, 5700);
 
-    // Complete splash sequence at 5.0s (4.2s + 0.8s slide transition)
+    // Complete splash sequence at 6.5s (5.7s + 0.8s slide transition)
     const completeTimer = setTimeout(() => {
       onComplete();
-    }, 5000);
+    }, 6500);
 
     return () => {
       clearTimeout(mountTimer);
