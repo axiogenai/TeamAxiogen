@@ -991,7 +991,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- ABOUT SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex flex-col items-center justify-start md:justify-center px-6 md:px-16 text-white pt-12 md:pt-0 pb-4 md:pb-0 section-bg-adapt overflow-hidden"
+        className="absolute inset-0 flex flex-col items-center justify-center px-4 md:px-16 text-white pt-24 pb-8 section-bg-adapt overflow-hidden"
         style={{ pointerEvents: showAbout ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1001,11 +1001,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-start md:justify-center flex-1 md:flex-initial min-h-0">
+        <div className="flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-center min-h-0 max-h-full">
           <div 
             data-scroll-container
             data-lenis-prevent
-            className="grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full overflow-y-auto scrollbar-none px-2 py-2 flex-1 md:flex-initial min-h-0"
+            className="grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full overflow-y-auto scrollbar-none px-2 py-2 flex-1 min-h-0"
           >
             <AnimatePresence mode={isMobile ? "wait" : "sync"}>
               {/* Bio statement */}
@@ -1167,7 +1167,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- PROJECTS SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-12 md:pt-16 px-6 md:px-16 section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
+        className={`absolute inset-0 flex flex-col items-center justify-start pt-24 pb-8 px-4 md:px-16 section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
         style={{ pointerEvents: showProjects ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1223,11 +1223,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               transition={{ duration: 0.35, ease: "easeInOut", staggerChildren: 0.08 }}
               data-scroll-container={!isMobile ? "" : undefined}
               data-lenis-prevent={!isMobile ? "" : undefined}
-              className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pointer-events-auto w-full items-start ${
-                isMobile
-                  ? 'max-h-none overflow-visible pr-0 py-0'
-                  : 'max-h-[62vh] md:max-h-none pr-2 py-2 overflow-y-auto scrollbar-none touch-pan-y'
-              }`}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pointer-events-auto w-full items-start max-h-[65vh] pr-2 py-2 overflow-y-auto scrollbar-none touch-pan-y"
               style={{ perspective: 1000 }}
             >
               {projects
@@ -1291,7 +1287,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         </motion.section>
       {/* ----------------- SERVICES SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex flex-col items-center justify-start md:justify-center pt-12 md:pt-0 pb-4 md:pb-0 px-6 md:px-16 section-bg-adapt overflow-hidden"
+        className="absolute inset-0 flex flex-col items-center justify-center pt-24 pb-8 px-4 md:px-16 section-bg-adapt overflow-hidden"
         style={{ pointerEvents: showServices ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1319,7 +1315,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           <div 
             data-scroll-container
             data-lenis-prevent
-            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-3.5 md:py-5 md:px-7 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[94vh] md:max-h-none md:overflow-visible services-no-scrollbar touch-pan-y glass-card"
+            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-3.5 md:py-5 md:px-7 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[75vh] overflow-y-auto services-no-scrollbar touch-pan-y glass-card"
           >
             {/* Main Title - Inside the card */}
             <div className="text-center mb-1.5 md:mb-3">
@@ -1435,7 +1431,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- CONTACT SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-24 md:justify-center md:pt-0 px-4 section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
+        className={`absolute inset-0 flex flex-col items-center justify-center pt-24 pb-8 px-4 section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
         style={{ pointerEvents: showContact ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1450,11 +1446,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         <div 
           data-scroll-container={!isMobile ? "" : undefined}
           data-lenis-prevent={!isMobile ? "" : undefined}
-          className={`text-white bg-[var(--card-bg)] p-5 md:p-10 lg:p-14 rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--card-border)] shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-12 gap-5 md:gap-8 items-stretch justify-center glass-card gradient-border ${
-            isMobile 
-              ? 'max-h-none overflow-visible' 
-              : 'max-h-[85vh] overflow-y-auto md:max-h-none md:overflow-visible'
-          } scrollbar-none touch-pan-y`}
+          className="text-white bg-[var(--card-bg)] p-4 md:p-8 lg:p-10 rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--card-border)] shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-12 gap-5 md:gap-8 items-stretch justify-center glass-card gradient-border max-h-[78vh] overflow-y-auto scrollbar-none touch-pan-y"
         >
           
           {/* Left panel - details */}
