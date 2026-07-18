@@ -941,7 +941,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         >
           <h1 
             className="text-6xl md:text-8xl lg:text-9xl font-black tracking-normal text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] leading-none"
-            style={{ fontFamily: "'Orange Avenue DEMO', serif" }}
+            style={{ fontFamily: "'Turbo Driver', sans-serif" }}
           >
             <motion.span variants={charVariants} className="inline-block mr-4 md:mr-6">
               TEAM
