@@ -126,18 +126,30 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
             opacity: showText ? 1 : 0
           }}
           transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-          className="overflow-hidden flex flex-col items-center justify-center pl-4 md:pl-6 whitespace-nowrap"
+          className="overflow-hidden flex flex-col items-center justify-center pl-2 md:pl-3 whitespace-nowrap"
         >
           {/* Brand Name Text */}
           <motion.h1 
             initial={{ x: -80 }}
             animate={{ x: showText ? 0 : -80 }}
             transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-            className="text-white font-extralight tracking-[0.3em] md:tracking-[0.4em] text-xl md:text-3xl mb-2 mr-[-0.3em] md:mr-[-0.4em] text-center"
+            className="text-white font-extralight tracking-[0.3em] md:tracking-[0.4em] text-xl md:text-3xl mb-1 mr-[-0.3em] md:mr-[-0.4em] text-center"
             style={{ fontFamily: "'Rostex', sans-serif" }}
           >
             {brandName}
           </motion.h1>
+
+          {/* Animated Horizontal Divider Line */}
+          <motion.div
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ 
+              scaleX: showText ? 1 : 0,
+              opacity: showText ? 0.35 : 0
+            }}
+            transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 0.05 }}
+            className="h-[1px] w-full bg-gradient-to-r from-transparent via-white to-transparent my-1.5"
+            style={{ originX: 0.5 }}
+          />
 
           {/* Tagline */}
           <motion.p
