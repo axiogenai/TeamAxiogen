@@ -222,7 +222,6 @@ textarea:focus-visible {
 .portfolio-bg-image-layer {
   position: absolute;
   inset: 0;
-  background-image: var(--portfolio-bg-image);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

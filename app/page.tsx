@@ -27,25 +27,15 @@ const LightPillarBackground = () => {
   return null;
 };
 
-// Nebula wrapper that only mounts and renders on the Hero section
+// Nebula wrapper that is mounted permanently to maintain the purple cosmic theme across all pages
 const NebulaBackground = ({ height }: { height: string }) => {
-  const { showHero } = useSectionVisibility();
-
   return (
-    <AnimatePresence>
-      {showHero && (
-        <motion.div 
-          className="fixed left-0 right-0 top-0 pointer-events-none overflow-hidden select-none"
-          style={{ zIndex: -9, height: height }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.85 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <Nebula />
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <div 
+      className="fixed left-0 right-0 top-0 pointer-events-none overflow-hidden select-none"
+      style={{ zIndex: -9, height: height, opacity: 0.85 }}
+    >
+      <Nebula />
+    </div>
   );
 };
 const SeamlessVideoComponent = ({ src }: { src: string }) => {
