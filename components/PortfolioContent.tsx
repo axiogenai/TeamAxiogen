@@ -698,14 +698,20 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   }, [lenis, mounted]);
 
   const scrollToFrame = (frame: number) => {
-    if (!lenis) return;
     // Calculate maxScroll mathematically based on 500vh page height
     const maxScroll = 4 * getStableHeight();
     const targetY = (frame / totalFrames) * maxScroll;
-    lenis.scrollTo(targetY, { 
-      duration: 1.2,
-      easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
-    });
+    if (lenis) {
+      lenis.scrollTo(targetY, { 
+        duration: 1.2,
+        easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+      });
+    } else {
+      window.scrollTo({
+        top: targetY,
+        behavior: 'smooth'
+      });
+    }
   };
 
   // Section visibility is now computed in the useSectionVisibility() hook.

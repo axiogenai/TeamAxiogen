@@ -34,13 +34,19 @@ export const Navbar = ({ ready = true }: { ready?: boolean }) => {
   }, []);
 
   const scrollToFrame = (frame: number) => {
-    if (!lenis) return;
     const maxScroll = getMaxScrollMultiplier() * getStableHeight();
     const targetY = (frame / TOTAL_FRAMES) * maxScroll;
-    lenis.scrollTo(targetY, { 
-      duration: 1.2,
-      easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
-    });
+    if (lenis) {
+      lenis.scrollTo(targetY, { 
+        duration: 1.2,
+        easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+      });
+    } else {
+      window.scrollTo({
+        top: targetY,
+        behavior: 'smooth'
+      });
+    }
   };
 
   const frames = getSectionFrames();
