@@ -28,15 +28,15 @@ const LightPillarBackground = () => {
 };
 
 // Nebula wrapper that only mounts and renders on the Hero section
-const NebulaBackground = () => {
+const NebulaBackground = ({ height }: { height: string }) => {
   const { showHero } = useSectionVisibility();
 
   return (
     <AnimatePresence>
       {showHero && (
         <motion.div 
-          className="fixed inset-0 pointer-events-none overflow-hidden select-none"
-          style={{ zIndex: -9 }}
+          className="fixed left-0 right-0 top-0 pointer-events-none overflow-hidden select-none"
+          style={{ zIndex: -9, height: height }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.85 }}
           exit={{ opacity: 0 }}
@@ -150,9 +150,19 @@ export default function Home() {
   const [activeBg, setActiveBg] = useState('');
   const { showHero } = useSectionVisibility();
   const activeSection = useNavSection();
+  const [bgHeight, setBgHeight] = useState('100vh');
 
   useEffect(() => {
     setMounted(true);
+
+    const updateHeight = () => {
+      if (window.innerWidth < 768) {
+        setBgHeight(`${window.screen.height}px`);
+      } else {
+        setBgHeight('100vh');
+      }
+    };
+    updateHeight();
 
     // Fetch active background from settings
     fetch('/api/settings')
@@ -241,7 +251,7 @@ export default function Home() {
           <LightPillarBackground />
           
           {/* Cosmic Nebula Background - Hero Page Only */}
-          <NebulaBackground />
+          <NebulaBackground height={bgHeight} />
           
           {/* Fixed UI Overlays */}
           <ScrollProgressBar />
@@ -252,9 +262,10 @@ export default function Home() {
 
           {/* Premium Simple Background */}
           <div 
-            className="fixed inset-0 w-full h-full select-none pointer-events-none overflow-hidden"
+            className="fixed left-0 right-0 top-0 w-full select-none pointer-events-none overflow-hidden"
             style={{ 
               zIndex: -5,
+              height: bgHeight
             }}
           >
             {isVideoBg ? (

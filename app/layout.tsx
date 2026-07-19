@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { SmoothScroll } from "../components/SmoothScroll";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -26,9 +25,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
       </head>
       <body className="font-outfit antialiased text-[var(--portfolio-fg)] selection:bg-violet-500/30 selection:text-[var(--portfolio-fg)]">
-        <SmoothScroll>
-          {children}
-        </SmoothScroll>
+        {children}
         <div className="film-grain" aria-hidden="true" />
       </body>
     </html>
