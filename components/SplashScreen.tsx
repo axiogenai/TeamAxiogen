@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 
 interface SplashScreenProps {
@@ -11,8 +11,34 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const [showText, setShowText] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
+    // Initialize and play intro music
+    const audio = new Audio('/intromusic/intromusic.mp3');
+    audio.volume = 0.5;
+    audioRef.current = audio;
+
+    const playAudio = () => {
+      audio.play().catch(err => {
+        // Silently catch autoplay errors (handled by interaction triggers below)
+      });
+    };
+
+    playAudio();
+
+    // Autoplay fallback - trigger play on first interaction if blocked by browser policies
+    const handleInteraction = () => {
+      playAudio();
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('keydown', handleInteraction);
+      window.removeEventListener('touchstart', handleInteraction);
+    };
+
+    window.addEventListener('click', handleInteraction);
+    window.addEventListener('keydown', handleInteraction);
+    window.addEventListener('touchstart', handleInteraction);
+
     // Stage 1: Full black screen first, then mount logo drawings after 400ms
     const mountTimer = setTimeout(() => {
       setIsMounted(true);
@@ -38,8 +64,30 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
       clearTimeout(textTimer);
       clearTimeout(exitTimer);
       clearTimeout(completeTimer);
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('keydown', handleInteraction);
+      window.removeEventListener('touchstart', handleInteraction);
+      audio.pause();
     };
   }, [onComplete]);
+
+  // Smooth fade-out of intro audio when isExiting becomes true
+  useEffect(() => {
+    if (isExiting && audioRef.current) {
+      const audio = audioRef.current;
+      let vol = audio.volume;
+      const fadeInterval = setInterval(() => {
+        if (vol > 0.05) {
+          vol -= 0.05;
+          audio.volume = Math.max(0, vol);
+        } else {
+          audio.pause();
+          clearInterval(fadeInterval);
+        }
+      }, 50);
+      return () => clearInterval(fadeInterval);
+    }
+  }, [isExiting]);
 
   const brandName = 'AXIOGEN';
 
