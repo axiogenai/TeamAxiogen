@@ -1288,7 +1288,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     <CardComponent
                       key={project.name}
                       {...linkProps}
-                      className={`group relative h-[160px] md:h-[310px] project-card rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto glass-card gradient-border ${project.link ? 'cursor-pointer' : 'select-none'}`}
+                      className={`group relative h-auto min-h-[220px] md:h-[310px] project-card rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto glass-card gradient-border ${project.link ? 'cursor-pointer' : 'select-none'}`}
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ type: 'spring' as const, stiffness: 200, damping: 20, delay: cardIdx * 0.1 }}
