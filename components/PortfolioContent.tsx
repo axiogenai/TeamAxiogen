@@ -1245,7 +1245,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     <CardComponent
                       key={project.name}
                       {...linkProps}
-                      className={`group relative h-[160px] md:h-[270px] project-card rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto glass-card gradient-border ${project.link ? 'cursor-pointer' : 'select-none'}`}
+                      className={`group relative h-[160px] md:h-[310px] project-card rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto glass-card gradient-border ${project.link ? 'cursor-pointer' : 'select-none'}`}
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ type: 'spring' as const, stiffness: 200, damping: 20, delay: cardIdx * 0.1 }}
@@ -1292,7 +1292,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         </motion.section>
       {/* ----------------- SERVICES SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex flex-col items-center justify-center pt-24 pb-8 px-4 md:px-16 section-bg-adapt overflow-hidden"
+        className="absolute inset-0 flex flex-col items-center justify-center pt-24 pb-8 px-4 md:px-16 section-bg-adapt overflow-y-auto scrollbar-none"
         style={{ pointerEvents: showServices ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1394,10 +1394,10 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </div>
 
             {/* Divider */}
-            <div className="bg-gradient-to-r from-transparent via-white/10 to-transparent h-[1px] my-2.5 md:my-3 w-full max-w-4xl mx-auto hide-on-short" />
+            <div className="bg-gradient-to-r from-transparent via-white/10 to-transparent h-[1px] my-2.5 md:my-3 w-full max-w-4xl mx-auto" />
 
             {/* Perfect Solutions Section */}
-            <div className="max-w-4xl mx-auto w-full hide-on-short">
+            <div className="max-w-4xl mx-auto w-full">
               <div className="text-center mb-1.5 md:mb-2">
                 <span className="text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-semibold text-white/40">Perfect Solutions For</span>
               </div>
@@ -1420,7 +1420,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </div>
 
             {/* Tech Stack Row */}
-            <div className="hidden md:flex flex-wrap items-center justify-center gap-1.5 mt-3 md:mt-3.5 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold text-white/30 max-w-4xl mx-auto pointer-events-auto hide-on-short">
+            <div className="hidden md:flex flex-wrap items-center justify-center gap-1.5 mt-3 md:mt-3.5 text-[8px] md:text-[9px] uppercase tracking-wider font-semibold text-white/30 max-w-4xl mx-auto pointer-events-auto">
               <span>Tech Stack :</span>
               {['Python', 'React', 'Node.js', 'Next.js', 'Java', 'TensorFlow', 'AWS / GCP', 'PostgreSQL', '.NET'].map((tech) => (
                 <span key={tech} className="px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full text-white/60 font-medium cursor-default hover:border-white/20 transition-colors">
