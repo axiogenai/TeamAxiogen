@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { NeuralNoise } from './ui/neural-noise';
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -115,6 +116,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
         pointerEvents: isExiting ? 'none' : 'auto',
       }}
     >
+      {/* Neural Noise background shader */}
+      <NeuralNoise />
+
       {/* Subtle grain texture overlay */}
       <div 
         className="absolute inset-0 opacity-[0.03] pointer-events-none"
