@@ -18,14 +18,35 @@ const Galaxy = dynamic(() => import('../components/Galaxy'), {
   ssr: false,
 });
 
+const Nebula = dynamic(() => import('../components/ui/nebula'), {
+  ssr: false,
+});
+
 // Fixed wrapper component that dynamically updates opacity and unmounts the WebGL canvas when invisible
 const LightPillarBackground = () => {
   return null;
 };
 
-// Galaxy starfield wrapper that only mounts and renders on the Hero section
-const GalaxyBackground = () => {
-  return null;
+// Nebula wrapper that only mounts and renders on the Hero section
+const NebulaBackground = () => {
+  const { showHero } = useSectionVisibility();
+
+  return (
+    <AnimatePresence>
+      {showHero && (
+        <motion.div 
+          className="fixed inset-0 pointer-events-none overflow-hidden select-none"
+          style={{ zIndex: -9 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.85 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Nebula />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 };
 const SeamlessVideoComponent = ({ src }: { src: string }) => {
   const videoARef = useRef<HTMLVideoElement>(null);
@@ -219,8 +240,8 @@ export default function Home() {
           {/* Scroll-Linked Fixed Background Shader */}
           <LightPillarBackground />
           
-          {/* Cosmic Galaxy Starfield Background - Hero Page Only */}
-          <GalaxyBackground />
+          {/* Cosmic Nebula Background - Hero Page Only */}
+          <NebulaBackground />
           
           {/* Fixed UI Overlays */}
           <ScrollProgressBar />
