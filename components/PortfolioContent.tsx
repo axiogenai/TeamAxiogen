@@ -10,7 +10,6 @@ import {
   getSectionFrames, 
   getMaxScrollMultiplier 
 } from '../hooks/useScroll';
-import { useLenis } from 'lenis/react';
 import { supabase } from '../lib/supabaseClient';
 import { LogoLoop } from './LogoLoop';
 import { ScrollVelocity } from './ScrollVelocity';
@@ -293,7 +292,6 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
     showServices, 
     showContact 
   } = useSectionVisibility();
-  const lenis = useLenis();
   const [activeTab, setActiveTab] = useState<'languages' | 'mobile' | 'web' | 'systems'>('languages');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -526,16 +524,16 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   const scrollResetRef = useRef(false);
 
   useEffect(() => {
-    if (mounted && lenis && !scrollResetRef.current) {
-      lenis.scrollTo(0, { immediate: true });
+    if (mounted && !scrollResetRef.current) {
+      window.scrollTo(0, 0);
       scrollResetRef.current = true;
     }
-  }, [mounted, lenis]);
+  }, [mounted]);
 
   const activeSection = useNavSection();
 
   useEffect(() => {
-    if (!lenis || !mounted) return;
+    if (!mounted) return;
 
     let isAnimating = false;
     let animatingTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -633,13 +631,13 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         const targetFrame = sectionFrames[targetIndex];
         const targetY = (targetFrame / 502) * maxScroll;
 
-        lenis.scrollTo(targetY, { 
-          duration: 0.45, 
-          easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
-          onComplete: () => {
-            unlockAnimation();
-          }
+        window.scrollTo({
+          top: targetY,
+          behavior: 'smooth'
         });
+        setTimeout(() => {
+          unlockAnimation();
+        }, 500);
       }
     };
 
@@ -659,11 +657,51 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       if (wheelResetTimer) clearTimeout(wheelResetTimer);
       wheelResetTimer = setTimeout(() => { wheelAccumulator = 0; }, 80);
 
-      if (Math.abs(wheelAccumulator) < 30) return;
+      // Increased threshold to 80 to prevent accidental double-snaps on hyper-sensitive wheels/trackpads
+      if (Math.abs(wheelAccumulator) < 80) return;
 
       const direction = wheelAccumulator > 0 ? 'down' : 'up';
       wheelAccumulator = 0;
       handleTransition(direction);
+    };
+
+    // ===== MOBILE: Touch-swipe paginated snap scrolling =====
+    let touchStartY = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      const target = e.target as HTMLElement;
+      const scrollContainer = findScrollContainer(target);
+      if (scrollContainer) return; // Allow normal scrolling inside scroll containers
+
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const target = e.target as HTMLElement;
+      const scrollContainer = findScrollContainer(target);
+      if (scrollContainer && shouldConsumeScroll(scrollContainer, touchStartY - e.touches[0].clientY)) {
+        return;
+      }
+      
+      // Stop dynamic native momentum scroll to prevent flying past sections
+      e.preventDefault();
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const target = e.target as HTMLElement;
+      const scrollContainer = findScrollContainer(target);
+      if (scrollContainer) return;
+
+      if (isAnimating) return;
+
+      const touchEndY = e.changedTouches[0].clientY;
+      const diffY = touchStartY - touchEndY;
+
+      // Swipe threshold: 45px minimum swipe to trigger section transition
+      if (Math.abs(diffY) > 45) {
+        const direction = diffY > 0 ? 'down' : 'up';
+        handleTransition(direction);
+      }
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -682,36 +720,36 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
     };
 
     if (!mobile) {
-      // DESKTOP: Keep existing wheel-based snap behavior.
       window.addEventListener('wheel', handleWheel, { passive: false });
+    } else {
+      window.addEventListener('touchstart', handleTouchStart, { passive: true });
+      window.addEventListener('touchmove', handleTouchMove, { passive: false });
+      window.addEventListener('touchend', handleTouchEnd, { passive: true });
     }
     window.addEventListener('keydown', handleKeyDown, { passive: false });
 
     return () => {
       if (!mobile) {
         window.removeEventListener('wheel', handleWheel);
+      } else {
+        window.removeEventListener('touchstart', handleTouchStart);
+        window.removeEventListener('touchmove', handleTouchMove);
+        window.removeEventListener('touchend', handleTouchEnd);
       }
       window.removeEventListener('keydown', handleKeyDown);
       if (animatingTimeout) clearTimeout(animatingTimeout);
       if (wheelResetTimer) clearTimeout(wheelResetTimer);
     };
-  }, [lenis, mounted]);
+  }, [mounted]);
 
   const scrollToFrame = (frame: number) => {
     // Calculate maxScroll mathematically based on 500vh page height
     const maxScroll = 4 * getStableHeight();
     const targetY = (frame / totalFrames) * maxScroll;
-    if (lenis) {
-      lenis.scrollTo(targetY, { 
-        duration: 1.2,
-        easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
-      });
-    } else {
-      window.scrollTo({
-        top: targetY,
-        behavior: 'smooth'
-      });
-    }
+    window.scrollTo({
+      top: targetY,
+      behavior: 'smooth'
+    });
   };
 
   // Section visibility is now computed in the useSectionVisibility() hook.
@@ -1014,7 +1052,10 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className={`flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-start ${isMobile ? '' : 'min-h-0 max-h-full'}`}>
+        <div 
+          className={`flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-start ${isMobile ? '' : 'min-h-0 max-h-full'}`}
+          style={isMobile ? undefined : { transform: 'translateY(40px)' }}
+        >
           <div 
             data-scroll-container
             data-lenis-prevent
@@ -1190,9 +1231,10 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-
-
-        <div className="w-full max-w-7xl text-white">
+        <div 
+          className="w-full max-w-7xl text-white"
+          style={isMobile ? undefined : { transform: 'translateY(40px)' }}
+        >
           <div className="flex justify-between items-end mb-6 md:mb-8">
             <div>
               <h2 className="text-3xl md:text-5xl font-black tracking-tighter bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Selected Work</h2>

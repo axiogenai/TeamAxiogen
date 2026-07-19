@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLenis } from 'lenis/react';
 import { 
   useNavSection, 
   getStableHeight, 
@@ -19,7 +18,6 @@ const TOTAL_FRAMES = 502;
 export const Navbar = ({ ready = true }: { ready?: boolean }) => {
   const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const lenis = useLenis();
   const activeSection = useNavSection();
 
   const [isMobile, setIsMobile] = useState(false);
@@ -36,17 +34,10 @@ export const Navbar = ({ ready = true }: { ready?: boolean }) => {
   const scrollToFrame = (frame: number) => {
     const maxScroll = getMaxScrollMultiplier() * getStableHeight();
     const targetY = (frame / TOTAL_FRAMES) * maxScroll;
-    if (lenis) {
-      lenis.scrollTo(targetY, { 
-        duration: 1.2,
-        easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
-      });
-    } else {
-      window.scrollTo({
-        top: targetY,
-        behavior: 'smooth'
-      });
-    }
+    window.scrollTo({
+      top: targetY,
+      behavior: 'smooth'
+    });
   };
 
   const frames = getSectionFrames();
