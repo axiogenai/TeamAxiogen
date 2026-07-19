@@ -998,7 +998,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- ABOUT SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex flex-col items-center justify-center px-4 md:px-16 text-white pt-24 pb-8 section-bg-adapt overflow-hidden"
+        className={`absolute inset-0 flex flex-col items-center justify-start pt-16 md:pt-24 pb-8 px-4 md:px-16 text-white section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
         style={{ pointerEvents: showAbout ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1008,11 +1008,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-center min-h-0 max-h-full">
+        <div className={`flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-start ${isMobile ? '' : 'min-h-0 max-h-full'}`}>
           <div 
             data-scroll-container
             data-lenis-prevent
-            className="grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full overflow-y-auto scrollbar-none px-2 py-2 flex-1 min-h-0"
+            className={`grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full px-2 py-2 ${isMobile ? '' : 'overflow-y-auto scrollbar-none flex-1 min-h-0'}`}
           >
             <AnimatePresence mode={isMobile ? "wait" : "sync"}>
               {/* Bio statement */}
