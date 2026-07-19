@@ -1042,7 +1042,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- ABOUT SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-16 md:pt-24 pb-8 px-4 md:px-16 text-white section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
+        className={`absolute inset-0 flex flex-col items-center justify-start pt-4 md:pt-8 pb-4 px-4 md:px-16 text-white section-bg-adapt overflow-hidden`}
         style={{ pointerEvents: showAbout ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1059,7 +1059,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           <div 
             data-scroll-container
             data-lenis-prevent
-            className={`grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full px-2 py-2 ${isMobile ? '' : 'overflow-y-auto scrollbar-none flex-1 min-h-0'}`}
+            className={`grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full px-2 py-2`}
           >
             <AnimatePresence mode={isMobile ? "wait" : "sync"}>
               {/* Bio statement */}
@@ -1221,7 +1221,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- PROJECTS SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-24 pb-8 px-4 md:px-16 section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
+        className={`absolute inset-0 flex flex-col items-center justify-start pt-4 md:pt-8 pb-4 px-4 md:px-16 section-bg-adapt overflow-hidden`}
         style={{ pointerEvents: showProjects ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1340,7 +1340,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         </motion.section>
       {/* ----------------- SERVICES SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex flex-col items-center justify-center pt-24 pb-8 px-4 md:px-16 section-bg-adapt overflow-y-auto scrollbar-none"
+        className="absolute inset-0 flex flex-col items-center justify-center pt-4 md:pt-8 pb-4 px-4 md:px-16 section-bg-adapt overflow-hidden"
         style={{ pointerEvents: showServices ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1482,7 +1482,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- CONTACT SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-center pt-24 pb-8 px-4 section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
+        className={`absolute inset-0 flex flex-col items-center justify-center pt-4 md:pt-8 pb-4 px-4 section-bg-adapt overflow-hidden`}
         style={{ pointerEvents: showContact ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
