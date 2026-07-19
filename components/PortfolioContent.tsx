@@ -336,7 +336,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           list.push({
             name: skill.name,
             node: (
-              <div className="flex items-center gap-3 px-4 py-2.5 bg-black/60 backdrop-blur-md border border-white/20 hover:border-white/40 hover:bg-black/80 transition-all rounded-xl select-none group/item shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+              <div className="flex items-center gap-3 px-4 py-2.5 bg-black/60 backdrop-blur-md border border-white/20 hover:border-white/40 hover:bg-black/80 transition-all rounded-xl select-none group/item">
                 <SkillIcon name={skill.name} />
                 <span className="font-extrabold text-[10px] md:text-xs uppercase tracking-wider text-white group-hover/item:text-white transition-colors">{skill.name}</span>
               </div>
@@ -1020,9 +1020,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           initial="hidden"
           animate={showHero ? "visible" : "hidden"}
           onClick={() => scrollToFrame(getSectionFrames()[2] ?? 209)}
-          className="group px-7 py-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-white/20 hover:border-white/40 rounded-full text-xs md:text-sm font-bold uppercase tracking-widest text-white hover:bg-white/10 transition-all shadow-[0_4px_30px_rgba(168,85,247,0.15)] hover:shadow-[0_4px_40px_rgba(168,85,247,0.3)] hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
+          className="group px-7 py-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-white/20 hover:border-white/40 rounded-full text-xs md:text-sm font-bold uppercase tracking-widest text-white hover:bg-white/10 transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
         >
-          <Sparkles className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
           <span>Explore Projects</span>
         </motion.button>
 
@@ -1042,7 +1041,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- ABOUT SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-4 md:pt-8 pb-4 px-4 md:px-16 text-white section-bg-adapt overflow-hidden`}
+        className={`absolute inset-0 flex flex-col items-center justify-start pt-16 pb-4 px-4 md:px-16 text-white section-bg-adapt overflow-hidden`}
         style={{ pointerEvents: showAbout ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1090,7 +1089,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                         href="https://www.instagram.com/axiogen.in?igsh=OGQ5ZDc2ODk2ZA==" 
                         target="_blank" 
                         rel="noopener noreferrer" 
-                        className="px-4 py-2 md:px-5 md:py-2.5 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(255,255,255,0.25)] hover:scale-105 btn-view-profile"
+                        className="px-4 py-2 md:px-5 md:py-2.5 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 btn-view-profile"
                       >
                         <BookOpen className="w-4 h-4" />
                         <span>View Profile</span>
@@ -1221,7 +1220,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- PROJECTS SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-4 md:pt-8 pb-4 px-4 md:px-16 section-bg-adapt overflow-hidden`}
+        className={`absolute inset-0 flex flex-col items-center justify-start pt-16 pb-4 px-4 md:px-16 section-bg-adapt overflow-hidden`}
         style={{ pointerEvents: showProjects ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1340,7 +1339,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         </motion.section>
       {/* ----------------- SERVICES SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex flex-col items-center justify-center pt-4 md:pt-8 pb-4 px-4 md:px-16 section-bg-adapt overflow-hidden"
+        className="absolute inset-0 flex flex-col items-center justify-center pt-16 pb-4 px-4 md:px-16 section-bg-adapt overflow-hidden"
         style={{ pointerEvents: showServices ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1453,7 +1452,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 {perfectForData.map((item, index) => {
                   const IconComponent = item.icon;
                   return (
-                    <div key={index} className="p-1.5 md:py-2 md:px-3 bg-black/40 border border-white/10 rounded-xl flex gap-2 md:gap-3 items-start text-left hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
+                    <div key={index} className="p-1.5 md:py-2 md:px-3 bg-black/40 border border-white/10 rounded-xl flex gap-2 md:gap-3 items-center text-left hover:border-white/20 transition-all hover:bg-black/60">
                       <div className={`p-1 md:p-1.5 rounded-lg shrink-0 ${item.color}`}>
                         <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </div>
@@ -1482,7 +1481,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- CONTACT SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-center pt-4 md:pt-8 pb-4 px-4 section-bg-adapt overflow-hidden`}
+        className={`absolute inset-0 flex flex-col items-center justify-center pt-16 pb-4 px-4 section-bg-adapt overflow-hidden`}
         style={{ pointerEvents: showContact ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1637,7 +1636,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
                   <button 
                     type="submit" 
-                    className="w-full py-2.5 md:py-3.5 mt-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg md:rounded-xl text-xs uppercase font-bold tracking-widest transition-all shadow-md hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:scale-[1.02] flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="w-full py-2.5 md:py-3.5 mt-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg md:rounded-xl text-xs uppercase font-bold tracking-widest transition-all hover:scale-[1.02] flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <Send className="w-4 h-4" />
                     <span>Send Message</span>

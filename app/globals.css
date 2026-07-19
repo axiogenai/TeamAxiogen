@@ -226,10 +226,16 @@ textarea:focus-visible {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 1; /* Keep it permanently active across all sections (including Hero) */
+  opacity: 0; /* Hidden on Hero */
   pointer-events: none;
   transition: opacity 1s ease-in-out;
 }
+
+/* Show Earth bg only when NOT on hero section */
+html.off-hero .portfolio-bg-image-layer {
+  opacity: 1;
+}
+
 
 /* --- Height-Based Scaling to Prevent Vertical Overflow & Eliminate Scrollbars --- */
 @media (min-width: 768px) and (max-height: 850px) {
