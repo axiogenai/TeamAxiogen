@@ -27,16 +27,9 @@ const LightPillarBackground = () => {
   return null;
 };
 
-// Nebula wrapper that is mounted permanently to maintain the purple cosmic theme across all pages
+// Nebula wrapper is disabled to restore and lock the Earth background image across all sections
 const NebulaBackground = ({ height }: { height: string }) => {
-  return (
-    <div 
-      className="fixed left-0 right-0 top-0 pointer-events-none overflow-hidden select-none"
-      style={{ zIndex: -9, height: height, opacity: 0.85 }}
-    >
-      <Nebula />
-    </div>
-  );
+  return null;
 };
 const SeamlessVideoComponent = ({ src }: { src: string }) => {
   const videoARef = useRef<HTMLVideoElement>(null);

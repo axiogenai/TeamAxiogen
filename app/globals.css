@@ -222,16 +222,13 @@ textarea:focus-visible {
 .portfolio-bg-image-layer {
   position: absolute;
   inset: 0;
+  background-image: var(--portfolio-bg-image);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 0;
+  opacity: 1; /* Keep it permanently active across all sections (including Hero) */
   pointer-events: none;
   transition: opacity 1s ease-in-out;
-}
-
-html.off-hero .portfolio-bg-image-layer {
-  opacity: 1;
 }
 
 /* --- Height-Based Scaling to Prevent Vertical Overflow & Eliminate Scrollbars --- */
