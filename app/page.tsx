@@ -1,36 +1,15 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import dynamic from 'next/dynamic';
+
 import { DynamicVignette } from '../components/DynamicVignette';
 import { Navbar } from '../components/Navbar';
 import { PortfolioContent } from '../components/PortfolioContent';
-import { useProjectCount, useSectionVisibility, getTotalStates, useNavSection } from '../hooks/useScroll';
+import { useSectionVisibility, getTotalStates, useNavSection } from '../hooks/useScroll';
 import { SplashScreen } from '../components/SplashScreen';
 import { ScrollProgressBar } from '../components/ScrollProgressBar';
-import { motion, AnimatePresence } from 'framer-motion';
 
-const LightPillar = dynamic(() => import('../components/LightPillar'), {
-  ssr: false,
-});
 
-const Galaxy = dynamic(() => import('../components/Galaxy'), {
-  ssr: false,
-});
-
-const Nebula = dynamic(() => import('../components/ui/nebula'), {
-  ssr: false,
-});
-
-// Fixed wrapper component that dynamically updates opacity and unmounts the WebGL canvas when invisible
-const LightPillarBackground = () => {
-  return null;
-};
-
-// Nebula wrapper is disabled to restore and lock the Earth background image across all sections
-const NebulaBackground = ({ height }: { height: string }) => {
-  return null;
-};
 const SeamlessVideoComponent = ({ src }: { src: string }) => {
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
@@ -230,11 +209,7 @@ export default function Home() {
         <div className="animate-page-fade-in">
           <Navbar ready={!showSplash} />
           
-          {/* Scroll-Linked Fixed Background Shader */}
-          <LightPillarBackground />
-          
-          {/* Cosmic Nebula Background - Hero Page Only */}
-          <NebulaBackground height={bgHeight} />
+
           
           {/* Fixed UI Overlays */}
           <ScrollProgressBar />

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   useNavSection, 
   getStableHeight, 
@@ -11,25 +11,18 @@ import {
 } from '../hooks/useScroll';
 import { ThemeToggle } from './ThemeToggle';
 import { MagneticButton } from './MagneticButton';
-import { Menu, X } from 'lucide-react';
+
 
 const TOTAL_FRAMES = 502;
 
 export const Navbar = ({ ready = true }: { ready?: boolean }) => {
   const [mounted, setMounted] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
   const activeSection = useNavSection();
 
-  const [isMobile, setIsMobile] = useState(false);
-
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
 
   const scrollToFrame = (frame: number) => {
     const maxScroll = getMaxScrollMultiplier() * getStableHeight();

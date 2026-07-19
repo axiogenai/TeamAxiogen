@@ -966,7 +966,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- HERO SECTION ----------------- */}
       <motion.section 
-        className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
+        className="absolute inset-0 flex flex-col items-center justify-center text-center pt-16 pb-4 px-4"
         style={{ pointerEvents: showHero ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1050,14 +1050,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           display: showAbout ? 'flex' : 'none'
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      >
+        >
         <div 
           className={`flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-start ${isMobile ? '' : 'min-h-0 max-h-full'}`}
-          style={isMobile ? undefined : { transform: 'translateY(40px)' }}
         >
           <div 
-            data-scroll-container
-            data-lenis-prevent
             className={`grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full px-2 py-2`}
           >
             <AnimatePresence mode={isMobile ? "wait" : "sync"}>
@@ -1232,7 +1229,6 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       >
         <div 
           className="w-full max-w-7xl text-white"
-          style={isMobile ? undefined : { transform: 'translateY(40px)' }}
         >
           <div className="flex justify-between items-end mb-6 md:mb-8">
             <div>
