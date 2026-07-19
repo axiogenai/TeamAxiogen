@@ -19,17 +19,18 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
     audio.volume = 0.5;
     audioRef.current = audio;
 
-    const playAudio = () => {
-      audio.play().catch(err => {
-        // Silently catch autoplay errors (handled by interaction triggers below)
-      });
-    };
-
-    playAudio();
+    let textStarted = false;
 
     // Autoplay fallback - trigger play on first interaction if blocked by browser policies
+    // but ONLY after the text starts sliding.
     const handleInteraction = () => {
-      playAudio();
+      if (textStarted) {
+        audio.play().catch(() => {});
+        cleanupListeners();
+      }
+    };
+
+    const cleanupListeners = () => {
       window.removeEventListener('click', handleInteraction);
       window.removeEventListener('keydown', handleInteraction);
       window.removeEventListener('touchstart', handleInteraction);
@@ -47,6 +48,15 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
     // Show brand name and tagline after logo drawing starts filling (at 2.0s)
     const textTimer = setTimeout(() => {
       setShowText(true);
+      textStarted = true;
+      // Play sound effect exactly when text starts sliding under the logo
+      audio.play()
+        .then(() => {
+          cleanupListeners();
+        })
+        .catch(err => {
+          // Blocked by autoplay policy, wait for next user interaction
+        });
     }, 2000);
 
     // Trigger exit wipe at 5.7s
