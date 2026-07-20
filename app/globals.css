@@ -287,3 +287,30 @@ html.off-hero .portfolio-bg-image-layer {
     padding-bottom: 1rem !important;
   }
 }
+
+/* Mobile phones - compact project cards */
+@media (max-width: 767px) {
+  .project-card {
+    min-height: 160px !important;
+    height: auto !important;
+  }
+
+  .project-grid {
+    gap: 0.5rem !important;
+  }
+
+  .project-section-header {
+    margin-bottom: 0.5rem !important;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 767px) and (max-height: 700px) {
+  .project-card {
+    min-height: 130px !important;
+  }
+
+  .project-grid {
+    gap: 0.35rem !important;
+  }
+}
