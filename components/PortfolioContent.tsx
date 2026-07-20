@@ -1298,14 +1298,14 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                         {/* Glow effect */}
                         <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/10 via-indigo-500/5 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
 
-                        <div className="flex justify-between items-start mb-2.5">
+                        <div className="flex justify-between items-start mb-1.5 md:mb-2.5">
                           <span className="px-2.5 py-0.5 md:px-3.5 md:py-1 rounded-full border border-white/10 text-[8px] sm:text-[9px] tracking-wider uppercase font-bold bg-white/5 text-white/80 group-hover:border-purple-500/30 group-hover:text-purple-300 transition-colors">
                             {project.category}
                           </span>
                           <span className="opacity-60 text-[8px] sm:text-[10px] md:text-xs bg-white/5 px-2 py-0.5 rounded border border-white/5 font-semibold tabular-nums">{project.year}</span>
                         </div>
 
-                        <div className="mt-auto">
+                        <div className="mt-2 md:mt-auto">
                           <div className="flex items-center gap-1">
                             <h3 className="text-base sm:text-lg md:text-2xl font-black tracking-tight mb-1 md:mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-purple-200 group-hover:to-pink-300 transition-all duration-500 leading-tight">
                               {project.name}
@@ -1314,7 +1314,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                               <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-purple-300 shrink-0 mb-1" />
                             )}
                           </div>
-                          <p className="text-[10px] sm:text-xs text-white/60 mb-4 group-hover:text-white/80 transition-colors leading-relaxed line-clamp-3">
+                          <p className="text-[10px] sm:text-xs text-white/60 mb-2 md:mb-4 group-hover:text-white/80 transition-colors leading-relaxed line-clamp-3">
                             {project.desc}
                           </p>
 
