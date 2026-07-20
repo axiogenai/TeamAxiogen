@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactLenis } from 'lenis/react';
+import { useState, useEffect } from 'react';
 
 /**
  * SmoothScroll — optimized Lenis config for butter-smooth scrolling.
@@ -9,6 +10,23 @@ import { ReactLenis } from 'lenis/react';
  * duration decreased from 1.5 → 1.2 (snappier response)
  */
 export const SmoothScroll = ({ children }: { children: React.ReactNode }) => {
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    const checkTouch = () => {
+      return (
+        'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0 ||
+        (navigator as any).msMaxTouchPoints > 0
+      );
+    };
+    setIsTouchDevice(checkTouch());
+  }, []);
+
+  if (isTouchDevice) {
+    return <>{children}</>;
+  }
+
   return (
     <ReactLenis root options={{ lerp: 0.1, duration: 1.2, smoothWheel: true, syncTouch: false }}>
       {children}

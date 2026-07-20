@@ -10,7 +10,6 @@ import {
   getSectionFrames, 
   getMaxScrollMultiplier 
 } from '../hooks/useScroll';
-import { useLenis } from 'lenis/react';
 import { supabase } from '../lib/supabaseClient';
 import { LogoLoop } from './LogoLoop';
 import { ScrollVelocity } from './ScrollVelocity';
@@ -293,7 +292,6 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
     showServices, 
     showContact 
   } = useSectionVisibility();
-  const lenis = useLenis();
   const [activeTab, setActiveTab] = useState<'languages' | 'mobile' | 'web' | 'systems'>('languages');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -338,7 +336,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           list.push({
             name: skill.name,
             node: (
-              <div className="flex items-center gap-3 px-4 py-2.5 bg-black/60 backdrop-blur-md border border-white/20 hover:border-white/40 hover:bg-black/80 transition-all rounded-xl select-none group/item shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+              <div className="flex items-center gap-3 px-4 py-2.5 bg-black/60 backdrop-blur-md border border-white/20 hover:border-white/40 hover:bg-black/80 transition-all rounded-xl select-none group/item">
                 <SkillIcon name={skill.name} />
                 <span className="font-extrabold text-[10px] md:text-xs uppercase tracking-wider text-white group-hover/item:text-white transition-colors">{skill.name}</span>
               </div>
@@ -526,16 +524,16 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   const scrollResetRef = useRef(false);
 
   useEffect(() => {
-    if (mounted && lenis && !scrollResetRef.current) {
-      lenis.scrollTo(0, { immediate: true });
+    if (mounted && !scrollResetRef.current) {
+      window.scrollTo(0, 0);
       scrollResetRef.current = true;
     }
-  }, [mounted, lenis]);
+  }, [mounted]);
 
   const activeSection = useNavSection();
 
   useEffect(() => {
-    if (!lenis || !mounted) return;
+    if (!mounted) return;
 
     let isAnimating = false;
     let animatingTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -633,13 +631,13 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         const targetFrame = sectionFrames[targetIndex];
         const targetY = (targetFrame / 502) * maxScroll;
 
-        lenis.scrollTo(targetY, { 
-          duration: 0.45, 
-          easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
-          onComplete: () => {
-            unlockAnimation();
-          }
+        window.scrollTo({
+          top: targetY,
+          behavior: 'smooth'
         });
+        setTimeout(() => {
+          unlockAnimation();
+        }, 500);
       }
     };
 
@@ -659,11 +657,51 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       if (wheelResetTimer) clearTimeout(wheelResetTimer);
       wheelResetTimer = setTimeout(() => { wheelAccumulator = 0; }, 80);
 
-      if (Math.abs(wheelAccumulator) < 30) return;
+      // Increased threshold to 80 to prevent accidental double-snaps on hyper-sensitive wheels/trackpads
+      if (Math.abs(wheelAccumulator) < 80) return;
 
       const direction = wheelAccumulator > 0 ? 'down' : 'up';
       wheelAccumulator = 0;
       handleTransition(direction);
+    };
+
+    // ===== MOBILE: Touch-swipe paginated snap scrolling =====
+    let touchStartY = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      const target = e.target as HTMLElement;
+      const scrollContainer = findScrollContainer(target);
+      if (scrollContainer) return; // Allow normal scrolling inside scroll containers
+
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const target = e.target as HTMLElement;
+      const scrollContainer = findScrollContainer(target);
+      if (scrollContainer && shouldConsumeScroll(scrollContainer, touchStartY - e.touches[0].clientY)) {
+        return;
+      }
+      
+      // Stop dynamic native momentum scroll to prevent flying past sections
+      e.preventDefault();
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const target = e.target as HTMLElement;
+      const scrollContainer = findScrollContainer(target);
+      if (scrollContainer) return;
+
+      if (isAnimating) return;
+
+      const touchEndY = e.changedTouches[0].clientY;
+      const diffY = touchStartY - touchEndY;
+
+      // Swipe threshold: 45px minimum swipe to trigger section transition
+      if (Math.abs(diffY) > 45) {
+        const direction = diffY > 0 ? 'down' : 'up';
+        handleTransition(direction);
+      }
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -682,29 +720,35 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
     };
 
     if (!mobile) {
-      // DESKTOP: Keep existing wheel-based snap behavior.
       window.addEventListener('wheel', handleWheel, { passive: false });
+    } else {
+      window.addEventListener('touchstart', handleTouchStart, { passive: true });
+      window.addEventListener('touchmove', handleTouchMove, { passive: false });
+      window.addEventListener('touchend', handleTouchEnd, { passive: true });
     }
     window.addEventListener('keydown', handleKeyDown, { passive: false });
 
     return () => {
       if (!mobile) {
         window.removeEventListener('wheel', handleWheel);
+      } else {
+        window.removeEventListener('touchstart', handleTouchStart);
+        window.removeEventListener('touchmove', handleTouchMove);
+        window.removeEventListener('touchend', handleTouchEnd);
       }
       window.removeEventListener('keydown', handleKeyDown);
       if (animatingTimeout) clearTimeout(animatingTimeout);
       if (wheelResetTimer) clearTimeout(wheelResetTimer);
     };
-  }, [lenis, mounted]);
+  }, [mounted]);
 
   const scrollToFrame = (frame: number) => {
-    if (!lenis) return;
     // Calculate maxScroll mathematically based on 500vh page height
     const maxScroll = 4 * getStableHeight();
     const targetY = (frame / totalFrames) * maxScroll;
-    lenis.scrollTo(targetY, { 
-      duration: 1.2,
-      easing: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+    window.scrollTo({
+      top: targetY,
+      behavior: 'smooth'
     });
   };
 
@@ -922,7 +966,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- HERO SECTION ----------------- */}
       <motion.section 
-        className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
+        className="absolute inset-0 flex flex-col items-center justify-center text-center pt-16 pb-4 px-4"
         style={{ pointerEvents: showHero ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -939,18 +983,25 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           animate={showHero ? "visible" : "hidden"}
           className="mb-6"
         >
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] leading-none">
-            {"TEAM".split("").map((char, index) => (
-              <motion.span key={index} variants={charVariants} className="inline-block">
-                {char}
-              </motion.span>
-            ))}
+          <h1 
+            className="text-5xl md:text-7xl lg:text-8xl font-black tracking-normal text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] leading-none"
+            style={{ fontFamily: "'Turbo Driver', sans-serif" }}
+          >
+            <motion.span 
+              variants={charVariants} 
+              className="inline-block mr-4 md:mr-6"
+              style={{ paddingRight: '0.1em' }}
+            >
+              TEAM
+            </motion.span>
             <br />
-            {"AXIOGEN".split("").map((char, index) => (
-              <motion.span key={index} variants={charVariants} className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400">
-                {char}
-              </motion.span>
-            ))}
+            <motion.span 
+              variants={charVariants} 
+              className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-400 to-indigo-400"
+              style={{ paddingBottom: '0.15em', paddingRight: '0.25em', marginRight: '-0.25em' }}
+            >
+              AXIOGEN
+            </motion.span>
           </h1>
         </motion.div>
 
@@ -969,9 +1020,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           initial="hidden"
           animate={showHero ? "visible" : "hidden"}
           onClick={() => scrollToFrame(getSectionFrames()[2] ?? 209)}
-          className="group px-7 py-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-white/20 hover:border-white/40 rounded-full text-xs md:text-sm font-bold uppercase tracking-widest text-white hover:bg-white/10 transition-all shadow-[0_4px_30px_rgba(168,85,247,0.15)] hover:shadow-[0_4px_40px_rgba(168,85,247,0.3)] hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
+          className="group px-7 py-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-white/20 hover:border-white/40 rounded-full text-xs md:text-sm font-bold uppercase tracking-widest text-white hover:bg-white/10 transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
         >
-          <Sparkles className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
           <span>Explore Projects</span>
         </motion.button>
 
@@ -991,7 +1041,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- ABOUT SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex flex-col items-center justify-start md:justify-center px-6 md:px-16 text-white pt-12 md:pt-0 pb-4 md:pb-0 section-bg-adapt overflow-hidden"
+        data-scroll-container
+        className={`absolute inset-0 flex flex-col items-center justify-start pt-24 pb-12 px-4 md:px-16 text-white section-bg-adapt overflow-y-auto`}
         style={{ pointerEvents: showAbout ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1000,12 +1051,12 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           display: showAbout ? 'flex' : 'none'
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <div className="flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-start md:justify-center flex-1 md:flex-initial min-h-0">
+        >
+        <div 
+          className={`flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-start ${isMobile ? '' : 'min-h-0 max-h-full'}`}
+        >
           <div 
-            data-scroll-container
-            data-lenis-prevent
-            className="grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full overflow-y-auto scrollbar-none px-2 py-2 flex-1 md:flex-initial min-h-0"
+            className={`grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full px-2 py-2`}
           >
             <AnimatePresence mode={isMobile ? "wait" : "sync"}>
               {/* Bio statement */}
@@ -1036,7 +1087,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                         href="https://www.instagram.com/axiogen.in?igsh=OGQ5ZDc2ODk2ZA==" 
                         target="_blank" 
                         rel="noopener noreferrer" 
-                        className="px-4 py-2 md:px-5 md:py-2.5 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(255,255,255,0.25)] hover:scale-105 btn-view-profile"
+                        className="px-4 py-2 md:px-5 md:py-2.5 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 btn-view-profile"
                       >
                         <BookOpen className="w-4 h-4" />
                         <span>View Profile</span>
@@ -1167,7 +1218,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- PROJECTS SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-12 md:pt-16 px-6 md:px-16 section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
+        data-scroll-container
+        className={`absolute inset-0 flex flex-col items-center justify-start pt-24 pb-12 px-4 md:px-16 section-bg-adapt overflow-y-auto`}
         style={{ pointerEvents: showProjects ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1177,9 +1229,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-
-
-        <div className="w-full max-w-7xl text-white">
+        <div 
+          className="w-full max-w-7xl text-white"
+        >
           <div className="flex justify-between items-end mb-6 md:mb-8">
             <div>
               <h2 className="text-3xl md:text-5xl font-black tracking-tighter bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Selected Work</h2>
@@ -1221,13 +1273,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.35, ease: "easeInOut", staggerChildren: 0.08 }}
-              data-scroll-container={!isMobile ? "" : undefined}
-              data-lenis-prevent={!isMobile ? "" : undefined}
-              className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pointer-events-auto w-full items-start ${
-                isMobile
-                  ? 'max-h-none overflow-visible pr-0 py-0'
-                  : 'max-h-[62vh] md:max-h-none pr-2 py-2 overflow-y-auto scrollbar-none touch-pan-y'
-              }`}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 project-grid pointer-events-auto w-full items-start"
               style={{ perspective: 1000 }}
             >
               {projects
@@ -1244,24 +1290,24 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     <CardComponent
                       key={project.name}
                       {...linkProps}
-                      className={`group relative h-[160px] md:h-[270px] rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto glass-card gradient-border ${project.link ? 'cursor-pointer' : 'select-none'}`}
+                      className={`group relative h-auto md:h-[310px] project-card rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto glass-card gradient-border ${project.link ? 'cursor-pointer' : 'select-none'}`}
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ type: 'spring' as const, stiffness: 200, damping: 20, delay: cardIdx * 0.1 }}
                       whileHover={{ scale: 1.02, y: -8 }}
                     >
-                      <div className="p-4 md:p-6 flex flex-col justify-between flex-1 relative z-10">
+                      <div className="p-3 md:p-6 flex flex-col justify-start md:justify-between flex-1 relative z-10">
                         {/* Glow effect */}
                         <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/10 via-indigo-500/5 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
 
-                        <div className="flex justify-between items-start mb-2.5">
+                        <div className="flex justify-between items-start mb-1.5 md:mb-2.5">
                           <span className="px-2.5 py-0.5 md:px-3.5 md:py-1 rounded-full border border-white/10 text-[8px] sm:text-[9px] tracking-wider uppercase font-bold bg-white/5 text-white/80 group-hover:border-purple-500/30 group-hover:text-purple-300 transition-colors">
                             {project.category}
                           </span>
                           <span className="opacity-60 text-[8px] sm:text-[10px] md:text-xs bg-white/5 px-2 py-0.5 rounded border border-white/5 font-semibold tabular-nums">{project.year}</span>
                         </div>
 
-                        <div className="mt-auto">
+                        <div className="mt-2 md:mt-auto">
                           <div className="flex items-center gap-1">
                             <h3 className="text-base sm:text-lg md:text-2xl font-black tracking-tight mb-1 md:mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-purple-200 group-hover:to-pink-300 transition-all duration-500 leading-tight">
                               {project.name}
@@ -1270,7 +1316,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                               <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-purple-300 shrink-0 mb-1" />
                             )}
                           </div>
-                          <p className="text-[10px] sm:text-xs text-white/60 mb-4 group-hover:text-white/80 transition-colors leading-relaxed line-clamp-3">
+                          <p className="text-[10px] sm:text-xs text-white/60 mb-2 md:mb-4 group-hover:text-white/80 transition-colors leading-relaxed line-clamp-3">
                             {project.desc}
                           </p>
 
@@ -1291,7 +1337,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         </motion.section>
       {/* ----------------- SERVICES SECTION ----------------- */}
       <motion.section
-        className="absolute inset-0 flex flex-col items-center justify-start md:justify-center pt-12 md:pt-0 pb-4 md:pb-0 px-6 md:px-16 section-bg-adapt overflow-hidden"
+        data-scroll-container
+        className="absolute inset-0 flex flex-col items-center justify-start pt-24 pb-12 px-4 md:px-16 section-bg-adapt overflow-y-auto"
         style={{ pointerEvents: showServices ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1317,9 +1364,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         <div className="w-full max-w-5xl text-white">
           {/* Unified Card Container Wrapper */}
           <div 
-            data-scroll-container
-            data-lenis-prevent
-            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-3.5 md:py-5 md:px-7 rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] max-h-[94vh] md:max-h-none md:overflow-visible services-no-scrollbar touch-pan-y glass-card"
+            className="bg-[var(--card-bg)] border border-[var(--card-border)] p-3.5 md:py-5 md:px-7 services-card rounded-[1.5rem] md:rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.6)] services-no-scrollbar touch-pan-y glass-card"
           >
             {/* Main Title - Inside the card */}
             <div className="text-center mb-1.5 md:mb-3">
@@ -1406,7 +1451,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 {perfectForData.map((item, index) => {
                   const IconComponent = item.icon;
                   return (
-                    <div key={index} className="p-1.5 md:py-2 md:px-3 bg-black/40 border border-white/10 rounded-xl flex gap-2 md:gap-3 items-start text-left hover:border-white/20 transition-all hover:bg-black/60 shadow-md">
+                    <div key={index} className="p-1.5 md:py-2 md:px-3 bg-black/40 border border-white/10 rounded-xl flex gap-2 md:gap-3 items-center text-left hover:border-white/20 transition-all hover:bg-black/60">
                       <div className={`p-1 md:p-1.5 rounded-lg shrink-0 ${item.color}`}>
                         <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </div>
@@ -1435,7 +1480,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- CONTACT SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-24 md:justify-center md:pt-0 px-4 section-bg-adapt ${isMobile ? 'overflow-y-auto scrollbar-none' : 'overflow-hidden'}`}
+        data-scroll-container
+        className={`absolute inset-0 flex flex-col items-center justify-start pt-24 pb-12 px-4 section-bg-adapt overflow-y-auto`}
         style={{ pointerEvents: showContact ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1448,13 +1494,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
 
         <div 
-          data-scroll-container={!isMobile ? "" : undefined}
-          data-lenis-prevent={!isMobile ? "" : undefined}
-          className={`text-white bg-[var(--card-bg)] p-5 md:p-10 lg:p-14 rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--card-border)] shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-12 gap-5 md:gap-8 items-stretch justify-center glass-card gradient-border ${
-            isMobile 
-              ? 'max-h-none overflow-visible' 
-              : 'max-h-[85vh] overflow-y-auto md:max-h-none md:overflow-visible'
-          } scrollbar-none touch-pan-y`}
+          className="text-white bg-[var(--card-bg)] p-4 md:p-8 lg:p-10 contact-card rounded-[1.5rem] md:rounded-[2.5rem] border border-[var(--card-border)] shadow-[0_30px_70px_rgba(0,0,0,0.65)] max-w-4xl w-full grid grid-cols-12 gap-5 md:gap-8 items-stretch justify-center glass-card gradient-border touch-pan-y"
         >
           
           {/* Left panel - details */}
@@ -1530,7 +1570,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 </a>
               </div>
 
-              <div className="pt-2 select-none pointer-events-none overflow-hidden max-w-xs md:max-w-sm">
+              <div className="pt-2 select-none pointer-events-none overflow-hidden max-w-xs md:max-w-sm hide-on-short">
                 <ScrollVelocity
                   texts={['THANK YOU', 'VISIT AGAIN']} 
                   velocity={100}
@@ -1596,7 +1636,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
                   <button 
                     type="submit" 
-                    className="w-full py-2.5 md:py-3.5 mt-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg md:rounded-xl text-xs uppercase font-bold tracking-widest transition-all shadow-md hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:scale-[1.02] flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="w-full py-2.5 md:py-3.5 mt-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg md:rounded-xl text-xs uppercase font-bold tracking-widest transition-all hover:scale-[1.02] flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <Send className="w-4 h-4" />
                     <span>Send Message</span>

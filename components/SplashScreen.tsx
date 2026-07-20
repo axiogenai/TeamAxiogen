@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { NeuralNoise } from './ui/neural-noise';
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -23,15 +24,15 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
       setShowText(true);
     }, 2000);
 
-    // Trigger exit wipe at 4.2s
+    // Trigger exit wipe at 5.7s
     const exitTimer = setTimeout(() => {
       setIsExiting(true);
-    }, 4200);
+    }, 5700);
 
-    // Complete splash sequence at 5.0s (4.2s + 0.8s slide transition)
+    // Complete splash sequence at 6.5s (5.7s + 0.8s slide transition)
     const completeTimer = setTimeout(() => {
       onComplete();
-    }, 5000);
+    }, 6500);
 
     return () => {
       clearTimeout(mountTimer);
@@ -57,6 +58,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
         pointerEvents: isExiting ? 'none' : 'auto',
       }}
     >
+      {/* Neural Noise background shader */}
+      <NeuralNoise />
+
       {/* Subtle grain texture overlay */}
       <div 
         className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -126,18 +130,30 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
             opacity: showText ? 1 : 0
           }}
           transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-          className="overflow-hidden flex flex-col items-center justify-center pl-4 md:pl-6 whitespace-nowrap"
+          className="overflow-hidden flex flex-col items-center justify-center pl-2 md:pl-3 whitespace-nowrap"
         >
           {/* Brand Name Text */}
           <motion.h1 
             initial={{ x: -80 }}
             animate={{ x: showText ? 0 : -80 }}
             transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-            className="text-white font-extralight tracking-[0.3em] md:tracking-[0.4em] text-xl md:text-3xl mb-2 mr-[-0.3em] md:mr-[-0.4em] text-center"
+            className="text-white font-extralight tracking-[0.3em] md:tracking-[0.4em] text-xl md:text-3xl mb-1 mr-[-0.3em] md:mr-[-0.4em] text-center"
             style={{ fontFamily: "'Rostex', sans-serif" }}
           >
             {brandName}
           </motion.h1>
+
+          {/* Animated Horizontal Divider Line */}
+          <motion.div
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ 
+              scaleX: showText ? 1 : 0,
+              opacity: showText ? 0.8 : 0
+            }}
+            transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 0.05 }}
+            className="h-[1px] w-24 md:w-32 bg-gradient-to-r from-transparent via-white/80 to-transparent my-2"
+            style={{ originX: 0.5 }}
+          />
 
           {/* Tagline */}
           <motion.p
