@@ -198,7 +198,7 @@ const fallbackProjects = [
     year: '2026',
     desc: 'Core neural network training workspace powering predictive analytics and cognitive assistant agents.',
     tech: ['Python', 'FastAPI', 'PyTorch', 'Docker'],
-    link: 'https://axiogen.in',
+    link: 'https://team.axiogen.in',
     preview: 'from-purple-600 to-indigo-600'
   },
   {
