@@ -198,7 +198,7 @@ const fallbackProjects = [
     year: '2026',
     desc: 'Core neural network training workspace powering predictive analytics and cognitive assistant agents.',
     tech: ['Python', 'FastAPI', 'PyTorch', 'Docker'],
-    link: 'https://team.axiogen.in',
+    link: '#',
     preview: 'from-purple-600 to-indigo-600'
   },
   {
@@ -223,7 +223,7 @@ const fallbackProjects = [
     year: '2025',
     desc: 'High-performance cryptographic sandbox tool for generating, mining, and auditing distributed chains.',
     tech: ['TypeScript', 'Node.js', 'Framer Motion', 'TailwindCSS'],
-    link: 'https://blockchainforge.vercel.app',
+    link: '#',
     preview: 'from-pink-600 to-rose-600'
   },
   {
@@ -232,7 +232,7 @@ const fallbackProjects = [
     year: '2025',
     desc: 'Advanced academic accreditation suite streamlining documentation, criteria metrics, and reporting.',
     tech: ['Next.js', 'TypeScript', 'Prisma ORM', 'PostgreSQL'],
-    link: 'https://naac-nine.vercel.app',
+    link: '#',
     preview: 'from-teal-600 to-emerald-600'
   },
   {
@@ -241,7 +241,7 @@ const fallbackProjects = [
     year: '2025',
     desc: 'Active session protection agent intercepting hijack attempts and managing token rotation in real-time.',
     tech: ['JavaScript', 'Express', 'JWT Security', 'TailwindCSS'],
-    link: 'https://sessionwarden.in',
+    link: '#',
     preview: 'from-yellow-600 to-amber-600'
   },
   {
@@ -250,7 +250,7 @@ const fallbackProjects = [
     year: '2025',
     desc: 'Library of fluid particle simulations and interactive canvas shaders built for premium web graphics.',
     tech: ['WebGL', 'GLSL', 'Canvas API', 'Vanilla CSS'],
-    link: 'https://luminabackgrounds.vercel.app',
+    link: '#',
     preview: 'from-cyan-600 to-blue-600'
   },
   {
@@ -1083,7 +1083,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     </p>
                     <div className="flex gap-4 mb-3 md:mb-6">
                       <a 
-                        href="https://www.instagram.com/axiogen.in?igsh=OGQ5ZDc2ODk2ZA==" 
+                        href="#" 
                         target="_blank" 
                         rel="noopener noreferrer" 
                         className="px-4 py-2 md:px-5 md:py-2.5 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 btn-view-profile"
@@ -1538,7 +1538,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               {/* Shuffled Social Buttons to the Bottom of Left Panel */}
               <div className="flex items-center gap-2 pt-1 pointer-events-auto">
                 <a 
-                  href="https://www.instagram.com/axiogen.in?igsh=OGQ5ZDc2ODk2ZA==" 
+                  href="#" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="p-2 bg-white/5 border border-white/10 hover:border-white/30 rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
@@ -1547,7 +1547,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   <BookOpen className="w-4 h-4" />
                 </a>
                 <a 
-                  href="https://twitter.com" 
+                  href="#" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="p-2 bg-white/5 border border-white/10 hover:border-white/30 rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
@@ -1556,7 +1556,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   <MessageSquare className="w-4 h-4" />
                 </a>
                 <a 
-                  href="https://linkedin.com" 
+                  href="#" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="p-2 bg-white/5 border border-white/10 hover:border-white/30 rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
