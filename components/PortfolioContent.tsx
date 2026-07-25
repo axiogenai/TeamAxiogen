@@ -1070,16 +1070,16 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 >
                   <div className="flex flex-col flex-1">
                     <div className="flex items-center gap-2 mb-1.5 md:mb-2">
-                      <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
+                      <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">Creative Technology Studio · Digital Experience Agency</span>
                     </div>
                     <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tighter mb-2 md:mb-3 leading-none whitespace-nowrap">
-                      TEAM AXIOGEN.
+                      AXIOGEN.
                     </h2>
                     <p className="text-xs sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-3 md:mb-4">
-                      We are a full-cycle software engineering team delivering end-to-end digital solutions. Our expertise spans web and mobile development, bespoke AI integration, scalable cloud architecture, and immersive user experiences.
+                      Axiogen is a premier Creative Engineering Studio & Digital Product Engineering team. We deliver Immersive Digital Experiences, High-Performance Web Development, and Cinematic Web Design.
                     </p>
                     <p className="text-[10px] sm:text-xs md:text-sm text-white/60 font-normal leading-relaxed mb-3 md:mb-5">
-                      From high-performance databases and automated research systems to advanced voice synthesis, document intelligence, and GPU-accelerated interfaces, we craft solutions tailored for both academic innovation and enterprise scale.
+                      Specializing in Web Engineering Solutions, Interactive Web Development, Bespoke Web Design, and Cutting-Edge Web Solutions, we build high-impact applications tailored for enterprise scale.
                     </p>
                     <div className="flex gap-4 mb-3 md:mb-6">
                       <a 
