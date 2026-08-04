@@ -198,7 +198,7 @@ const fallbackProjects = [
     year: '2026',
     desc: 'Core neural network training workspace powering predictive analytics and cognitive assistant agents.',
     tech: ['Python', 'FastAPI', 'PyTorch', 'Docker'],
-    link: 'https://axiogen.in',
+    link: '#',
     preview: 'from-purple-600 to-indigo-600'
   },
   {
@@ -223,7 +223,7 @@ const fallbackProjects = [
     year: '2025',
     desc: 'High-performance cryptographic sandbox tool for generating, mining, and auditing distributed chains.',
     tech: ['TypeScript', 'Node.js', 'Framer Motion', 'TailwindCSS'],
-    link: 'https://blockchainforge.vercel.app',
+    link: '#',
     preview: 'from-pink-600 to-rose-600'
   },
   {
@@ -232,7 +232,7 @@ const fallbackProjects = [
     year: '2025',
     desc: 'Advanced academic accreditation suite streamlining documentation, criteria metrics, and reporting.',
     tech: ['Next.js', 'TypeScript', 'Prisma ORM', 'PostgreSQL'],
-    link: 'https://naac-nine.vercel.app',
+    link: '#',
     preview: 'from-teal-600 to-emerald-600'
   },
   {
@@ -241,7 +241,7 @@ const fallbackProjects = [
     year: '2025',
     desc: 'Active session protection agent intercepting hijack attempts and managing token rotation in real-time.',
     tech: ['JavaScript', 'Express', 'JWT Security', 'TailwindCSS'],
-    link: 'https://sessionwarden.in',
+    link: '#',
     preview: 'from-yellow-600 to-amber-600'
   },
   {
@@ -250,7 +250,7 @@ const fallbackProjects = [
     year: '2025',
     desc: 'Library of fluid particle simulations and interactive canvas shaders built for premium web graphics.',
     tech: ['WebGL', 'GLSL', 'Canvas API', 'Vanilla CSS'],
-    link: 'https://luminabackgrounds.vercel.app',
+    link: '#',
     preview: 'from-cyan-600 to-blue-600'
   },
   {
@@ -1041,8 +1041,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- ABOUT SECTION ----------------- */}
       <motion.section
-        data-scroll-container
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-24 pb-12 px-4 md:px-16 text-white section-bg-adapt overflow-y-auto`}
+        className={`absolute inset-0 flex flex-col items-center justify-start pt-16 pb-4 px-4 md:px-16 text-white section-bg-adapt overflow-hidden`}
         style={{ pointerEvents: showAbout ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1071,20 +1070,20 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 >
                   <div className="flex flex-col flex-1">
                     <div className="flex items-center gap-2 mb-1.5 md:mb-2">
-                      <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">About Us</span>
+                      <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">Creative Technology Studio · Digital Experience Agency</span>
                     </div>
                     <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tighter mb-2 md:mb-3 leading-none whitespace-nowrap">
-                      TEAM AXIOGEN.
+                      AXIOGEN.
                     </h2>
                     <p className="text-xs sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-3 md:mb-4">
-                      We are a full-cycle software engineering team delivering end-to-end digital solutions. Our expertise spans web and mobile development, bespoke AI integration, scalable cloud architecture, and immersive user experiences.
+                      Axiogen is a premier Creative Engineering Studio & Digital Product Engineering team. We deliver Immersive Digital Experiences, High-Performance Web Development, and Cinematic Web Design.
                     </p>
                     <p className="text-[10px] sm:text-xs md:text-sm text-white/60 font-normal leading-relaxed mb-3 md:mb-5">
-                      From high-performance databases and automated research systems to advanced voice synthesis, document intelligence, and GPU-accelerated interfaces, we craft solutions tailored for both academic innovation and enterprise scale.
+                      Specializing in Web Engineering Solutions, Interactive Web Development, Bespoke Web Design, and Cutting-Edge Web Solutions, we build high-impact applications tailored for enterprise scale.
                     </p>
                     <div className="flex gap-4 mb-3 md:mb-6">
                       <a 
-                        href="https://www.instagram.com/axiogen.in?igsh=OGQ5ZDc2ODk2ZA==" 
+                        href="#" 
                         target="_blank" 
                         rel="noopener noreferrer" 
                         className="px-4 py-2 md:px-5 md:py-2.5 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 btn-view-profile"
@@ -1218,8 +1217,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- PROJECTS SECTION ----------------- */}
       <motion.section
-        data-scroll-container
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-24 pb-12 px-4 md:px-16 section-bg-adapt overflow-y-auto`}
+        className={`absolute inset-0 flex flex-col items-center justify-start pt-16 pb-4 px-4 md:px-16 section-bg-adapt overflow-y-auto md:overflow-hidden`}
         style={{ pointerEvents: showProjects ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1232,7 +1230,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         <div 
           className="w-full max-w-7xl text-white"
         >
-          <div className="flex justify-between items-end mb-6 md:mb-8">
+          <div className="flex justify-between items-end mb-2 md:mb-8 project-section-header">
             <div>
               <h2 className="text-3xl md:text-5xl font-black tracking-tighter bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Selected Work</h2>
               <div className="flex items-center space-x-2 text-white/40 text-xs mt-1">
@@ -1273,7 +1271,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.35, ease: "easeInOut", staggerChildren: 0.08 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 project-grid pointer-events-auto w-full items-start"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 project-grid pointer-events-auto w-full items-start"
               style={{ perspective: 1000 }}
             >
               {projects
@@ -1290,13 +1288,13 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     <CardComponent
                       key={project.name}
                       {...linkProps}
-                      className={`group relative h-auto md:h-[310px] project-card rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto glass-card gradient-border ${project.link ? 'cursor-pointer' : 'select-none'}`}
+                      className={`group relative h-auto min-h-[160px] sm:min-h-[200px] md:h-[310px] project-card rounded-xl md:rounded-3xl bg-[var(--card-bg)] overflow-hidden flex flex-col shadow-[0_15px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(168,85,247,0.15)] pointer-events-auto glass-card gradient-border ${project.link ? 'cursor-pointer' : 'select-none'}`}
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ type: 'spring' as const, stiffness: 200, damping: 20, delay: cardIdx * 0.1 }}
                       whileHover={{ scale: 1.02, y: -8 }}
                     >
-                      <div className="p-3 md:p-6 flex flex-col justify-start md:justify-between flex-1 relative z-10">
+                      <div className="p-4 md:p-6 flex flex-col justify-between flex-1 relative z-10">
                         {/* Glow effect */}
                         <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/10 via-indigo-500/5 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
 
@@ -1337,8 +1335,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         </motion.section>
       {/* ----------------- SERVICES SECTION ----------------- */}
       <motion.section
-        data-scroll-container
-        className="absolute inset-0 flex flex-col items-center justify-start pt-24 pb-12 px-4 md:px-16 section-bg-adapt overflow-y-auto"
+        className="absolute inset-0 flex flex-col items-center justify-center pt-16 pb-4 px-4 md:px-16 section-bg-adapt overflow-hidden"
         style={{ pointerEvents: showServices ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1480,8 +1477,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- CONTACT SECTION ----------------- */}
       <motion.section
-        data-scroll-container
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-24 pb-12 px-4 section-bg-adapt overflow-y-auto`}
+        className={`absolute inset-0 flex flex-col items-center justify-center pt-16 pb-4 px-4 section-bg-adapt overflow-hidden`}
         style={{ pointerEvents: showContact ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1542,7 +1538,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               {/* Shuffled Social Buttons to the Bottom of Left Panel */}
               <div className="flex items-center gap-2 pt-1 pointer-events-auto">
                 <a 
-                  href="https://www.instagram.com/axiogen.in?igsh=OGQ5ZDc2ODk2ZA==" 
+                  href="#" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="p-2 bg-white/5 border border-white/10 hover:border-white/30 rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
@@ -1551,7 +1547,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   <BookOpen className="w-4 h-4" />
                 </a>
                 <a 
-                  href="https://twitter.com" 
+                  href="#" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="p-2 bg-white/5 border border-white/10 hover:border-white/30 rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
@@ -1560,7 +1556,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   <MessageSquare className="w-4 h-4" />
                 </a>
                 <a 
-                  href="https://linkedin.com" 
+                  href="#" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="p-2 bg-white/5 border border-white/10 hover:border-white/30 rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"

@@ -161,9 +161,9 @@ function cn(...inputs: any[]) {
 export default function Nebula({
   className,
   speed = 1.0,
-  color1 = "#9b59b6", // Amethyst Purple Highlights
-  color2 = "#4a148c", // Neutral Deep Purple
-  color3 = "#120024", // Eggplant Dark Purple
+  color1 = "#5352ed", // Rich Electric Indigo Blue
+  color2 = "#2e0854", // Deep Cosmic Purple
+  color3 = "#0b011d", // Deep Midnight Violet Space
 }: NebulaProps) {
   return (
     <div className={cn("absolute inset-0 w-full h-full pointer-events-none", className)}>
