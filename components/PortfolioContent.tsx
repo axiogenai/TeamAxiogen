@@ -743,8 +743,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   }, [mounted]);
 
   const scrollToFrame = (frame: number) => {
-    // Calculate maxScroll mathematically based on 500vh page height
-    const maxScroll = 4 * getStableHeight();
+    // Calculate maxScroll based on dynamic getTotalStates() multiplier
+    const maxScroll = getMaxScrollMultiplier() * getStableHeight();
     const targetY = (frame / totalFrames) * maxScroll;
     window.scrollTo({
       top: targetY,
@@ -1250,14 +1250,23 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               </div>
             </div>
 
-            {/* Visual Page Indicator Dots */}
-            <div className="flex gap-1.5 pb-2">
+            {/* Interactive Page Indicator Dots */}
+            <div className="flex gap-2 pb-2 items-center">
               {Array.from({ length: isMobile ? Math.max(1, Math.ceil(projects.length / 3)) : Math.max(1, Math.ceil(projects.length / 6)) }).map((_, i) => (
-                <div
+                <button
                   key={i}
-                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                    projectPage === i ? 'bg-purple-400 w-4 shadow-[0_0_8px_rgba(168,85,247,0.6)]' : 'bg-white/20'
+                  type="button"
+                  onClick={() => {
+                    const frames = getSectionFrames();
+                    const targetFrame = frames[2 + i];
+                    if (targetFrame !== undefined) {
+                      scrollToFrame(targetFrame);
+                    }
+                  }}
+                  className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                    projectPage === i ? 'bg-purple-400 w-5 shadow-[0_0_8px_rgba(168,85,247,0.6)]' : 'bg-white/20 hover:bg-white/40 w-2'
                   }`}
+                  title={`Jump to Page ${i + 1}`}
                 />
               ))}
             </div>

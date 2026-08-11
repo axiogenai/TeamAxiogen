@@ -13,6 +13,7 @@
     ],
     "link": "https://seohubpro.vercel.app",
     "display_order": 0,
+    "created_at": "2026-07-03T12:45:38.821112+00:00",
     "hidden": false
   },
   {
@@ -28,7 +29,9 @@
       "HTML",
       "CSS"
     ],
+    "link": null,
     "display_order": 1,
+    "created_at": "2026-07-02T13:31:15.405663+00:00",
     "hidden": false
   },
   {
@@ -45,6 +48,7 @@
     ],
     "link": "https://rebuildly.vercel.app",
     "display_order": 2,
+    "created_at": "2026-07-01T17:02:25.080149+00:00",
     "hidden": false
   },
   {
@@ -61,6 +65,7 @@
     ],
     "link": "https://invenscope.vercel.app/",
     "display_order": 3,
+    "created_at": "2026-06-14T06:40:25.506455+00:00",
     "hidden": false
   },
   {
@@ -77,6 +82,7 @@
     ],
     "link": "https://axiogen.in",
     "display_order": 4,
+    "created_at": "2026-06-14T06:36:56.166049+00:00",
     "hidden": false
   },
   {
@@ -92,7 +98,9 @@
       "Socket.IO",
       "SQLite"
     ],
+    "link": null,
     "display_order": 5,
+    "created_at": "2026-06-14T06:36:57.153091+00:00",
     "hidden": false
   },
   {
@@ -108,7 +116,9 @@
       "PostgreSQL",
       "Docker"
     ],
+    "link": null,
     "display_order": 6,
+    "created_at": "2026-06-14T06:36:58.127104+00:00",
     "hidden": false
   },
   {
@@ -123,7 +133,9 @@
       "Vitest",
       "Node.js"
     ],
+    "link": null,
     "display_order": 7,
+    "created_at": "2026-06-15T06:45:39.256309+00:00",
     "hidden": false
   },
   {
@@ -140,6 +152,7 @@
     ],
     "link": "https://truth-lenspro.vercel.app/",
     "display_order": 8,
+    "created_at": "2026-06-15T07:58:15.177302+00:00",
     "hidden": false
   },
   {
@@ -156,6 +169,7 @@
     ],
     "link": "https://blockchainforge.vercel.app",
     "display_order": 9,
+    "created_at": "2026-06-14T06:36:59.071499+00:00",
     "hidden": false
   },
   {
@@ -172,6 +186,7 @@
     ],
     "link": "https://naac-nine.vercel.app",
     "display_order": 10,
+    "created_at": "2026-06-14T06:37:00.025577+00:00",
     "hidden": false
   },
   {
@@ -188,6 +203,7 @@
     ],
     "link": "https://sessionwarden.in",
     "display_order": 11,
+    "created_at": "2026-06-14T06:37:00.86799+00:00",
     "hidden": false
   },
   {
@@ -204,6 +220,197 @@
     ],
     "link": "https://luminabackgrounds.vercel.app",
     "display_order": 12,
+    "created_at": "2026-06-14T06:37:01.427656+00:00",
+    "hidden": false
+  },
+  {
+    "id": "2f52970c-6c67-4a4c-b9c9-e571f2db0e7f",
+    "name": "Aura Health Portal",
+    "category": "Healthcare & Wellness",
+    "year": "2026",
+    "desc": "AURA Health & Wellness Institute Web Portal for patient care, wellness analytics, and medical appointment management.",
+    "tech": [
+      "React",
+      "JavaScript",
+      "Tailwind CSS",
+      "Node.js"
+    ],
+    "link": "https://github.com/axiogenai/aura-health-portal",
+    "display_order": 13,
+    "created_at": "2026-08-11T08:57:37.40986+00:00",
+    "hidden": false
+  },
+  {
+    "id": "2174c003-0bf9-4562-a93f-36bc5ed3e602",
+    "name": "Axiogen ClinicOS",
+    "category": "Healthcare & Medical SaaS",
+    "year": "2026",
+    "desc": "Comprehensive medical clinic management system, EHR, patient queue management, and electronic prescription engine.",
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Supabase"
+    ],
+    "link": "https://github.com/axiogenai/axiogen-clinicos",
+    "display_order": 14,
+    "created_at": "2026-08-11T08:57:37.40986+00:00",
+    "hidden": false
+  },
+  {
+    "id": "e45f8101-4dff-445e-8673-4e0ebe0d0677",
+    "name": "Axiogen Digitize",
+    "category": "AI Document Intelligence",
+    "year": "2026",
+    "desc": "Full 17-Stage AI Document Intelligence & B2B SaaS Platform for automated OCR, table extraction, and data parsing.",
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "Python",
+      "FastAPI",
+      "Groq AI"
+    ],
+    "link": "https://github.com/axiogenai/axiogen-digitize",
+    "display_order": 15,
+    "created_at": "2026-08-11T08:57:37.40986+00:00",
+    "hidden": false
+  },
+  {
+    "id": "a6cdfa6d-c8da-42f1-978f-7c7e212914e6",
+    "name": "ClinicAdmin Pro",
+    "category": "Healthcare Management",
+    "year": "2026",
+    "desc": "Multi-tenant clinic administration suite for doctors, appointment scheduling, medical billing, and patient records.",
+    "tech": [
+      "JavaScript",
+      "Express.js",
+      "Node.js",
+      "MongoDB"
+    ],
+    "link": "https://github.com/axiogenai/clinicadmin",
+    "display_order": 16,
+    "created_at": "2026-08-11T08:57:37.40986+00:00",
+    "hidden": false
+  },
+  {
+    "id": "cb0c4ace-f6d1-48d9-a927-5ac3887aa100",
+    "name": "CodeMind AI",
+    "category": "Developer Tools & AI",
+    "year": "2026",
+    "desc": "Autonomous Multi-Language Codebase Reverse Engineering, Structural Analysis & Intelligence System.",
+    "tech": [
+      "Python",
+      "FastAPI",
+      "Llama-3.3",
+      "Tree-Sitter",
+      "Docker"
+    ],
+    "link": "https://github.com/axiogenai/codemind-ai",
+    "display_order": 17,
+    "created_at": "2026-08-11T08:57:37.40986+00:00",
+    "hidden": false
+  },
+  {
+    "id": "2e17585e-d6bf-4ab2-84ea-b21c1b4eb5b1",
+    "name": "CyberStrike Engine",
+    "category": "Cybersecurity",
+    "year": "2026",
+    "desc": "Cybersecurity & Threat Intelligence Engine for real-time vulnerability scanning, log telemetry, and automated SOC defense.",
+    "tech": [
+      "Python",
+      "C++",
+      "HTML5",
+      "CSS3",
+      "REST APIs"
+    ],
+    "link": "https://github.com/axiogenai/cyberstrike",
+    "display_order": 18,
+    "created_at": "2026-08-11T08:57:37.40986+00:00",
+    "hidden": false
+  },
+  {
+    "id": "e20f3920-7c29-4054-80db-5e81e3c7313c",
+    "name": "HMEMS SchoolSite Pro",
+    "category": "EdTech & Education",
+    "year": "2026",
+    "desc": "Comprehensive educational institution platform for student records, academic tracking, notice boards, and administration.",
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "PostgreSQL"
+    ],
+    "link": "https://github.com/axiogenai/hmems",
+    "display_order": 19,
+    "created_at": "2026-08-11T08:57:37.40986+00:00",
+    "hidden": false
+  },
+  {
+    "id": "ef794d2d-9fee-43cd-98b7-24e4034fd4a6",
+    "name": "Maison Velours",
+    "category": "Luxury E-Commerce",
+    "year": "2026",
+    "desc": "Maison Velours — Luxury Women Ethnic Saree & Bridal Store with interactive catalog, digital showcase, and seamless checkout.",
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Framer Motion"
+    ],
+    "link": "https://github.com/axiogenai/maison-velours",
+    "display_order": 20,
+    "created_at": "2026-08-11T08:57:37.40986+00:00",
+    "hidden": false
+  },
+  {
+    "id": "4031c5c3-edb6-47aa-82dd-12a3850c377c",
+    "name": "Shiv Sai Solutions",
+    "category": "Industrial Enterprise",
+    "year": "2026",
+    "desc": "Industrial engineering & equipment portal for custom machinery catalog, RFQ quotations, and client servicing.",
+    "tech": [
+      "JavaScript",
+      "HTML5",
+      "CSS3",
+      "Bootstrap"
+    ],
+    "link": "https://github.com/axiogenai/shivsai",
+    "display_order": 21,
+    "created_at": "2026-08-11T08:57:37.40986+00:00",
+    "hidden": false
+  },
+  {
+    "id": "8d4c39a2-be07-44bf-8768-cca41a37e610",
+    "name": "Team Axiogen Platform",
+    "category": "Agency Core",
+    "year": "2026",
+    "desc": "Team Axiogen digital agency platform showcasing cutting-edge AI products, software solutions, and client portals.",
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Supabase"
+    ],
+    "link": "https://github.com/axiogenai/TeamAxiogen",
+    "display_order": 22,
+    "created_at": "2026-08-11T08:57:37.40986+00:00",
+    "hidden": false
+  },
+  {
+    "id": "9f970e52-affb-4e56-80a1-900a451d5a12",
+    "name": "Web Application Firewall",
+    "category": "Security Infrastructure",
+    "year": "2026",
+    "desc": "Enterprise Web Application Firewall & Rate Limiting System for DDoS defense, packet inspection, and API security.",
+    "tech": [
+      "JavaScript",
+      "Node.js",
+      "Express",
+      "Redis"
+    ],
+    "link": "https://github.com/axiogenai/WAF",
+    "display_order": 23,
+    "created_at": "2026-08-11T08:57:37.40986+00:00",
     "hidden": false
   }
 ]
