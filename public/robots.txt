@@ -1,0 +1,33 @@
+# User-agent rules for Axiogen Platform
+User-agent: *
+Allow: /
+Disallow: /_next/
+Disallow: /api/private/
+
+# AI Search & LLM Crawlers (Perplexity, ChatGPT, Claude, Gemini, Apple Intelligence)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://team.axiogen.in/sitemap.xml
+Host: https://team.axiogen.in

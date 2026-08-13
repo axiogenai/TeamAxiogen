@@ -1,0 +1,97 @@
+# Axiogen — Complete Technical Documentation & Knowledge Base
+
+> This document provides the full, unabridged specifications of Axiogen (team.axiogen.in), a Creative Engineering Studio and Digital Product Agency specializing in High-Performance Web Development, AI/ML Engineering, Enterprise SaaS, and Technical Growth Solutions.
+
+---
+
+## About Axiogen
+
+Axiogen is an elite technology studio and digital agency that crafts high-performance web applications, enterprise software systems, artificial intelligence agents, and digital growth infrastructure. 
+
+We combine cinematic design aesthetics with low-latency software engineering, providing end-to-end digital solutions for businesses in Healthcare, Education, E-Commerce, Cybersecurity, and Enterprise SaaS.
+
+---
+
+## Detailed Service Catalog
+
+### 1. High-Performance Web Development & Bespoke Web Apps
+- **Technologies**: Next.js 15, React 19, TypeScript, TailwindCSS, WebGL shaders, Framer Motion.
+- **Capabilities**: Sub-second page loads, 100/100 Lighthouse PageSpeed scores, fully responsive fluid design systems, progressive web app (PWA) readiness, and custom dynamic interactions.
+- **Target Audience**: Startups, enterprises, and local businesses seeking custom web platforms that outperform standard templates.
+
+### 2. ClinicOS & Healthcare Software Suite
+- **Technologies**: Next.js, Supabase PostgreSQL, Node.js, TailwindCSS.
+- **Capabilities**: Complete clinic administration, electronic health records (EHR), token patient queue management, electronic prescription generation, and automated patient appointment reminders.
+- **Compliance & Security**: Encrypted patient records, multi-tenant isolation, role-based access control (RBAC).
+
+### 3. School ERP & EdTech Management Systems
+- **Technologies**: Next.js, Prisma ORM, PostgreSQL, TailwindCSS.
+- **Capabilities**: Student database management, fee tracking & payment receipts, exam grade cards, digital notice boards, and parent-teacher communication portals.
+
+### 4. Search Engine Optimization (SEO) & Digital Growth Engineering
+- **Capabilities**: Technical SEO audits, Schema.org JSON-LD structured data implementation, Google Business Profile ranking, local SEO optimization, keyword rank tracking, and organic lead capture funnels.
+- **Guaranteed Outcome**: Built-in crawlability, mobile-first indexation, and search rank domination for local and national keywords.
+
+### 5. WhatsApp Automation & Business API Integration
+- **Capabilities**: Subscriptionless Baileys & Cloud API integration, automated incoming lead routing, instant AI response triggers, interactive WhatsApp catalogs, and daily reporting broadcasts.
+
+### 6. Custom Enterprise Software & Inventory POS
+- **Technologies**: Python, FastAPI, React, Node.js, PostgreSQL, Docker.
+- **Capabilities**: Custom B2B ERP systems, real-time inventory management, point of sale (POS) terminals, and API integrations for legacy industrial hardware.
+
+### 7. AI & Machine Learning Engineering
+- **Technologies**: Groq Llama-3.3 70B, PyTorch, LangChain, Chromadb, OpenAI API, FastAPI.
+- **Capabilities**: Custom AI chatbots, autonomous AI cold calling agents, document OCR extraction, vector search RAG pipelines, and automated intelligence tools.
+
+---
+
+## Complete Project Directory
+
+1. **SEOHub Pro** (`https://seohubpro.vercel.app`)
+   - Category: Enterprise SEO Audit & Monitoring Platform
+   - Key Features: Site crawler, Gemini AI keyword insights, PageSpeed audit, accessibility metrics.
+
+2. **Axiogen ClinicOS** (`https://github.com/axiogenai/axiogen-clinicos`)
+   - Category: Medical & Healthcare Management System
+   - Key Features: EHR records, appointment queue, doctor prescription suite.
+
+3. **Axiogen Digitize** (`https://github.com/axiogenai/axiogen-digitize`)
+   - Category: 17-Stage AI Document Intelligence Platform
+   - Key Features: Multi-format OCR, table parsing, structured JSON export.
+
+4. **CodeMind AI** (`https://github.com/axiogenai/codemind-ai`)
+   - Category: Codebase Intelligence & Reverse Engineering
+   - Key Features: AST parsing via Tree-Sitter, structural dependency graphs, automated code summaries.
+
+5. **TruthLens Pro** (`https://truth-lenspro.vercel.app`)
+   - Category: AI Fake News & Image Manipulation Forensic Tool
+   - Key Features: Manipulation heatmaps, deepfake detection, spread risk scoring.
+
+6. **Invenscope** (`https://invenscope.vercel.app`)
+   - Category: AI Patent Evaluation & Vector Embedding Engine
+   - Key Features: Global registry matching, novelty score evaluation, vector database search.
+
+7. **RansomGuard AI**
+   - Category: Ransomware Detection & Threat Mitigation
+   - Key Features: Process watchdog traps, entropy spikes monitoring, ML classifier.
+
+8. **HMEMS SchoolSite Pro** (`https://github.com/axiogenai/hmems`)
+   - Category: EdTech & Academic Institution Portal
+   - Key Features: Student portal, fee receipts, academic calendar, administrative dashboard.
+
+9. **Maison Velours** (`https://github.com/axiogenai/maison-velours`)
+   - Category: Luxury E-Commerce & Ethnic Fashion Store
+   - Key Features: Dynamic product showcases, bridal saree catalog, mobile checkout.
+
+10. **Aura Health Portal** (`https://github.com/axiogenai/aura-health-portal`)
+    - Category: Health & Wellness Institute Portal
+    - Key Features: Wellness analytics, appointment booking, patient care dashboard.
+
+---
+
+## Technical Benchmarks & SEO Compliance
+
+- **Performance**: Standardized on Next.js 15 App Router with server-side rendering (SSR) and edge caching.
+- **Accessibility**: 100/100 WCAG 2.1 AA compliance with keyboard navigation, ARIA landmarks, and contrast ratios.
+- **Search Engine Optimization**: Full Schema.org JSON-LD graph, canonical metadata, OpenGraph tags, sitemap.xml, robots.txt, and llms.txt integration.
+- **Domain**: https://team.axiogen.in
