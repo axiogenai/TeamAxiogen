@@ -205,6 +205,7 @@ export default function RootLayout({
         <meta name="geo.placename" content="Mumbai" />
         <meta name="geo.position" content="19.0760;72.8777" />
         <meta name="ICBM" content="19.0760, 72.8777" />
+        <meta name="msvalidate.01" content="621B3825D10663EF47942F6661B27080" />
         <link rel="icon" href="/icon.png" type="image/png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
