@@ -35,7 +35,7 @@ export const Navbar = ({ ready = true }: { ready?: boolean }) => {
   
   const navItems = [
     { id: 'about', label: 'About', frame: frames[1] ?? 83 },
-    { id: 'founder', label: 'Founder', frame: frames[2] ?? 167 },
+    { id: 'founder', label: 'Founders', frame: frames[2] ?? 167 },
     { id: 'work', label: 'Work', frame: frames[3] ?? 250 },
     { id: 'services', label: 'Services', frame: frames[3 + P] ?? 334 },
     { id: 'contact', label: 'Contact', frame: frames[4 + P] ?? 418 },
@@ -49,14 +49,14 @@ export const Navbar = ({ ready = true }: { ready?: boolean }) => {
       <div className="flex fixed top-4 md:top-6 left-4 md:left-8 z-50 pointer-events-auto select-none items-center gap-2.5">
         <button 
           onClick={() => scrollToFrame(frames[0] ?? 42)}
-          className="hover:opacity-85 transition-opacity cursor-pointer flex items-center gap-2"
+          className="hover:opacity-85 transition-opacity cursor-pointer flex items-center gap-2.5"
         >
           <img 
-            src="/axiogen-logo.png" 
+            src="/logo.svg" 
             alt="Axiogen" 
-            className="w-7 h-7 invert brightness-200"
+            className="w-7 h-7 drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]"
           />
-          <span className="hidden md:inline text-sm font-black tracking-tighter text-white uppercase bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">
+          <span className="text-sm font-black tracking-tighter text-white uppercase bg-gradient-to-r from-white via-purple-200 to-indigo-300 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
             AXIOGEN
           </span>
         </button>

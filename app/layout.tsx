@@ -105,20 +105,31 @@ export default function RootLayout({
           "url": "https://team.axiogen.in/logo.png",
           "caption": "Axiogen AI Automation & Software Engineering Studio"
         },
-        "description": "Axiogen is an Indian AI Automation & Software Engineering Studio founded by Aditya Patil. We engineer autonomous AI voice calling agents, ClinicOS medical EHR platforms, custom web applications, mobile apps, and business workflow automation.",
+        "description": "Axiogen is an Indian AI Automation & Software Engineering Studio founded by Aditya Patil and Aditya Minchekar. We engineer autonomous AI voice calling agents, ClinicOS medical EHR platforms, custom web applications, mobile apps, and business workflow automation.",
         "disambiguatingDescription": "Axiogen (Team Axiogen) is an Indian AI Automation and Software Engineering Studio specializing in AI agents, ClinicOS medical EHR, and custom digital infrastructure. Not affiliated with biotechnology or pharmaceutical entities.",
         "foundingDate": "2024",
-        "founder": {
-          "@type": "Person",
-          "@id": "https://team.axiogen.in/#founder",
-          "name": "Aditya Patil",
-          "jobTitle": "Founder & Chief Software Architect",
-          "url": "https://team.axiogen.in/founder",
-          "sameAs": [
-            "https://github.com/axiogenai",
-            "https://team.axiogen.in/founder"
-          ]
-        },
+        "founder": [
+          {
+            "@type": "Person",
+            "@id": "https://team.axiogen.in/#founder-aditya-patil",
+            "name": "Aditya Patil",
+            "jobTitle": "Founder & Chief Software Architect",
+            "url": "https://team.axiogen.in/founder",
+            "sameAs": [
+              "https://github.com/axiogenai"
+            ]
+          },
+          {
+            "@type": "Person",
+            "@id": "https://team.axiogen.in/#founder-aditya-minchekar",
+            "name": "Aditya Minchekar",
+            "jobTitle": "Co-Founder & Chief Technology Lead",
+            "url": "https://team.axiogen.in/founder",
+            "sameAs": [
+              "https://github.com/axiogenai"
+            ]
+          }
+        ],
         "sameAs": [
           "https://github.com/axiogenai",
           "https://team.axiogen.in",
@@ -140,21 +151,51 @@ export default function RootLayout({
       },
       {
         "@type": "Person",
-        "@id": "https://team.axiogen.in/#founder",
+        "@id": "https://team.axiogen.in/#founder-aditya-patil",
         "name": "Aditya Patil",
-        "jobTitle": "Founder & AI Systems Architect",
+        "jobTitle": "Founder & Software Engineer",
         "worksFor": {
           "@id": "https://team.axiogen.in/#organization"
         },
         "url": "https://team.axiogen.in/founder",
-        "description": "Aditya Patil is the founder of Team Axiogen, specializing in AI calling agents, full-stack systems engineering, ClinicOS medical platform, and machine learning infrastructure.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Kolhapur",
+          "addressRegion": "Maharashtra",
+          "addressCountry": "IN"
+        },
+        "description": "Aditya Patil is the founder of Team Axiogen based in Kolhapur, specializing in AI models, full-stack systems engineering, ClinicOS healthcare platform, web & mobile applications, and scalable production software.",
         "knowsAbout": [
-          "Artificial Intelligence",
-          "Voice AI & Neural TTS",
-          "Clinic Management Systems (EHR)",
-          "Full-Stack Web Development",
-          "Next.js & React Architecture",
-          "Cybersecurity & Cloud Infrastructure"
+          "Artificial Intelligence & LLMs",
+          "Full-Stack Software Engineering",
+          "Healthcare Clinic Operating Systems (ClinicOS)",
+          "Next.js, React & Mobile Architecture",
+          "High-Performance Web Applications",
+          "Autonomous AI Agents"
+        ]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://team.axiogen.in/#founder-aditya-minchekar",
+        "name": "Aditya Minchekar",
+        "jobTitle": "Co-Founder & Technology Lead",
+        "worksFor": {
+          "@id": "https://team.axiogen.in/#organization"
+        },
+        "url": "https://team.axiogen.in/founder",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Sangli",
+          "addressRegion": "Maharashtra",
+          "addressCountry": "IN"
+        },
+        "description": "Aditya Minchekar is the co-founder of Team Axiogen based in Sangli, specializing in distributed cloud infrastructure, high-throughput systems, database scalability, DevOps, and enterprise automation.",
+        "knowsAbout": [
+          "Cloud & Distributed Systems",
+          "High-Throughput Database Scalability",
+          "Microservice Architecture",
+          "Enterprise Automation & DevOps",
+          "PostgreSQL & Real-Time Queues"
         ]
       },
       {

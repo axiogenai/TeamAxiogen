@@ -18,6 +18,7 @@ import { ScrollVelocity } from './ScrollVelocity';
 import { AnimatedCounter } from './AnimatedCounter';
 import { TextReveal } from './TextReveal';
 import { MagneticButton } from './MagneticButton';
+import LightTunnel from './LightTunnel';
 
 import { 
   ArrowDown, 
@@ -39,7 +40,8 @@ import {
   Search,
   GraduationCap,
   Building2,
-  Rocket
+  Rocket,
+  Layers
 } from 'lucide-react';
 
 const SkillIcon = ({ name }: { name: string }) => {
@@ -512,26 +514,44 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
-    // Force scroll to top on page reload/refresh
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
-    window.scrollTo(0, 0);
 
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+
+    const checkHashAndScroll = () => {
+      const hash = window.location.hash.toLowerCase().replace('#', '');
+      const frames = getSectionFrames();
+      const P = getProjectPagesCount();
+      const maxScroll = getMaxScrollMultiplier() * getStableHeight();
+
+      let targetFrame = -1;
+      if (hash === 'about') targetFrame = frames[1] ?? 83;
+      else if (hash === 'founder' || hash === 'founders') targetFrame = frames[2] ?? 167;
+      else if (hash === 'work' || hash === 'projects') targetFrame = frames[3] ?? 250;
+      else if (hash === 'services') targetFrame = frames[3 + P] ?? 334;
+      else if (hash === 'contact') targetFrame = frames[4 + P] ?? 418;
+
+      if (targetFrame > 0 && maxScroll > 0) {
+        const targetY = (targetFrame / 502) * maxScroll;
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      } else if (!window.location.hash) {
+        window.scrollTo(0, 0);
+      }
+    };
+
+    const timer = setTimeout(checkHashAndScroll, 300);
+    window.addEventListener('hashchange', checkHashAndScroll);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('hashchange', checkHashAndScroll);
+    };
   }, []);
-
-  const scrollResetRef = useRef(false);
-
-  useEffect(() => {
-    if (mounted && !scrollResetRef.current) {
-      window.scrollTo(0, 0);
-      scrollResetRef.current = true;
-    }
-  }, [mounted]);
 
   const activeSection = useNavSection();
 
@@ -969,7 +989,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- HERO SECTION ----------------- */}
       <motion.section 
-        className="absolute inset-0 flex flex-col items-center justify-center text-center pt-16 pb-4 px-4"
+        className="absolute inset-0 flex flex-col items-center justify-center text-center pt-16 pb-4 px-4 overflow-hidden"
         style={{ pointerEvents: showHero ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -979,72 +999,108 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
+        {/* LightTunnel Hero Background (Hero Only) */}
+        <div className="absolute inset-0 pointer-events-auto z-0 flex items-center justify-center overflow-hidden">
+          <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+            <LightTunnel
+              cableColor="#A855F7"
+              pulseColor="#A855F7"
+              tunnelColor="#5227FF"
+              tunnelOpacity={0}
+              speed={0.1}
+              flowDirection="outward"
+              pulseSpeed={2}
+              pulseLength={0.28}
+              pulseBlend={1}
+              pulseWidth={1}
+              cableCount={20}
+              thickness={0.35}
+              rimWidth={0.15}
+              waviness={0.3}
+              sway={0.5}
+              size={1}
+              centerX={0}
+              centerY={0}
+              glow={1}
+              fadeNear={0.5}
+              fadeFar={2}
+              brightness={1}
+              colorVariance
+              grain
+              grainIntensity={0.05}
+              opacity={1}
+              mouseInteraction
+              mouseStrength={0.1}
+            />
+          </div>
+        </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={showHero ? "visible" : "hidden"}
-          className="mb-6"
-        >
-          <h1 
-            className="text-5xl md:text-7xl lg:text-8xl font-black tracking-normal text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] leading-none"
-            style={{ fontFamily: "'Turbo Driver', sans-serif" }}
+        <div className="relative z-10 flex flex-col items-center justify-center pointer-events-none">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate={showHero ? "visible" : "hidden"}
+            className="mb-6"
           >
-            <motion.span 
-              variants={charVariants} 
-              className="inline-block mr-4 md:mr-6"
-              style={{ paddingRight: '0.1em' }}
+            <h1 
+              className="text-5xl md:text-7xl lg:text-8xl font-black tracking-normal text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] leading-none"
+              style={{ fontFamily: "'Turbo Driver', sans-serif" }}
             >
-              TEAM
-            </motion.span>
-            <br />
-            <motion.span 
-              variants={charVariants} 
-              className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-400 to-indigo-400"
-              style={{ paddingBottom: '0.15em', paddingRight: '0.25em', marginRight: '-0.25em' }}
-            >
-              AXIOGEN
-            </motion.span>
-          </h1>
-        </motion.div>
+              <motion.span 
+                variants={charVariants} 
+                className="inline-block mr-4 md:mr-6"
+                style={{ paddingRight: '0.1em' }}
+              >
+                TEAM
+              </motion.span>
+              <br />
+              <motion.span 
+                variants={charVariants} 
+                className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-400 to-indigo-400"
+                style={{ paddingBottom: '0.15em', paddingRight: '0.25em', marginRight: '-0.25em' }}
+              >
+                AXIOGEN
+              </motion.span>
+            </h1>
+          </motion.div>
 
-        <motion.p 
-          variants={fadeUpVariants}
-          initial="hidden"
-          animate={showHero ? "visible" : "hidden"}
-          className="text-sm md:text-lg lg:text-xl text-white/70 font-normal max-w-xl md:max-w-3xl lg:max-w-4xl leading-relaxed drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] mb-8"
-        >
-          Axiogen is an AI Automation & Software Engineering Studio. We engineer autonomous AI agents, SaaS platforms, bespoke web applications, mobile apps, and business automation systems for startups, healthcare clinics, and enterprises.
-        </motion.p>
+          <motion.p 
+            variants={fadeUpVariants}
+            initial="hidden"
+            animate={showHero ? "visible" : "hidden"}
+            className="text-sm md:text-lg lg:text-xl text-white/70 font-normal max-w-xl md:max-w-3xl lg:max-w-4xl leading-relaxed drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] mb-8"
+          >
+            Axiogen is an AI Automation &amp; Software Engineering Studio. We engineer autonomous AI agents, SaaS platforms, bespoke web applications, mobile apps, and business automation systems for startups, healthcare clinics, and enterprises.
+          </motion.p>
 
-        {/* CTA Button */}
-        <motion.button
-          variants={fadeUpVariants}
-          initial="hidden"
-          animate={showHero ? "visible" : "hidden"}
-          onClick={() => scrollToFrame(getSectionFrames()[2] ?? 209)}
-          className="group px-7 py-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-white/20 hover:border-white/40 rounded-full text-xs md:text-sm font-bold uppercase tracking-widest text-white hover:bg-white/10 transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
-        >
-          <span>Explore Projects</span>
-        </motion.button>
+          {/* CTA Button */}
+          <motion.button
+            variants={fadeUpVariants}
+            initial="hidden"
+            animate={showHero ? "visible" : "hidden"}
+            onClick={() => scrollToFrame(getSectionFrames()[2] ?? 209)}
+            className="group px-7 py-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-white/20 hover:border-white/40 rounded-full text-xs md:text-sm font-bold uppercase tracking-widest text-white hover:bg-white/10 transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2 pointer-events-auto"
+          >
+            <span>Explore Projects</span>
+          </motion.button>
+        </div>
 
         {/* Scroll Down Indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: showHero ? 0.6 : 0 }}
           transition={{ delay: 1.5, duration: 1 }}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10 pointer-events-none"
         >
           <span className="text-[8px] uppercase tracking-[0.3em] text-white/40 font-semibold">Scroll</span>
           <ArrowDown className="w-4 h-4 text-white/40 animate-bounce-down" />
         </motion.div>
-        
       </motion.section>
 
 
       {/* ----------------- ABOUT SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-16 pb-4 px-4 md:px-16 text-white section-bg-adapt overflow-hidden`}
+        className={`absolute inset-0 flex flex-col items-center justify-center pt-8 md:pt-12 pb-6 md:pb-8 px-4 md:px-16 text-white section-bg-adapt overflow-hidden`}
         style={{ pointerEvents: showAbout ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1055,10 +1111,10 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
         <div 
-          className={`flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-start ${isMobile ? '' : 'min-h-0 max-h-full'}`}
+          className={`flex flex-col items-center max-w-7xl w-full gap-3 md:gap-4 justify-center ${isMobile ? 'overflow-y-auto max-h-[85vh] py-2' : 'min-h-0 max-h-full'}`}
         >
           <div 
-            className={`grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full px-2 py-2`}
+            className={`grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full px-2 py-1`}
           >
             <AnimatePresence mode={isMobile ? "wait" : "sync"}>
               {/* Bio statement */}
@@ -1073,36 +1129,17 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 >
                   <div className="flex flex-col flex-1">
                     <div className="flex items-center gap-2 mb-1.5 md:mb-2">
-                      <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">AI Automation & Software Engineering Studio</span>
+                      <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">AI Automation &amp; Software Engineering Studio</span>
                     </div>
                     <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tighter mb-2 md:mb-3 leading-none whitespace-nowrap">
                       TEAM AXIOGEN.
                     </h2>
-                    <p className="text-xs sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-3 md:mb-4">
-                      Axiogen is an Indian AI Automation & Software Engineering Studio based in Mumbai. We build autonomous AI voice agents, ClinicOS medical platform, and high-performance bespoke applications.
+                    <p className="text-xs sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-2 md:mb-3">
+                      Axiogen is an Indian AI Automation &amp; Software Engineering Studio. We build autonomous AI voice agents, ClinicOS medical platform, and high-performance bespoke applications.
                     </p>
-
-                    {/* Founder Spotlight Card */}
-                    <div className="p-3.5 rounded-2xl bg-purple-950/20 border border-purple-500/25 mb-4 flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-xs font-black text-white shadow-lg shrink-0">
-                          AP
-                        </div>
-                        <div>
-                          <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                            <span>Aditya Patil</span>
-                            <span className="text-[9px] uppercase tracking-wider text-purple-300 px-1.5 py-0.2 rounded bg-purple-500/20 font-mono">Founder</span>
-                          </div>
-                          <p className="text-[11px] text-white/60">Chief Architect & AI Engineer</p>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={() => scrollToFrame(getSectionFrames()[2] ?? 167)}
-                        className="px-3 py-1.5 rounded-xl bg-white text-black hover:bg-white/90 text-[10px] font-bold uppercase tracking-wider transition-all hover:scale-105 shrink-0 cursor-pointer"
-                      >
-                        Founder Profile →
-                      </button>
-                    </div>
+                    <p className="text-[10px] sm:text-xs md:text-sm text-white/60 font-normal leading-relaxed mb-4 md:mb-6">
+                      Specializing in autonomous AI models, healthcare clinic operating systems, and scalable cloud engineering, we build high-impact production architectures tailored for enterprise scale.
+                    </p>
 
                     <div className="flex flex-wrap gap-2.5 mb-3 md:mb-6">
                       <button 
@@ -1235,7 +1272,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
           {/* Logo Loop Section */}
           {!isMobile && (
-            <div className="w-full px-2 overflow-hidden select-none pointer-events-auto">
+            <div className="w-full px-2 overflow-hidden select-none pointer-events-auto mt-1">
               <LogoLoop logos={loopLogos} />
             </div>
           )}
@@ -1243,9 +1280,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       </motion.section>
 
 
-      {/* ----------------- FOUNDER SECTION ----------------- */}
+      {/* ----------------- FOUNDERS SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-16 pb-4 px-4 md:px-16 text-white section-bg-adapt overflow-hidden`}
+        className={`absolute inset-0 flex flex-col items-center justify-center pt-8 md:pt-12 pb-6 md:pb-8 px-4 md:px-16 text-white section-bg-adapt overflow-hidden`}
         style={{ pointerEvents: showFounder ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1255,41 +1292,53 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className={`flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-start ${isMobile ? '' : 'min-h-0 max-h-full'}`}>
-          <div className="grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full px-2 py-2">
+        <div className={`flex flex-col items-center max-w-6xl w-full gap-3 md:gap-5 justify-center ${isMobile ? 'overflow-y-auto max-h-[85vh] py-2' : 'min-h-0 max-h-full'}`}>
+          
+          {/* Header */}
+          <div className="text-center space-y-1">
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-purple-500/15 border border-purple-500/25 text-purple-300 text-[10px] font-bold uppercase tracking-widest">
+              <Sparkles className="w-3 h-3 text-purple-400" /> Studio Leadership &amp; Engineering
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter text-white">
+              The <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400">Founders</span>.
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-12 gap-4 md:gap-8 items-start lg:items-stretch w-full px-2 py-1">
             
-            {/* Left Card: Founder Spotlight & Bio */}
+            {/* Founder 1: Aditya Patil */}
             <motion.div
               initial={isMobile ? { opacity: 0, y: 15 } : undefined}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25 }}
-              className="col-span-12 lg:col-span-6 text-white bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] glass-card gradient-border flex flex-col justify-between h-full"
+              className="col-span-12 lg:col-span-6 text-white bg-[var(--card-bg)] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-purple-500/20 hover:border-purple-500/40 shadow-[0_20px_50px_rgba(0,0,0,0.5)] glass-card gradient-border flex flex-col justify-between h-full transition-all"
             >
               <div className="flex flex-col flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">Founder & Chief Software Architect</span>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[9px] md:text-[10px] font-semibold uppercase tracking-wider text-purple-300 px-2 py-0.5 rounded bg-purple-500/15 border border-purple-500/25">Founder &amp; Software Engineer</span>
+                  <span className="text-[10px] text-white/50 font-mono font-bold">Kolhapur, India</span>
                 </div>
                 
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-tr from-purple-600 via-pink-600 to-indigo-600 flex items-center justify-center text-lg md:text-xl font-black text-white shadow-xl shadow-purple-600/30 shrink-0">
+                <div className="flex items-center gap-3.5 mb-3">
+                  <div className="w-13 h-13 md:w-15 md:h-15 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-teal-600 flex items-center justify-center text-base md:text-lg font-black text-white shadow-xl shadow-purple-600/30 shrink-0">
                     AP
                   </div>
                   <div>
-                    <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black tracking-tighter leading-none text-white">
-                      ADITYA PATIL.
-                    </h2>
-                    <p className="text-[11px] md:text-xs text-white/50 font-mono mt-1">Systems Architect · AI Systems Specialist · Founder</p>
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-black tracking-tight leading-none text-white">
+                      ADITYA PATIL
+                    </h3>
+                    <p className="text-[10px] md:text-xs text-purple-400 font-mono mt-1 font-semibold">AI Models · Full-Stack Systems · Product Engineering</p>
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] mb-3">
-                  <p className="text-xs sm:text-sm text-white/80 font-normal leading-relaxed italic">
-                    &ldquo;Software shouldn&apos;t just look futuristic — it must execute with relentless speed, solve hard operational bottlenecks, and automate what humans shouldn&apos;t have to do repeatedly.&rdquo;
+                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] mb-3">
+                  <p className="text-[11px] sm:text-xs text-white/80 font-normal leading-relaxed italic">
+                    &ldquo;We build complete end-to-end software — from custom AI models and automation to web architectures, SaaS platforms, and bespoke applications engineered to scale.&rdquo;
                   </p>
                 </div>
 
-                <p className="text-xs sm:text-sm text-white/70 font-normal leading-relaxed mb-3">
-                  Aditya founded <strong>Team Axiogen</strong> to deliver production-grade AI automation, vertical medical SaaS (<strong className="text-white">ClinicOS</strong>), and ultra-fast web architectures engineered for measurable business growth.
+                <p className="text-[11px] sm:text-xs text-white/70 font-normal leading-relaxed mb-4">
+                  Leads core software engineering, autonomous AI systems, high-performance web and mobile platforms, ClinicOS healthcare SaaS, and custom production architectures.
                 </p>
 
                 <div className="flex flex-wrap gap-2 pt-1 mb-2">
@@ -1297,98 +1346,87 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     href="https://github.com/axiogenai"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105"
+                    className="px-3.5 py-1.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-full flex items-center gap-1.5 font-bold text-[10px] uppercase tracking-widest transition-all hover:scale-105"
                   >
-                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    <svg viewBox="0 0 24 24" className="w-3 h-3 fill-current"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                     <span>GitHub</span>
                   </a>
                   <button
-                    onClick={() => {
-                      const frames = getSectionFrames();
-                      const maxScroll = getMaxScrollMultiplier() * getStableHeight();
-                      const targetY = ((frames[4 + getProjectPagesCount()] ?? 418) / 502) * maxScroll;
-                      window.scrollTo({ top: targetY, behavior: 'smooth' });
-                    }}
-                    className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 shadow-lg shadow-purple-600/25 cursor-pointer"
+                    onClick={() => scrollToFrame(getSectionFrames()[4 + getProjectPagesCount()] ?? 418)}
+                    className="px-3.5 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-full flex items-center gap-1.5 font-bold text-[10px] uppercase tracking-widest transition-all hover:scale-105 shadow-lg shadow-purple-600/25 cursor-pointer"
                   >
-                    <Mail className="w-3.5 h-3.5" />
-                    <span>Contact Aditya</span>
+                    <Mail className="w-3 h-3" />
+                    <span>Contact Aditya P.</span>
                   </button>
                 </div>
               </div>
 
-              {/* Founder Stats Bottom Bar */}
-              <div className="grid grid-cols-3 gap-2 pt-4 border-t border-white/10 mt-auto">
-                <div className="flex flex-col">
-                  <span className="text-lg md:text-2xl font-black text-purple-400 font-mono">100%</span>
-                  <span className="text-[8px] uppercase tracking-wider text-white/50 font-bold">Custom Code</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-lg md:text-2xl font-black text-teal-400 font-mono">&lt;200ms</span>
-                  <span className="text-[8px] uppercase tracking-wider text-white/50 font-bold">Voice Latency</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-lg md:text-2xl font-black text-pink-400 font-mono">12+</span>
-                  <span className="text-[8px] uppercase tracking-wider text-white/50 font-bold">Live Systems</span>
-                </div>
+              {/* Specialization Footer */}
+              <div className="pt-3 border-t border-white/10 mt-auto flex items-center justify-between text-[10px] text-white/50">
+                <span>Scope: <strong className="text-purple-300">Full-Stack · AI Systems · Web &amp; Mobile · SaaS</strong></span>
+                <span className="font-mono text-purple-400/60 font-semibold uppercase text-[9px]">Founder</span>
               </div>
             </motion.div>
 
-            {/* Right Card: Signature Systems & Architectures */}
+            {/* Founder 2: Aditya Minchekar */}
             <motion.div
               initial={isMobile ? { opacity: 0, y: 15 } : undefined}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25 }}
-              className="col-span-12 lg:col-span-6 flex flex-col gap-3 w-full h-full bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white glass-card gradient-border justify-between"
+              className="col-span-12 lg:col-span-6 text-white bg-[var(--card-bg)] p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-pink-500/20 hover:border-pink-500/40 shadow-[0_20px_50px_rgba(0,0,0,0.5)] glass-card gradient-border flex flex-col justify-between h-full transition-all"
             >
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase font-mono text-purple-400 font-bold tracking-wider">SYSTEMS ARCHITECT</span>
-                <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Signature Architectures</h3>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 my-1">
+              <div className="flex flex-col flex-1">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[9px] md:text-[10px] font-semibold uppercase tracking-wider text-pink-300 px-2 py-0.5 rounded bg-pink-500/15 border border-pink-500/25">Co-Founder &amp; Technology Lead</span>
+                  <span className="text-[10px] text-white/50 font-mono font-bold">Sangli, India</span>
+                </div>
                 
-                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-purple-500/20 space-y-1.5 hover:border-purple-500/40 transition-colors">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-mono text-purple-400 font-bold uppercase">Voice AI</span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+                <div className="flex items-center gap-3.5 mb-3">
+                  <div className="w-13 h-13 md:w-15 md:h-15 rounded-2xl bg-gradient-to-tr from-pink-600 via-rose-600 to-amber-600 flex items-center justify-center text-base md:text-lg font-black text-white shadow-xl shadow-pink-600/30 shrink-0">
+                    AM
                   </div>
-                  <h4 className="text-xs font-bold text-white">Axiogen Real-Time Voice Agent</h4>
-                  <p className="text-[10px] text-white/60 leading-snug">Local ONNX WASM Kokoro-82M streaming audio queue + Groq Llama 8B.</p>
+                  <div>
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-black tracking-tight leading-none text-white">
+                      ADITYA MINCHEKAR
+                    </h3>
+                    <p className="text-[10px] md:text-xs text-pink-400 font-mono mt-1 font-semibold">Cloud Infrastructure · Distributed Systems</p>
+                  </div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-teal-500/20 space-y-1.5 hover:border-teal-500/40 transition-colors">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-mono text-teal-400 font-bold uppercase">Healthcare</span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
-                  </div>
-                  <h4 className="text-xs font-bold text-white">ClinicOS EHR & Queue Suite</h4>
-                  <p className="text-[10px] text-white/60 leading-snug">Multi-specialty patient EHR, digital Rx, and automated WhatsApp appointment dispatch.</p>
+                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] mb-3">
+                  <p className="text-[11px] sm:text-xs text-white/80 font-normal leading-relaxed italic">
+                    &ldquo;Resilient engineering demands rock-solid backends, secure multi-tenant cloud infrastructure, and distributed pipelines that run continuously without fail.&rdquo;
+                  </p>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-indigo-500/20 space-y-1.5 hover:border-indigo-500/40 transition-colors">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-mono text-indigo-400 font-bold uppercase">Software AI</span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-                  </div>
-                  <h4 className="text-xs font-bold text-white">CodeMind AI Reverse Engine</h4>
-                  <p className="text-[10px] text-white/60 leading-snug">Multi-language AST parser & dependency mapper for codebase intelligence.</p>
-                </div>
+                <p className="text-[11px] sm:text-xs text-white/70 font-normal leading-relaxed mb-4">
+                  Directs cloud architecture, distributed systems scalability, high-availability databases, security compliance, and enterprise software operations.
+                </p>
 
-                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-pink-500/20 space-y-1.5 hover:border-pink-500/40 transition-colors">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-mono text-pink-400 font-bold uppercase">Security</span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse" />
-                  </div>
-                  <h4 className="text-xs font-bold text-white">RansomGuard AI Defense</h4>
-                  <p className="text-[10px] text-white/60 leading-snug">Real-time filesystem entropy watchdog + XGBoost ensemble ransomware blocker.</p>
+                <div className="flex flex-wrap gap-2 pt-1 mb-2">
+                  <a
+                    href="https://github.com/axiogenai"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3.5 py-1.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-full flex items-center gap-1.5 font-bold text-[10px] uppercase tracking-widest transition-all hover:scale-105"
+                  >
+                    <svg viewBox="0 0 24 24" className="w-3 h-3 fill-current"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    <span>GitHub</span>
+                  </a>
+                  <button
+                    onClick={() => scrollToFrame(getSectionFrames()[4 + getProjectPagesCount()] ?? 418)}
+                    className="px-3.5 py-1.5 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white rounded-full flex items-center gap-1.5 font-bold text-[10px] uppercase tracking-widest transition-all hover:scale-105 shadow-lg shadow-pink-600/25 cursor-pointer"
+                  >
+                    <Mail className="w-3 h-3" />
+                    <span>Contact Aditya M.</span>
+                  </button>
                 </div>
-
               </div>
 
-              <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-white/50">
-                <span>Location: <strong>Mumbai, Maharashtra, India</strong></span>
-                <span className="text-purple-400 font-mono font-bold">team.axiogen.in</span>
+              {/* Specialization Footer */}
+              <div className="pt-3 border-t border-white/10 mt-auto flex items-center justify-between text-[10px] text-white/50">
+                <span>Scope: <strong className="text-pink-300">Cloud Scale · Distributed Systems · Infrastructure</strong></span>
+                <span className="font-mono text-pink-400/60 font-semibold uppercase text-[9px]">Co-Founder</span>
               </div>
             </motion.div>
 
@@ -1531,7 +1569,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         initial={{ opacity: 0 }}
         animate={{ 
           opacity: showServices ? 1 : 0,
-          x: showServices ? "0%" : (['hero', 'about', 'work'].includes(activeSection) ? "-100%" : "100%"),
+          x: showServices ? "0%" : (['hero', 'about', 'founder', 'work'].includes(activeSection) ? "-100%" : "100%"),
           display: showServices ? 'flex' : 'none'
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}

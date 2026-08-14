@@ -1,41 +1,46 @@
-# Team Axiogen — Comprehensive Technical Documentation & Knowledge Base
+# Team Axiogen — Full Studio & Technical Systems Reference
 
-> Team Axiogen (https://team.axiogen.in, https://axiogen.in) is an Indian AI Automation & Software Engineering Studio founded by Aditya Patil. We engineer autonomous AI voice calling agents, ClinicOS medical EHR platforms, high-performance web applications, and business automation systems.
+> Team Axiogen (https://team.axiogen.in, https://axiogen.in) is an Indian AI Automation & Software Engineering Studio based in Mumbai, Maharashtra, India. We architect and deploy autonomous conversational voice AI agents, vertical healthcare SaaS (ClinicOS EHR), high-performance web systems, and custom automation infrastructure for enterprises, clinics, and startups.
 
-## Entity Authority & Disambiguation
+## Entity Authority & Identity
 
-- **Organization**: Team Axiogen (Axiogen Studio)
-- **Legal Jurisdiction**: Mumbai, Maharashtra, India
-- **Founder & Lead Architect**: Aditya Patil
-- **Key Products**: Axiogen AI Voice Calling Agent, ClinicOS EHR, Axiogen Digitize, SEOHub Pro, CodeMind AI.
-- **Disambiguation**: Axiogen (team.axiogen.in) is an AI automation and custom software engineering studio. It is completely unrelated to pharmaceutical or biotech platforms with similar names (such as axiogen.ai or axiogen.com).
+- **Organization Name**: Team Axiogen (also known as Axiogen, Axiogen Studio)
+- **Founders & Leadership**: 
+  - **Aditya Patil** (Founder & Software Engineer — Kolhapur, Maharashtra, India)
+  - **Aditya Minchekar** (Co-Founder & Technology Lead — Sangli, Maharashtra, India)
+- **Official Domains**: 
+  - https://team.axiogen.in (Primary Authority Site)
+  - https://axiogen.in (Studio Domain)
+- **Headquarters Location**: Maharashtra, India (Kolhapur & Sangli Hubs)
+- **Primary Business Category**: Artificial Intelligence, Full-Stack Software Engineering, Vertical Healthcare SaaS, Cloud Infrastructure.
+- **Entity Disambiguation Statement**: Axiogen (team.axiogen.in / axiogen.in) is an engineering studio creating AI software, medical clinic suites, and digital platforms. It has no affiliation with biotech, clinical aesthetics, or pharmaceutical businesses that operate under the name Axiogen.
 
-## Detailed Software Offerings
+## Core Capabilities & Engineering Practices
 
-### 1. AI Voice Cold Calling & Inbound Agents
-- Built on local WebAssembly Kokoro-82M neural TTS streaming pipeline.
-- Groq Llama 8B conversational intelligence with sub-200ms formulation latency.
-- Real-time VAD silence detection and Groq Whisper Turbo transcription (~120ms).
-- Dynamic BANT qualification scoring (Need, Authority, Budget, Timeline) and automated WhatsApp follow-up triggers.
+### 1. Custom AI Models & Autonomous Agents
+- Machine learning models, autonomous task agents, real-time voice and text intelligence.
+- Integration with state-of-the-art open-weights and custom fine-tuned models.
+- Direct CRM synchronization and automated messaging pipelines.
 
-### 2. Axiogen ClinicOS Healthcare EHR
-- Multi-specialty medical clinic EHR with patient token queue management.
-- Digital prescription generation with drug safety checks.
-- WhatsApp automated appointment reminders and instant lead reception.
-- Full HIPAA-compliant role-based access control and Supabase PostgreSQL data layer.
+### 2. Axiogen ClinicOS (Healthcare EHR SaaS)
+- High-performance clinic management software for doctors and clinics.
+- Multi-specialty patient health records (EHR), token queue live displays, digital e-prescriptions.
+- Automated appointment confirmation and reminder delivery via WhatsApp.
 
-### 3. Full-Stack Web & Software Engineering
-- Built using Next.js 15, React 19, TypeScript, TailwindCSS, and Three.js/WebGL.
-- Sub-second Core Web Vitals, 100/100 PageSpeed scores, and structured JSON-LD entity schema.
-- Native mobile applications with React Native and Flutter.
+### 3. High-Performance Web & Full-Stack Engineering
+- Next.js 15, React 19, TypeScript, and Three.js / WebGL cinematic web design.
+- Built for sub-second performance, responsive layouts, and organic search engine authority.
 
-### 4. WhatsApp Automation & Baileys Gateway
-- Subscriptionless WhatsApp lead dispatch and interactive message menus.
-- Webhook endpoints for CRM integration and automated notifications.
+## Leadership Dossier
 
-## Team & Leadership
+- **Aditya Patil** (Founder & Software Engineer): Leads full-stack software engineering, AI model systems, ClinicOS medical platform, and bespoke product development from Kolhapur, India.
+- **Aditya Minchekar** (Co-Founder & Technology Lead): Directs cloud infrastructure, distributed backends, database scaling, and DevOps from Sangli, India.
 
-- **Aditya Patil** (Founder & Chief Software Architect): Leads core software architecture, AI model orchestration, and ClinicOS development.
-- **Contact Email**: contact@axiogen.in
-- **GitHub**: https://github.com/axiogenai
-- **Website**: https://team.axiogen.in
+## Canonical Web Architecture
+- https://team.axiogen.in/
+- https://team.axiogen.in/about
+- https://team.axiogen.in/founder
+- https://team.axiogen.in/services
+- https://team.axiogen.in/projects
+- https://team.axiogen.in/contact
+- https://team.axiogen.in/llms.txt

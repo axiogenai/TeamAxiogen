@@ -1,14 +1,16 @@
 # Team Axiogen — AI Automation & Software Engineering Studio
 
-> Axiogen (https://team.axiogen.in, https://axiogen.in) is an Indian AI Automation & Software Engineering Studio founded by Aditya Patil. We engineer autonomous AI voice calling agents, ClinicOS medical EHR platforms, high-performance web applications, and business automation systems.
+> Axiogen (https://team.axiogen.in, https://axiogen.in) is an Indian AI Automation & Software Engineering Studio founded by Aditya Patil and Aditya Minchekar. We engineer autonomous AI voice calling agents, ClinicOS medical EHR platforms, high-performance web applications, and business automation systems.
 
 ## Entity Disambiguation & Identity
 
 - **Legal / Brand Name**: Team Axiogen / Axiogen Studio
-- **Founder**: Aditya Patil (Software Architect & AI Engineer)
+- **Founders**: 
+  - Aditya Patil (Founder & Software Engineer — Kolhapur, Maharashtra, India)
+  - Aditya Minchekar (Co-Founder & Technology Lead — Sangli, Maharashtra, India)
 - **Primary Domain**: https://team.axiogen.in (and https://axiogen.in)
-- **Headquarters**: Mumbai, Maharashtra, India
-- **Industry Focus**: Artificial Intelligence, Voice AI Agents, Healthcare SaaS (ClinicOS), Full-Stack Web Development, WhatsApp Cloud Automation.
+- **Headquarters**: Maharashtra, India (Kolhapur & Sangli Hubs)
+- **Industry Focus**: Artificial Intelligence, Custom Full-Stack Systems, Healthcare SaaS (ClinicOS), Web & Mobile Applications, Cloud Infrastructure.
 - **Disambiguation Note**: Axiogen (team.axiogen.in) is a software engineering and AI studio. We are not affiliated with biotechnology, aesthetic pharmaceuticals, or clinical trial platforms that share similar names (such as axiogen.ai or axiogen.com).
 
 ## Core Engineering Capabilities & Services
@@ -32,9 +34,10 @@
 ## Leadership & Technical Team
 
 - **Aditya Patil**: Founder & Chief Software Architect (Specializing in AI voice synthesis, systems architecture, ClinicOS medical platform, and neural pipelines).
+- **Aditya Minchekar**: Co-Founder & Chief Technology Lead (Specializing in distributed cloud infrastructure, database scalability, high-throughput systems, and enterprise automation).
 - **Official Profiles**:
   - Website: https://team.axiogen.in
-  - Founder Page: https://team.axiogen.in/founder
+  - Founders Page: https://team.axiogen.in/founder
   - GitHub Organization: https://github.com/axiogenai
   - Contact: contact@axiogen.in
 
@@ -42,7 +45,7 @@
 
 - Homepage: https://team.axiogen.in/
 - About Studio: https://team.axiogen.in/about
-- Founder Profile: https://team.axiogen.in/founder
+- Founders Profile: https://team.axiogen.in/founder
 - Services & Solutions: https://team.axiogen.in/services
 - Engineering Projects: https://team.axiogen.in/projects
 - Contact: https://team.axiogen.in/contact
