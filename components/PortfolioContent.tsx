@@ -1096,29 +1096,29 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                           <p className="text-[11px] text-white/60">Chief Architect & AI Engineer</p>
                         </div>
                       </div>
-                      <Link 
-                        href="/founder" 
-                        className="px-3 py-1.5 rounded-xl bg-white text-black hover:bg-white/90 text-[10px] font-bold uppercase tracking-wider transition-all hover:scale-105 shrink-0"
+                      <button 
+                        onClick={() => scrollToFrame(getSectionFrames()[2] ?? 167)}
+                        className="px-3 py-1.5 rounded-xl bg-white text-black hover:bg-white/90 text-[10px] font-bold uppercase tracking-wider transition-all hover:scale-105 shrink-0 cursor-pointer"
                       >
                         Founder Profile →
-                      </Link>
+                      </button>
                     </div>
 
                     <div className="flex flex-wrap gap-2.5 mb-3 md:mb-6">
-                      <Link 
-                        href="/about" 
-                        className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105"
+                      <button 
+                        onClick={() => scrollToFrame(getSectionFrames()[3] ?? 250)}
+                        className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 cursor-pointer"
                       >
                         <BookOpen className="w-4 h-4 text-purple-400" />
-                        <span>About Studio</span>
-                      </Link>
-                      <Link 
-                        href="/services" 
-                        className="px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 text-purple-300 hover:text-white rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105"
+                        <span>View Projects</span>
+                      </button>
+                      <button 
+                        onClick={() => scrollToFrame(getSectionFrames()[3 + getProjectPagesCount()] ?? 334)}
+                        className="px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 text-purple-300 hover:text-white rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 cursor-pointer"
                       >
                         <Sparkles className="w-4 h-4 text-purple-400" />
                         <span>All Solutions</span>
-                      </Link>
+                      </button>
                     </div>
                   </div>
 
@@ -1728,36 +1728,36 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
               {/* Subpages Quick Navigation */}
               <div className="flex flex-wrap items-center gap-2 pt-2 pointer-events-auto">
-                <Link 
-                  href="/founder" 
-                  className="px-2.5 py-1 rounded-lg bg-purple-500/15 border border-purple-500/25 text-[10px] font-bold text-purple-300 hover:text-white hover:bg-purple-500/30 transition-all flex items-center gap-1"
+                <button 
+                  onClick={() => scrollToFrame(getSectionFrames()[2] ?? 167)}
+                  className="px-2.5 py-1 rounded-lg bg-purple-500/15 border border-purple-500/25 text-[10px] font-bold text-purple-300 hover:text-white hover:bg-purple-500/30 transition-all flex items-center gap-1 cursor-pointer"
                 >
                   <Sparkles className="w-2.5 h-2.5 text-purple-400" /> Founder
-                </Link>
-                <Link 
-                  href="/about" 
-                  className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                </button>
+                <button 
+                  onClick={() => scrollToFrame(getSectionFrames()[1] ?? 83)}
+                  className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
                 >
                   About
-                </Link>
-                <Link 
-                  href="/services" 
-                  className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                </button>
+                <button 
+                  onClick={() => scrollToFrame(getSectionFrames()[3 + getProjectPagesCount()] ?? 334)}
+                  className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
                 >
                   Services
-                </Link>
-                <Link 
-                  href="/projects" 
-                  className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                </button>
+                <button 
+                  onClick={() => scrollToFrame(getSectionFrames()[3] ?? 250)}
+                  className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
                 >
                   Projects
-                </Link>
-                <Link 
-                  href="/contact" 
-                  className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                </button>
+                <button 
+                  onClick={() => scrollToFrame(getSectionFrames()[0] ?? 42)}
+                  className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
                 >
-                  Contact
-                </Link>
+                  Top ↑
+                </button>
               </div>
 
               {/* Social Buttons */}
