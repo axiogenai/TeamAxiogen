@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   useSectionVisibility, 
@@ -1070,27 +1071,52 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 >
                   <div className="flex flex-col flex-1">
                     <div className="flex items-center gap-2 mb-1.5 md:mb-2">
-                      <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">Creative Technology Studio · Digital Experience Agency</span>
+                      <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">AI Automation & Software Engineering Studio</span>
                     </div>
                     <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tighter mb-2 md:mb-3 leading-none whitespace-nowrap">
-                      AXIOGEN.
+                      TEAM AXIOGEN.
                     </h2>
                     <p className="text-xs sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-3 md:mb-4">
-                      Axiogen is a premier Creative Engineering Studio & Digital Product Engineering team. We deliver Immersive Digital Experiences, High-Performance Web Development, and Cinematic Web Design.
+                      Axiogen is an Indian AI Automation & Software Engineering Studio based in Mumbai. We build autonomous AI voice agents, ClinicOS medical platform, and high-performance bespoke applications.
                     </p>
-                    <p className="text-[10px] sm:text-xs md:text-sm text-white/60 font-normal leading-relaxed mb-3 md:mb-5">
-                      Specializing in Web Engineering Solutions, Interactive Web Development, Bespoke Web Design, and Cutting-Edge Web Solutions, we build high-impact applications tailored for enterprise scale.
-                    </p>
-                    <div className="flex gap-4 mb-3 md:mb-6">
-                      <a 
-                        href="#" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="px-4 py-2 md:px-5 md:py-2.5 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 btn-view-profile"
+
+                    {/* Founder Spotlight Card */}
+                    <div className="p-3.5 rounded-2xl bg-purple-950/20 border border-purple-500/25 mb-4 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-xs font-black text-white shadow-lg shrink-0">
+                          AP
+                        </div>
+                        <div>
+                          <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                            <span>Aditya Patil</span>
+                            <span className="text-[9px] uppercase tracking-wider text-purple-300 px-1.5 py-0.2 rounded bg-purple-500/20 font-mono">Founder</span>
+                          </div>
+                          <p className="text-[11px] text-white/60">Chief Architect & AI Engineer</p>
+                        </div>
+                      </div>
+                      <Link 
+                        href="/founder" 
+                        className="px-3 py-1.5 rounded-xl bg-white text-black hover:bg-white/90 text-[10px] font-bold uppercase tracking-wider transition-all hover:scale-105 shrink-0"
                       >
-                        <BookOpen className="w-4 h-4" />
-                        <span>View Profile</span>
-                      </a>
+                        Founder Profile →
+                      </Link>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2.5 mb-3 md:mb-6">
+                      <Link 
+                        href="/about" 
+                        className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105"
+                      >
+                        <BookOpen className="w-4 h-4 text-purple-400" />
+                        <span>About Studio</span>
+                      </Link>
+                      <Link 
+                        href="/services" 
+                        className="px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 text-purple-300 hover:text-white rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105"
+                      >
+                        <Sparkles className="w-4 h-4 text-purple-400" />
+                        <span>All Solutions</span>
+                      </Link>
                     </div>
                   </div>
 
@@ -1544,34 +1570,50 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 </a>
               </div>
 
-              {/* Shuffled Social Buttons to the Bottom of Left Panel */}
+              {/* Subpages Quick Navigation */}
+              <div className="flex flex-wrap items-center gap-2 pt-2 pointer-events-auto">
+                <Link 
+                  href="/founder" 
+                  className="px-2.5 py-1 rounded-lg bg-purple-500/15 border border-purple-500/25 text-[10px] font-bold text-purple-300 hover:text-white hover:bg-purple-500/30 transition-all flex items-center gap-1"
+                >
+                  <Sparkles className="w-2.5 h-2.5 text-purple-400" /> Founder
+                </Link>
+                <Link 
+                  href="/about" 
+                  className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                >
+                  About
+                </Link>
+                <Link 
+                  href="/services" 
+                  className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                >
+                  Services
+                </Link>
+                <Link 
+                  href="/projects" 
+                  className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                >
+                  Projects
+                </Link>
+                <Link 
+                  href="/contact" 
+                  className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                >
+                  Contact
+                </Link>
+              </div>
+
+              {/* Social Buttons */}
               <div className="flex items-center gap-2 pt-1 pointer-events-auto">
                 <a 
-                  href="#" 
+                  href="https://github.com/axiogenai" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="p-2 bg-white/5 border border-white/10 hover:border-white/30 rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
-                  aria-label="Instagram Profile"
+                  aria-label="GitHub Profile"
                 >
-                  <BookOpen className="w-4 h-4" />
-                </a>
-                <a 
-                  href="#" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="p-2 bg-white/5 border border-white/10 hover:border-white/30 rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
-                  aria-label="Twitter Profile"
-                >
-                  <MessageSquare className="w-4 h-4" />
-                </a>
-                <a 
-                  href="#" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="p-2 bg-white/5 border border-white/10 hover:border-white/30 rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
-                  aria-label="LinkedIn Profile"
-                >
-                  <Briefcase className="w-4 h-4" />
+                  <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                 </a>
               </div>
 
