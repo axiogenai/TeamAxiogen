@@ -51,7 +51,7 @@ export const Navbar = ({ ready = true }: { ready?: boolean }) => {
           onClick={() => scrollToFrame(frames[0] ?? 42)}
           className="hover:opacity-90 transition-all cursor-pointer flex items-center gap-2.5 group"
         >
-          <div className="w-7 h-7 flex items-center justify-center filter drop-shadow-[0_0_8px_rgba(255,255,255,0.9)]">
+          <div className="w-7 h-7 flex items-center justify-center">
             <svg viewBox="0 0 582 595" className="w-7 h-7 text-white fill-white stroke-white">
               <g fill="#ffffff" stroke="#ffffff" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M 287 61 L 291 55 L 295 58 L 304 76 L 308 80 L 323 107 L 325 108 L 328 116 L 331 118 L 335 127 L 344 139 L 348 149 L 351 152 L 366 180 L 369 182 L 369 184 L 393 222 L 403 242 L 406 244 L 408 250 L 413 256 L 420 270 L 426 278 L 427 282 L 431 286 L 431 288 L 455 326 L 456 331 L 460 335 L 467 349 L 485 376 L 493 392 L 497 396 L 500 404 L 505 409 L 513 426 L 515 427 L 524 444 L 527 447 L 526 449 L 494 450 L 408 450 L 406 446 L 403 444 L 399 436 L 399 433 L 396 431 L 388 416 L 378 403 L 375 396 L 372 394 L 357 367 L 346 352 L 345 348 L 332 330 L 318 316 L 309 310 L 297 305 L 298 303 L 308 301 L 310 299 L 332 299 L 334 301 L 346 304 L 365 316 L 380 329 L 382 328 L 363 302 L 346 285 L 344 281 L 317 259 L 305 232 L 302 232 L 297 243 L 292 248 L 292 252 L 282 270 L 279 273 L 276 280 L 272 282 L 262 269 L 241 249 L 215 236 L 194 231 L 194 228 L 200 216 L 203 214 L 207 204 L 209 203 L 213 193 L 223 178 L 231 161 L 234 159 L 234 156 L 243 138 L 252 125 L 268 94 L 272 89 L 274 83 L 287 62 Z" />
