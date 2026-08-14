@@ -8,6 +8,7 @@ import {
   useNavSection,
   getStableHeight, 
   setProjectCount, 
+  getProjectPagesCount,
   getSectionFrames, 
   getMaxScrollMultiplier 
 } from '../hooks/useScroll';
@@ -288,6 +289,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
     showAbout, 
     showAboutUs,
     showSkills,
+    showFounder,
     showProjects, 
     projectPage, 
     showServices, 
@@ -915,7 +917,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const isInteractive = showHero || showAbout || showProjects || showServices || showContact;
+  const isInteractive = showHero || showAbout || showFounder || showProjects || showServices || showContact;
 
   // Motion variants for service card icons
   const getIconVariants = (title: string): any => {
@@ -1241,6 +1243,160 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       </motion.section>
 
 
+      {/* ----------------- FOUNDER SECTION ----------------- */}
+      <motion.section
+        className={`absolute inset-0 flex flex-col items-center justify-start pt-16 pb-4 px-4 md:px-16 text-white section-bg-adapt overflow-hidden`}
+        style={{ pointerEvents: showFounder ? 'auto' : 'none' }}
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: showFounder ? 1 : 0,
+          x: showFounder ? "0%" : (['hero', 'about'].includes(activeSection) ? "100%" : "-100%"),
+          display: showFounder ? 'flex' : 'none'
+        }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <div className={`flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-start ${isMobile ? '' : 'min-h-0 max-h-full'}`}>
+          <div className="grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full px-2 py-2">
+            
+            {/* Left Card: Founder Spotlight & Bio */}
+            <motion.div
+              initial={isMobile ? { opacity: 0, y: 15 } : undefined}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25 }}
+              className="col-span-12 lg:col-span-6 text-white bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] glass-card gradient-border flex flex-col justify-between h-full"
+            >
+              <div className="flex flex-col flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">Founder & Chief Software Architect</span>
+                </div>
+                
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-tr from-purple-600 via-pink-600 to-indigo-600 flex items-center justify-center text-lg md:text-xl font-black text-white shadow-xl shadow-purple-600/30 shrink-0">
+                    AP
+                  </div>
+                  <div>
+                    <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black tracking-tighter leading-none text-white">
+                      ADITYA PATIL.
+                    </h2>
+                    <p className="text-[11px] md:text-xs text-white/50 font-mono mt-1">Systems Architect · AI Systems Specialist · Founder</p>
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] mb-3">
+                  <p className="text-xs sm:text-sm text-white/80 font-normal leading-relaxed italic">
+                    &ldquo;Software shouldn&apos;t just look futuristic — it must execute with relentless speed, solve hard operational bottlenecks, and automate what humans shouldn&apos;t have to do repeatedly.&rdquo;
+                  </p>
+                </div>
+
+                <p className="text-xs sm:text-sm text-white/70 font-normal leading-relaxed mb-3">
+                  Aditya founded <strong>Team Axiogen</strong> to deliver production-grade AI automation, vertical medical SaaS (<strong className="text-white">ClinicOS</strong>), and ultra-fast web architectures engineered for measurable business growth.
+                </p>
+
+                <div className="flex flex-wrap gap-2 pt-1 mb-2">
+                  <a
+                    href="https://github.com/axiogenai"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105"
+                  >
+                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    <span>GitHub</span>
+                  </a>
+                  <button
+                    onClick={() => {
+                      const frames = getSectionFrames();
+                      const maxScroll = getMaxScrollMultiplier() * getStableHeight();
+                      const targetY = ((frames[4 + getProjectPagesCount()] ?? 418) / 502) * maxScroll;
+                      window.scrollTo({ top: targetY, behavior: 'smooth' });
+                    }}
+                    className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 shadow-lg shadow-purple-600/25 cursor-pointer"
+                  >
+                    <Mail className="w-3.5 h-3.5" />
+                    <span>Contact Aditya</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Founder Stats Bottom Bar */}
+              <div className="grid grid-cols-3 gap-2 pt-4 border-t border-white/10 mt-auto">
+                <div className="flex flex-col">
+                  <span className="text-lg md:text-2xl font-black text-purple-400 font-mono">100%</span>
+                  <span className="text-[8px] uppercase tracking-wider text-white/50 font-bold">Custom Code</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-lg md:text-2xl font-black text-teal-400 font-mono">&lt;200ms</span>
+                  <span className="text-[8px] uppercase tracking-wider text-white/50 font-bold">Voice Latency</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-lg md:text-2xl font-black text-pink-400 font-mono">12+</span>
+                  <span className="text-[8px] uppercase tracking-wider text-white/50 font-bold">Live Systems</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Right Card: Signature Systems & Architectures */}
+            <motion.div
+              initial={isMobile ? { opacity: 0, y: 15 } : undefined}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25 }}
+              className="col-span-12 lg:col-span-6 flex flex-col gap-3 w-full h-full bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white glass-card gradient-border justify-between"
+            >
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase font-mono text-purple-400 font-bold tracking-wider">SYSTEMS ARCHITECT</span>
+                <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Signature Architectures</h3>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 my-1">
+                
+                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-purple-500/20 space-y-1.5 hover:border-purple-500/40 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-mono text-purple-400 font-bold uppercase">Voice AI</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+                  </div>
+                  <h4 className="text-xs font-bold text-white">Axiogen Real-Time Voice Agent</h4>
+                  <p className="text-[10px] text-white/60 leading-snug">Local ONNX WASM Kokoro-82M streaming audio queue + Groq Llama 8B.</p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-teal-500/20 space-y-1.5 hover:border-teal-500/40 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-mono text-teal-400 font-bold uppercase">Healthcare</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+                  </div>
+                  <h4 className="text-xs font-bold text-white">ClinicOS EHR & Queue Suite</h4>
+                  <p className="text-[10px] text-white/60 leading-snug">Multi-specialty patient EHR, digital Rx, and automated WhatsApp appointment dispatch.</p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-indigo-500/20 space-y-1.5 hover:border-indigo-500/40 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-mono text-indigo-400 font-bold uppercase">Software AI</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                  </div>
+                  <h4 className="text-xs font-bold text-white">CodeMind AI Reverse Engine</h4>
+                  <p className="text-[10px] text-white/60 leading-snug">Multi-language AST parser & dependency mapper for codebase intelligence.</p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-pink-500/20 space-y-1.5 hover:border-pink-500/40 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-mono text-pink-400 font-bold uppercase">Security</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse" />
+                  </div>
+                  <h4 className="text-xs font-bold text-white">RansomGuard AI Defense</h4>
+                  <p className="text-[10px] text-white/60 leading-snug">Real-time filesystem entropy watchdog + XGBoost ensemble ransomware blocker.</p>
+                </div>
+
+              </div>
+
+              <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-white/50">
+                <span>Location: <strong>Mumbai, Maharashtra, India</strong></span>
+                <span className="text-purple-400 font-mono font-bold">team.axiogen.in</span>
+              </div>
+            </motion.div>
+
+          </div>
+        </div>
+      </motion.section>
+
+
       {/* ----------------- PROJECTS SECTION ----------------- */}
       <motion.section
         className={`absolute inset-0 flex flex-col items-center justify-start pt-16 pb-4 px-4 md:px-16 section-bg-adapt overflow-y-auto md:overflow-hidden`}
@@ -1248,7 +1404,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         initial={{ opacity: 0 }}
         animate={{ 
           opacity: showProjects ? 1 : 0,
-          y: showProjects ? "0%" : (['hero', 'about'].includes(activeSection) ? "100%" : "-100%"),
+          y: showProjects ? "0%" : (['hero', 'about', 'founder'].includes(activeSection) ? "100%" : "-100%"),
           display: showProjects ? 'flex' : 'none'
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
