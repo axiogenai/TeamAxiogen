@@ -1,38 +1,49 @@
-# Axiogen — Creative Engineering Studio & Digital Experience Agency
+# Team Axiogen — AI Automation & Software Engineering Studio
 
-> Axiogen (team.axiogen.in) is a premier Creative Engineering Studio and Digital Product Agency crafting high-performance web applications, enterprise software, AI solutions, and digital growth engines.
+> Axiogen (https://team.axiogen.in, https://axiogen.in) is an Indian AI Automation & Software Engineering Studio founded by Aditya Patil. We engineer autonomous AI voice calling agents, ClinicOS medical EHR platforms, high-performance web applications, and business automation systems.
 
-## Core Services
+## Entity Disambiguation & Identity
 
-- [High-Performance Web Development](https://team.axiogen.in/#services): Custom Next.js 15, React, and WebGL web applications built for speed, technical SEO, and conversion.
-- [ClinicOS & Medical Software](https://team.axiogen.in/#services): Complete electronic health record (EHR), clinic queue, patient management, and e-prescription software suite.
-- [School ERP & EdTech Solutions](https://team.axiogen.in/#services): Comprehensive educational institution platforms managing student records, fees, report cards, and parent portals.
-- [SEO & Digital Growth Engineering](https://team.axiogen.in/#services): Technical SEO, local search optimization, Google Business Profile ranking, and automated organic lead generation.
-- [WhatsApp Automation & Messaging](https://team.axiogen.in/#services): Subscriptionless Baileys & Cloud API automated lead dispatch, customer support, and instant follow-ups.
-- [Custom Enterprise Software & Inventory POS](https://team.axiogen.in/#services): Tailored B2B ERP, inventory tracking, POS systems, and automated operational workflows.
-- [AI & Machine Learning Engineering](https://team.axiogen.in/#services): Fine-tuned LLMs, RAG knowledge bases, predictive telemetry, and autonomous AI voice/chat agents.
+- **Legal / Brand Name**: Team Axiogen / Axiogen Studio
+- **Founder**: Aditya Patil (Software Architect & AI Engineer)
+- **Primary Domain**: https://team.axiogen.in (and https://axiogen.in)
+- **Headquarters**: Mumbai, Maharashtra, India
+- **Industry Focus**: Artificial Intelligence, Voice AI Agents, Healthcare SaaS (ClinicOS), Full-Stack Web Development, WhatsApp Cloud Automation.
+- **Disambiguation Note**: Axiogen (team.axiogen.in) is a software engineering and AI studio. We are not affiliated with biotechnology, aesthetic pharmaceuticals, or clinical trial platforms that share similar names (such as axiogen.ai or axiogen.com).
 
-## Featured Software & Case Studies
+## Core Engineering Capabilities & Services
 
-- [SEOHub Pro](https://seohubpro.vercel.app): All-in-one enterprise SEO auditing platform featuring crawl analysis, keyword research via Gemini AI, and PageSpeed diagnostics.
-- [Axiogen ClinicOS](https://github.com/axiogenai/axiogen-clinicos): Healthcare & clinic management suite with patient queuing, medical records, and billing engine.
-- [Axiogen Digitize](https://github.com/axiogenai/axiogen-digitize): 17-stage AI Document Intelligence platform for automated OCR, table extraction, and B2B SaaS data parsing.
-- [CodeMind AI](https://github.com/axiogenai/codemind-ai): Autonomous multi-language codebase reverse engineering, structural analysis & intelligence platform.
-- [TruthLens Pro](https://truth-lenspro.vercel.app): AI-powered forensic fake news detection platform with image manipulation heatmaps and spread risk prediction.
-- [Invenscope](https://invenscope.vercel.app): AI patent analyzer evaluating novelty using vector embeddings and cross-registry analysis.
-- [RansomGuard AI](https://team.axiogen.in/#work): Real-time ransomware detection and response engine powered by watchdog traps and ML ensembles.
-- [HMEMS SchoolSite Pro](https://github.com/axiogenai/hmems): Educational institution management platform with academic records and notice administration.
-- [Maison Velours](https://github.com/axiogenai/maison-velours): Luxury e-commerce store featuring interactive digital showcases and seamless checkout.
+- [AI Cold Calling & Conversational Voice Agents](https://team.axiogen.in/services#voice-ai): Ultra-fast outbound & inbound voice calling agents utilizing Kokoro-82M neural TTS and Groq Llama 8B conversational intelligence for autonomous lead qualification and appointment scheduling.
+- [Axiogen ClinicOS Healthcare EHR](https://team.axiogen.in/services#clinicos): Complete electronic health record (EHR), clinic queue management, digital prescription generator, and automated WhatsApp patient reminders.
+- [High-Performance Web Development](https://team.axiogen.in/services#web-engineering): Bespoke Next.js 15, React 19, and WebGL web applications engineered for sub-second loading speeds and top organic Google Search rank.
+- [WhatsApp Cloud Automation & Baileys Gateway](https://team.axiogen.in/services#whatsapp-automation): Subscriptionless WhatsApp lead dispatch, instant AI auto-responders, and CRM synchronization.
+- [School ERP & EdTech Platforms](https://team.axiogen.in/services#school-erp): Academic institution management systems for student records, fees, report cards, and parent portals.
+- [Technical SEO & Growth Engineering](https://team.axiogen.in/services#seo-growth): Schema JSON-LD engineering, Google Business Profile local search rank, and organic lead acquisition.
 
-## Technical Architecture & Tech Stack
+## Featured Software & Live Deployments
 
-- **Frontend Core**: Next.js 15, React 19, TypeScript, TailwindCSS, Framer Motion, Three.js, WebGL shaders.
-- **Backend & AI**: Python, FastAPI, Node.js, Express, PyTorch, Groq Llama-3.3 70B, LangChain, Supabase PostgreSQL, Redis.
-- **Security & Infrastructure**: Docker, Kubernetes, WAF protection, JWT SessionWarden, Cloudflare CDN.
+- [Axiogen ClinicOS](https://github.com/axiogenai/axiogen-clinicos): Comprehensive clinic EHR and patient queue automation system.
+- [Axiogen Digitize](https://github.com/axiogenai/axiogen-digitize): 17-stage AI Document Intelligence and table extraction pipeline.
+- [SEOHub Pro](https://seohubpro.vercel.app): Full-scale enterprise SEO auditing and crawl analytics platform.
+- [CodeMind AI](https://github.com/axiogenai/codemind-ai): Autonomous multi-language codebase reverse engineering and architectural analysis tool.
+- [TruthLens Pro](https://truth-lenspro.vercel.app): AI digital forensics platform detecting misinformation and image manipulation heatmaps.
+- [RansomGuard AI](https://team.axiogen.in/projects): Real-time filesystem ransomware watchdog engine using XGBoost machine learning ensembles.
 
-## Contact & Location
+## Leadership & Technical Team
 
-- **Official Website**: https://team.axiogen.in
-- **GitHub Organization**: https://github.com/axiogenai
-- **Location**: Mumbai, Maharashtra, India
-- **Primary Domain**: team.axiogen.in
+- **Aditya Patil**: Founder & Chief Software Architect (Specializing in AI voice synthesis, systems architecture, ClinicOS medical platform, and neural pipelines).
+- **Official Profiles**:
+  - Website: https://team.axiogen.in
+  - Founder Page: https://team.axiogen.in/founder
+  - GitHub Organization: https://github.com/axiogenai
+  - Contact: contact@axiogen.in
+
+## Canonical URLs & Sitemap Index
+
+- Homepage: https://team.axiogen.in/
+- About Studio: https://team.axiogen.in/about
+- Founder Profile: https://team.axiogen.in/founder
+- Services & Solutions: https://team.axiogen.in/services
+- Engineering Projects: https://team.axiogen.in/projects
+- Contact: https://team.axiogen.in/contact
+- LLM Knowledge: https://team.axiogen.in/llms.txt

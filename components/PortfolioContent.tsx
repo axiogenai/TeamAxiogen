@@ -1009,9 +1009,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
           variants={fadeUpVariants}
           initial="hidden"
           animate={showHero ? "visible" : "hidden"}
-          className="text-sm md:text-lg lg:text-xl text-white/60 font-normal max-w-xl md:max-w-3xl lg:max-w-4xl leading-relaxed drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] mb-8"
+          className="text-sm md:text-lg lg:text-xl text-white/70 font-normal max-w-xl md:max-w-3xl lg:max-w-4xl leading-relaxed drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] mb-8"
         >
-          Axiogen builds everything — AI models, mobile apps, cinematic web experiences, cloud infrastructure, and deep research systems.
+          Axiogen is an AI Automation & Software Engineering Studio. We engineer autonomous AI agents, SaaS platforms, bespoke web applications, mobile apps, and business automation systems for startups, healthcare clinics, and enterprises.
         </motion.p>
 
         {/* CTA Button */}

@@ -97,28 +97,70 @@ export default function RootLayout({
         "@type": "Organization",
         "@id": "https://team.axiogen.in/#organization",
         "name": "Axiogen",
-        "alternateName": "Team Axiogen",
+        "legalName": "Team Axiogen",
+        "alternateName": ["Team Axiogen", "Axiogen AI", "Axiogen Studio", "Axiogen India"],
         "url": "https://team.axiogen.in",
         "logo": {
           "@type": "ImageObject",
           "url": "https://team.axiogen.in/logo.png",
-          "caption": "Axiogen Creative Technology Studio"
+          "caption": "Axiogen AI Automation & Software Engineering Studio"
+        },
+        "description": "Axiogen is an Indian AI Automation & Software Engineering Studio founded by Aditya Patil. We engineer autonomous AI voice calling agents, ClinicOS medical EHR platforms, custom web applications, mobile apps, and business workflow automation.",
+        "disambiguatingDescription": "Axiogen (Team Axiogen) is an Indian AI Automation and Software Engineering Studio specializing in AI agents, ClinicOS medical EHR, and custom digital infrastructure. Not affiliated with biotechnology or pharmaceutical entities.",
+        "foundingDate": "2024",
+        "founder": {
+          "@type": "Person",
+          "@id": "https://team.axiogen.in/#founder",
+          "name": "Aditya Patil",
+          "jobTitle": "Founder & Chief Software Architect",
+          "url": "https://team.axiogen.in/founder",
+          "sameAs": [
+            "https://github.com/axiogenai",
+            "https://team.axiogen.in/founder"
+          ]
         },
         "sameAs": [
           "https://github.com/axiogenai",
-          "https://team.axiogen.in"
+          "https://team.axiogen.in",
+          "https://axiogen.in"
         ],
         "contactPoint": {
           "@type": "ContactPoint",
-          "contactType": "customer service",
-          "availableLanguage": ["English", "Hindi"],
+          "contactType": "customer service & sales",
+          "email": "contact@axiogen.in",
+          "availableLanguage": ["English", "Hindi", "Marathi"],
           "url": "https://team.axiogen.in/#contact"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Mumbai",
+          "addressRegion": "Maharashtra",
+          "addressCountry": "IN"
         }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://team.axiogen.in/#founder",
+        "name": "Aditya Patil",
+        "jobTitle": "Founder & AI Systems Architect",
+        "worksFor": {
+          "@id": "https://team.axiogen.in/#organization"
+        },
+        "url": "https://team.axiogen.in/founder",
+        "description": "Aditya Patil is the founder of Team Axiogen, specializing in AI calling agents, full-stack systems engineering, ClinicOS medical platform, and machine learning infrastructure.",
+        "knowsAbout": [
+          "Artificial Intelligence",
+          "Voice AI & Neural TTS",
+          "Clinic Management Systems (EHR)",
+          "Full-Stack Web Development",
+          "Next.js & React Architecture",
+          "Cybersecurity & Cloud Infrastructure"
+        ]
       },
       {
         "@type": "ProfessionalService",
         "@id": "https://team.axiogen.in/#service",
-        "name": "Axiogen Creative Engineering Studio",
+        "name": "Axiogen AI Automation & Software Engineering Studio",
         "url": "https://team.axiogen.in",
         "priceRange": "$$",
         "address": {
@@ -132,7 +174,7 @@ export default function RootLayout({
           "latitude": "19.0760",
           "longitude": "72.8777"
         },
-        "description": "Creative Technology Studio & Digital Experience Agency crafting Immersive Digital Experiences, Cinematic Web Design, High-Performance Web Development, Bespoke Web Design, and Enterprise AI Solutions.",
+        "description": "Premier AI Automation & Software Engineering Studio crafting Autonomous AI Agents, Bespoke Web Applications, ClinicOS Healthcare Software, School ERP, and WhatsApp Cloud Automation.",
         "knowsAbout": keywords,
         "aggregateRating": {
           "@type": "AggregateRating",
@@ -141,46 +183,46 @@ export default function RootLayout({
         },
         "hasOfferCatalog": {
           "@type": "OfferCatalog",
-          "name": "Axiogen Core Services",
+          "name": "Axiogen Core Solutions",
           "itemListElement": [
             {
               "@type": "Offer",
               "itemOffered": {
                 "@type": "Service",
+                "name": "AI Cold Calling & Conversational Agents",
+                "description": "Real-time voice calling agents with neural TTS, speech-to-text, and automated CRM lead qualification."
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
                 "name": "High-Performance Web Development",
-                "description": "Custom Next.js 15, React, and WebGL web applications engineered for ultra-fast performance, SEO rank, and high conversion."
+                "description": "Custom Next.js, React, and WebGL web applications engineered for sub-second load times, SEO rank, and high conversion."
               }
             },
             {
               "@type": "Offer",
               "itemOffered": {
                 "@type": "Service",
-                "name": "Axiogen ClinicOS & Medical Software",
-                "description": "Healthcare EHR, clinic queue management, digital prescription engine, and patient care SaaS."
+                "name": "Axiogen ClinicOS Healthcare EHR",
+                "description": "Complete clinic queue management, digital prescriptions, patient electronic health records, and WhatsApp appointment reminders."
               }
             },
             {
               "@type": "Offer",
               "itemOffered": {
                 "@type": "Service",
-                "name": "School ERP & Educational SaaS",
-                "description": "Comprehensive academic institution portal managing student records, fees, report cards, and parent portals."
+                "name": "WhatsApp Cloud Automation",
+                "description": "Subscriptionless automated WhatsApp lead capture, instant auto-reply engines, and CRM dispatch."
               }
             },
             {
               "@type": "Offer",
               "itemOffered": {
                 "@type": "Service",
-                "name": "Technical SEO & Growth Engineering",
-                "description": "Full technical SEO audit, Google Business Profile local search ranking, and organic lead generation systems."
-              }
-            },
-            {
-              "@type": "Offer",
-              "itemOffered": {
-                "@type": "Service",
-                "name": "WhatsApp Automation & Cloud API Integration",
-                "description": "Subscriptionless automated WhatsApp lead dispatch, instant AI auto-responders, and business messaging."
+                "name": "School ERP & Academic Management",
+                "description": "Educational institution software managing student records, fees, report cards, and parent portals."
               }
             }
           ]
@@ -190,7 +232,8 @@ export default function RootLayout({
         "@type": "WebSite",
         "@id": "https://team.axiogen.in/#website",
         "url": "https://team.axiogen.in",
-        "name": "Axiogen Platform",
+        "name": "Axiogen",
+        "alternateName": "Team Axiogen Studio",
         "publisher": {
           "@id": "https://team.axiogen.in/#organization"
         }
