@@ -1149,13 +1149,6 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                         <BookOpen className="w-4 h-4 text-purple-400" />
                         <span>View Projects</span>
                       </button>
-                      <button 
-                        onClick={() => scrollToFrame(getSectionFrames()[3 + getProjectPagesCount()] ?? 334)}
-                        className="px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 text-purple-300 hover:text-white rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 cursor-pointer"
-                      >
-                        <Sparkles className="w-4 h-4 text-purple-400" />
-                        <span>All Solutions</span>
-                      </button>
                     </div>
                   </div>
 
