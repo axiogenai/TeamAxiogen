@@ -71,18 +71,18 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
       />
 
       {/* Centered layout row holding logo and clipping text container */}
-      <div className="flex flex-row items-center justify-center h-32 md:h-40 relative">
+      <div className="flex flex-row items-center justify-center h-28 md:h-40 max-w-[92vw] mx-auto relative">
         {/* Inline SVG Logo drawing animation container */}
         <motion.div 
-          animate={{ x: showText ? -20 : 0 }}
+          animate={{ x: showText ? -6 : 0 }}
           transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-          className="w-20 h-20 md:w-28 md:h-28 flex items-center justify-center z-10"
+          className="w-12 h-12 sm:w-16 sm:h-16 md:w-24 md:h-24 flex-shrink-0 flex items-center justify-center z-10"
         >
           <svg 
             viewBox="0 0 582 595" 
             className="w-full h-full"
             style={{ 
-              filter: 'drop-shadow(0 0 35px rgba(255,255,255,0.08))',
+              filter: 'drop-shadow(0 0 25px rgba(255,255,255,0.08))',
               opacity: isMounted ? 1 : 0,
               transition: 'opacity 0.3s ease-in-out'
             }}
@@ -130,14 +130,14 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
             opacity: showText ? 1 : 0
           }}
           transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-          className="overflow-hidden flex flex-col items-center justify-center pl-2 md:pl-3 whitespace-nowrap"
+          className="overflow-hidden flex flex-col items-center justify-center pl-2 sm:pl-3 md:pl-4 whitespace-nowrap"
         >
           {/* Brand Name Text */}
           <motion.h1 
-            initial={{ x: -80 }}
-            animate={{ x: showText ? 0 : -80 }}
+            initial={{ x: -40 }}
+            animate={{ x: showText ? 0 : -40 }}
             transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-            className="text-white font-extralight tracking-[0.3em] md:tracking-[0.4em] text-xl md:text-3xl mb-1 mr-[-0.3em] md:mr-[-0.4em] text-center"
+            className="text-white font-extralight tracking-[0.16em] sm:tracking-[0.25em] md:tracking-[0.35em] text-sm sm:text-lg md:text-2xl mb-1 mr-[-0.16em] sm:mr-[-0.25em] md:mr-[-0.35em] text-center"
             style={{ fontFamily: "'Rostex', sans-serif" }}
           >
             {brandName}
@@ -151,16 +151,16 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
               opacity: showText ? 0.8 : 0
             }}
             transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 0.05 }}
-            className="h-[1px] w-32 md:w-44 bg-gradient-to-r from-transparent via-white/80 to-transparent my-2"
+            className="h-[1px] w-20 sm:w-28 md:w-36 bg-gradient-to-r from-transparent via-white/80 to-transparent my-1 sm:my-1.5"
             style={{ originX: 0.5 }}
           />
 
           {/* Tagline */}
           <motion.p
-            initial={{ x: -50 }}
-            animate={{ x: showText ? 0 : -50 }}
+            initial={{ x: -30 }}
+            animate={{ x: showText ? 0 : -30 }}
             transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 0.1 }}
-            className="text-white/40 text-[9px] md:text-xs tracking-[0.25em] uppercase font-light text-center"
+            className="text-white/40 text-[8px] sm:text-[10px] md:text-xs tracking-[0.2em] sm:tracking-[0.25em] uppercase font-light text-center"
           >
             Design · Build · Evolve
           </motion.p>
