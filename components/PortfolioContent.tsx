@@ -1375,13 +1375,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               className="flex flex-col items-center max-w-6xl w-full gap-3 md:gap-5 justify-center min-h-0 max-h-full"
             >
               {/* Luxury Haute Header */}
-              <div className="text-center space-y-1 sm:space-y-1.5">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-white/70 animate-pulse" />
-                  <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.3em] font-light text-white/70">
-                    Studio Leadership &amp; Engineering
-                  </span>
-                </div>
+              <div className="text-center">
                 <h2 
                   className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extralight tracking-[0.22em] md:tracking-[0.32em] uppercase text-white drop-shadow-[0_4px_24px_rgba(255,255,255,0.06)] leading-tight"
                   style={{ fontFamily: "'Rostex', sans-serif" }}
