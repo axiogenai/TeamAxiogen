@@ -1284,7 +1284,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- FOUNDERS SECTION (AUTO-REVEAL INTRO -> CARDS) ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-center pt-8 md:pt-12 pb-6 md:pb-8 px-4 md:px-16 text-white overflow-hidden transition-colors duration-500 ${
+        className={`absolute inset-0 flex flex-col items-center justify-start lg:justify-center pt-20 sm:pt-24 lg:pt-0 pb-16 sm:pb-20 lg:pb-0 px-3 sm:px-6 md:px-12 lg:px-16 text-white overflow-y-auto lg:overflow-hidden transition-colors duration-500 ${
           founderPhase === 'intro' ? 'bg-black' : 'section-bg-adapt'
         }`}
         style={{ pointerEvents: showFounder ? 'auto' : 'none' }}
@@ -1306,14 +1306,14 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               exit={{ opacity: 0, scale: 1.04, filter: 'blur(12px)', transition: { duration: 0.45, ease: 'easeInOut' } }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               onClick={() => setFounderPhase('cards')}
-              className="relative z-10 flex flex-col items-center justify-center max-w-4xl w-full mx-auto space-y-4 md:space-y-6 text-center cursor-pointer pointer-events-auto select-none"
+              className="relative z-10 flex flex-col items-center justify-center max-w-[92vw] sm:max-w-2xl w-full mx-auto space-y-3.5 sm:space-y-5 text-center cursor-pointer pointer-events-auto select-none my-auto"
             >
               {/* Luxury Studio Badge */}
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.1] backdrop-blur-xl text-white/75 text-[10px] sm:text-xs font-light uppercase tracking-[0.3em] shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+                className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-white/[0.03] border border-white/[0.1] backdrop-blur-xl text-white/75 text-[9px] sm:text-xs font-light uppercase tracking-[0.22em] sm:tracking-[0.3em] shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-white/70 animate-pulse" />
                 <span>The Minds Behind Axiogen</span>
@@ -1324,16 +1324,16 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 initial={{ opacity: 0, y: 25 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-                className="space-y-1.5 sm:space-y-2"
+                className="space-y-1 sm:space-y-2"
               >
                 <h2 
-                  className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extralight tracking-[0.25em] md:tracking-[0.35em] text-white/80 drop-shadow-[0_10px_40px_rgba(0,0,0,0.8)] uppercase leading-none"
+                  className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-extralight tracking-[0.18em] sm:tracking-[0.25em] md:tracking-[0.35em] text-white/80 drop-shadow-[0_10px_40px_rgba(0,0,0,0.8)] uppercase leading-none"
                   style={{ fontFamily: "'Rostex', sans-serif" }}
                 >
                   MEET OUR
                 </h2>
                 <h2 
-                  className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-[0.25em] md:tracking-[0.35em] text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-400 drop-shadow-[0_0_30px_rgba(255,255,255,0.15)] uppercase leading-none"
+                  className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-normal tracking-[0.18em] sm:tracking-[0.25em] md:tracking-[0.35em] text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-400 drop-shadow-[0_0_30px_rgba(255,255,255,0.15)] uppercase leading-none"
                   style={{ fontFamily: "'Rostex', sans-serif" }}
                 >
                   FOUNDERS
@@ -1345,13 +1345,13 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.25 }}
-                className="text-xs sm:text-sm md:text-base text-white/60 font-light max-w-xl leading-relaxed mx-auto tracking-wide"
+                className="text-[11px] sm:text-sm md:text-base text-white/60 font-light max-w-lg sm:max-w-xl leading-relaxed mx-auto tracking-wide px-2"
               >
                 Software engineers &amp; system architects engineering autonomous AI models, high-performance web architectures, and enterprise cloud infrastructure.
               </motion.p>
 
               {/* Luxury Hairline Progress Indicator */}
-              <div className="w-44 sm:w-56 h-[2px] bg-white/[0.08] rounded-full overflow-hidden mt-3 shadow-inner">
+              <div className="w-36 sm:w-56 h-[2px] bg-white/[0.08] rounded-full overflow-hidden mt-2 sm:mt-3 shadow-inner">
                 <motion.div 
                   initial={{ width: "0%" }}
                   animate={{ width: "100%" }}
@@ -1360,7 +1360,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 />
               </div>
 
-              <div className="flex items-center gap-1.5 text-[9px] sm:text-[10px] text-white/35 uppercase tracking-[0.25em] font-light pt-1">
+              <div className="flex items-center gap-1.5 text-[8px] sm:text-[10px] text-white/35 uppercase tracking-[0.2em] sm:tracking-[0.25em] font-light pt-0.5">
                 <span>Revealing Profiles</span>
               </div>
             </motion.div>
@@ -1372,77 +1372,77 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.97 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center max-w-6xl w-full gap-3 md:gap-5 justify-center min-h-0 max-h-full"
+              className="flex flex-col items-center max-w-6xl w-full gap-3 sm:gap-4 md:gap-5 justify-center min-h-0 my-auto"
             >
               {/* Luxury Haute Header */}
               <div className="text-center">
                 <h2 
-                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extralight tracking-[0.22em] md:tracking-[0.32em] uppercase text-white drop-shadow-[0_4px_24px_rgba(255,255,255,0.06)] leading-tight"
+                  className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-extralight tracking-[0.18em] sm:tracking-[0.25em] md:tracking-[0.32em] uppercase text-white drop-shadow-[0_4px_24px_rgba(255,255,255,0.06)] leading-tight"
                   style={{ fontFamily: "'Rostex', sans-serif" }}
                 >
                   THE <span className="font-normal text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400">FOUNDERS</span>
                 </h2>
               </div>
 
-              <div className="grid grid-cols-12 gap-3.5 sm:gap-6 md:gap-8 items-stretch w-full px-2 py-0.5">
+              <div className="grid grid-cols-12 gap-3 sm:gap-4 md:gap-6 lg:gap-8 items-stretch w-full px-1 sm:px-2 py-0.5">
                 
                 {/* Founder 1: Aditya Patil */}
                 <div
-                  className="col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/90 via-[#0a0a10]/95 to-[#06060a]/98 backdrop-blur-2xl p-5 sm:p-7 md:p-8 rounded-2xl md:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col justify-between h-full transition-all duration-300 relative overflow-hidden group"
+                  className="col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col justify-between h-full transition-all duration-300 relative overflow-hidden group"
                 >
                   <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/[0.03] rounded-full blur-3xl pointer-events-none group-hover:bg-white/[0.06] transition-colors" />
 
                   <div className="flex flex-col flex-1">
                     {/* Status Header */}
-                    <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
-                      <span className="font-mono text-[9px] sm:text-[10px] text-white/50 tracking-widest uppercase flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
+                    <div className="flex flex-wrap items-center justify-between gap-1.5 pb-2.5 sm:pb-3 border-b border-white/[0.06]">
+                      <span className="font-mono text-[8px] sm:text-[9px] md:text-[10px] text-white/50 tracking-wider sm:tracking-widest uppercase flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)] shrink-0" />
                         LEADERSHIP 01 // CORE ARCHITECT
                       </span>
-                      <span className="text-[9px] sm:text-[10px] text-white/40 font-mono tracking-wider">Kolhapur, IN</span>
+                      <span className="text-[8px] sm:text-[9px] md:text-[10px] text-white/40 font-mono tracking-wider">Kolhapur, IN</span>
                     </div>
 
                     {/* Executive Identity */}
-                    <div className="mt-4 sm:mt-5 mb-3">
+                    <div className="mt-3 sm:mt-4 md:mt-5 mb-2 sm:mb-3">
                       <h3 
-                        className="text-xl sm:text-2xl md:text-3xl font-extralight tracking-[0.14em] uppercase text-white leading-tight"
+                        className="text-lg sm:text-2xl md:text-3xl font-extralight tracking-[0.1em] sm:tracking-[0.14em] uppercase text-white leading-tight"
                         style={{ fontFamily: "'Rostex', sans-serif" }}
                       >
                         ADITYA PATIL
                       </h3>
-                      <p className="text-xs sm:text-sm text-white/70 font-light tracking-wide mt-1">
+                      <p className="text-[11px] sm:text-xs md:text-sm text-white/70 font-light tracking-wide mt-0.5 sm:mt-1">
                         Founder &amp; Principal Systems Architect
                       </p>
                     </div>
 
                     {/* Philosophy Quote */}
-                    <div className="my-3 sm:my-4 pl-3.5 border-l-2 border-white/20 py-0.5">
-                      <p className="text-[11px] sm:text-xs text-white/80 font-light leading-relaxed italic">
+                    <div className="my-2.5 sm:my-3.5 md:my-4 pl-3 sm:pl-3.5 border-l-2 border-white/20 py-0.5">
+                      <p className="text-[10px] sm:text-xs md:text-sm text-white/80 font-light leading-relaxed italic">
                         &ldquo;We engineer complete end-to-end software — from autonomous AI models and automation to web architectures, SaaS platforms, and bespoke systems built to scale.&rdquo;
                       </p>
                     </div>
 
                     {/* Domain Matrix */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 my-2 sm:my-3 text-[10px] sm:text-xs">
-                      <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                        <span className="text-white/40 font-mono block text-[8px] sm:text-[9px] uppercase tracking-widest mb-0.5">Core Discipline</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 my-2 sm:my-3 text-[9px] sm:text-xs">
+                      <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                        <span className="text-white/40 font-mono block text-[7px] sm:text-[9px] uppercase tracking-widest mb-0.5">Core Discipline</span>
                         <span className="text-white/90 font-light">Autonomous AI &amp; Web Platforms</span>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                        <span className="text-white/40 font-mono block text-[8px] sm:text-[9px] uppercase tracking-widest mb-0.5">Flagship Systems</span>
+                      <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                        <span className="text-white/40 font-mono block text-[7px] sm:text-[9px] uppercase tracking-widest mb-0.5">Flagship Systems</span>
                         <span className="text-white/90 font-light">ClinicOS · Custom Voice Engine</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Actions Footer */}
-                  <div className="pt-4 border-t border-white/[0.06] mt-3 flex flex-wrap items-center justify-between gap-2.5">
+                  <div className="pt-3 sm:pt-4 border-t border-white/[0.06] mt-2.5 sm:mt-3 flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <a
                         href="https://github.com/axiogenai"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-3.5 py-1.5 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.2] text-white/70 hover:text-white rounded-xl flex items-center gap-1.5 font-light text-[9px] sm:text-[10px] uppercase tracking-[0.16em] transition-all duration-200"
+                        className="px-3 sm:px-3.5 py-1.5 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.2] text-white/70 hover:text-white rounded-xl flex items-center gap-1.5 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.16em] transition-all duration-200"
                       >
                         <svg viewBox="0 0 24 24" className="w-3 h-3 fill-current opacity-70"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                         <span>GitHub</span>
@@ -1450,7 +1450,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     </div>
                     <button
                       onClick={() => scrollToFrame(getSectionFrames()[4 + getProjectPagesCount()] ?? 418)}
-                      className="px-4 py-1.5 bg-white/[0.08] hover:bg-white/[0.16] text-white border border-white/[0.18] hover:border-white/[0.3] rounded-xl flex items-center gap-1.5 font-light text-[9px] sm:text-[10px] uppercase tracking-[0.18em] transition-all duration-200 cursor-pointer"
+                      className="px-3.5 sm:px-4 py-1.5 bg-white/[0.08] hover:bg-white/[0.16] text-white border border-white/[0.18] hover:border-white/[0.3] rounded-xl flex items-center gap-1.5 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.16em] sm:tracking-[0.18em] transition-all duration-200 cursor-pointer"
                     >
                       <Mail className="w-3 h-3 text-white/70" />
                       <span>Contact Directly →</span>
@@ -1460,61 +1460,61 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
                 {/* Founder 2: Aditya Minchekar */}
                 <div
-                  className="col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/90 via-[#0a0a10]/95 to-[#06060a]/98 backdrop-blur-2xl p-5 sm:p-7 md:p-8 rounded-2xl md:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col justify-between h-full transition-all duration-300 relative overflow-hidden group"
+                  className="col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col justify-between h-full transition-all duration-300 relative overflow-hidden group"
                 >
                   <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/[0.03] rounded-full blur-3xl pointer-events-none group-hover:bg-white/[0.06] transition-colors" />
 
                   <div className="flex flex-col flex-1">
                     {/* Status Header */}
-                    <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
-                      <span className="font-mono text-[9px] sm:text-[10px] text-white/50 tracking-widest uppercase flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
+                    <div className="flex flex-wrap items-center justify-between gap-1.5 pb-2.5 sm:pb-3 border-b border-white/[0.06]">
+                      <span className="font-mono text-[8px] sm:text-[9px] md:text-[10px] text-white/50 tracking-wider sm:tracking-widest uppercase flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)] shrink-0" />
                         LEADERSHIP 02 // CLOUD &amp; INFRA
                       </span>
-                      <span className="text-[9px] sm:text-[10px] text-white/40 font-mono tracking-wider">Sangli, IN</span>
+                      <span className="text-[8px] sm:text-[9px] md:text-[10px] text-white/40 font-mono tracking-wider">Sangli, IN</span>
                     </div>
 
                     {/* Executive Identity */}
-                    <div className="mt-4 sm:mt-5 mb-3">
+                    <div className="mt-3 sm:mt-4 md:mt-5 mb-2 sm:mb-3">
                       <h3 
-                        className="text-xl sm:text-2xl md:text-3xl font-extralight tracking-[0.14em] uppercase text-white leading-tight"
+                        className="text-lg sm:text-2xl md:text-3xl font-extralight tracking-[0.1em] sm:tracking-[0.14em] uppercase text-white leading-tight"
                         style={{ fontFamily: "'Rostex', sans-serif" }}
                       >
                         ADITYA MINCHEKAR
                       </h3>
-                      <p className="text-xs sm:text-sm text-white/70 font-light tracking-wide mt-1">
+                      <p className="text-[11px] sm:text-xs md:text-sm text-white/70 font-light tracking-wide mt-0.5 sm:mt-1">
                         Co-Founder &amp; Technology Lead
                       </p>
                     </div>
 
                     {/* Philosophy Quote */}
-                    <div className="my-3 sm:my-4 pl-3.5 border-l-2 border-white/20 py-0.5">
-                      <p className="text-[11px] sm:text-xs text-white/80 font-light leading-relaxed italic">
+                    <div className="my-2.5 sm:my-3.5 md:my-4 pl-3 sm:pl-3.5 border-l-2 border-white/20 py-0.5">
+                      <p className="text-[10px] sm:text-xs md:text-sm text-white/80 font-light leading-relaxed italic">
                         &ldquo;Resilient engineering demands rock-solid backends, secure multi-tenant cloud infrastructure, and distributed pipelines that run continuously without fail.&rdquo;
                       </p>
                     </div>
 
                     {/* Domain Matrix */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 my-2 sm:my-3 text-[10px] sm:text-xs">
-                      <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                        <span className="text-white/40 font-mono block text-[8px] sm:text-[9px] uppercase tracking-widest mb-0.5">Core Discipline</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 my-2 sm:my-3 text-[9px] sm:text-xs">
+                      <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                        <span className="text-white/40 font-mono block text-[7px] sm:text-[9px] uppercase tracking-widest mb-0.5">Core Discipline</span>
                         <span className="text-white/90 font-light">Cloud Architecture &amp; Scale</span>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                        <span className="text-white/40 font-mono block text-[8px] sm:text-[9px] uppercase tracking-widest mb-0.5">Core Specialization</span>
+                      <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                        <span className="text-white/40 font-mono block text-[7px] sm:text-[9px] uppercase tracking-widest mb-0.5">Core Specialization</span>
                         <span className="text-white/90 font-light">Distributed Multi-Tenant Systems</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Actions Footer */}
-                  <div className="pt-4 border-t border-white/[0.06] mt-3 flex flex-wrap items-center justify-between gap-2.5">
+                  <div className="pt-3 sm:pt-4 border-t border-white/[0.06] mt-2.5 sm:mt-3 flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <a
                         href="https://github.com/axiogenai"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-3.5 py-1.5 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.2] text-white/70 hover:text-white rounded-xl flex items-center gap-1.5 font-light text-[9px] sm:text-[10px] uppercase tracking-[0.16em] transition-all duration-200"
+                        className="px-3 sm:px-3.5 py-1.5 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.2] text-white/70 hover:text-white rounded-xl flex items-center gap-1.5 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.16em] transition-all duration-200"
                       >
                         <svg viewBox="0 0 24 24" className="w-3 h-3 fill-current opacity-70"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                         <span>GitHub</span>
@@ -1522,7 +1522,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     </div>
                     <button
                       onClick={() => scrollToFrame(getSectionFrames()[4 + getProjectPagesCount()] ?? 418)}
-                      className="px-4 py-1.5 bg-white/[0.08] hover:bg-white/[0.16] text-white border border-white/[0.18] hover:border-white/[0.3] rounded-xl flex items-center gap-1.5 font-light text-[9px] sm:text-[10px] uppercase tracking-[0.18em] transition-all duration-200 cursor-pointer"
+                      className="px-3.5 sm:px-4 py-1.5 bg-white/[0.08] hover:bg-white/[0.16] text-white border border-white/[0.18] hover:border-white/[0.3] rounded-xl flex items-center gap-1.5 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.16em] sm:tracking-[0.18em] transition-all duration-200 cursor-pointer"
                     >
                       <Mail className="w-3 h-3 text-white/70" />
                       <span>Contact Directly →</span>
