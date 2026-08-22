@@ -1393,19 +1393,17 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/[0.03] rounded-full blur-3xl pointer-events-none group-hover:bg-white/[0.06] transition-colors" />
 
                   <div className="flex flex-col flex-1">
-                    {/* Status Header */}
-                    <div className="flex flex-wrap items-center justify-between gap-1 pb-1.5 sm:pb-2.5 md:pb-3.5 border-b border-white/[0.06]">
-                      <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.12),0_2px_10px_rgba(0,0,0,0.5)]">
-                        <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2 shrink-0">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
-                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
-                        </span>
-                        <span className="font-mono text-[7.5px] sm:text-[9px] md:text-[9.5px] uppercase tracking-[0.16em] sm:tracking-[0.2em] font-light text-white/90">
-                          LEADERSHIP 01 <span className="text-white/30 font-normal">/</span> CORE ARCHITECT
+                    {/* Architectural Studio Header */}
+                    <div className="flex items-center justify-between gap-1 pb-1.5 sm:pb-2.5 md:pb-3.5 border-b border-white/[0.08]">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-[9px] sm:text-[10px] md:text-[11px] text-white/40 tracking-[0.25em] font-medium">01</span>
+                        <span className="w-2.5 h-px bg-white/20" />
+                        <span className="font-mono text-[8px] sm:text-[9px] md:text-[10px] text-white/80 uppercase tracking-[0.22em] font-light">
+                          SYSTEMS ARCHITECTURE
                         </span>
                       </div>
-                      <span className="text-[7.5px] sm:text-[9px] md:text-[10px] text-white/50 font-mono tracking-wider px-1.5 sm:px-2.5 py-0.5 rounded-full bg-white/[0.02] border border-white/[0.06]">
-                        Kolhapur, IN
+                      <span className="text-[7.5px] sm:text-[9px] md:text-[9.5px] text-white/40 font-mono tracking-widest uppercase">
+                        KOLHAPUR, IN
                       </span>
                     </div>
 
@@ -1472,19 +1470,17 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/[0.03] rounded-full blur-3xl pointer-events-none group-hover:bg-white/[0.06] transition-colors" />
 
                   <div className="flex flex-col flex-1">
-                    {/* Status Header */}
-                    <div className="flex flex-wrap items-center justify-between gap-1 pb-1.5 sm:pb-2.5 md:pb-3.5 border-b border-white/[0.06]">
-                      <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.12),0_2px_10px_rgba(0,0,0,0.5)]">
-                        <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2 shrink-0">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
-                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
-                        </span>
-                        <span className="font-mono text-[7.5px] sm:text-[9px] md:text-[9.5px] uppercase tracking-[0.16em] sm:tracking-[0.2em] font-light text-white/90">
-                          LEADERSHIP 02 <span className="text-white/30 font-normal">/</span> CLOUD &amp; INFRA
+                    {/* Architectural Studio Header */}
+                    <div className="flex items-center justify-between gap-1 pb-1.5 sm:pb-2.5 md:pb-3.5 border-b border-white/[0.08]">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-[9px] sm:text-[10px] md:text-[11px] text-white/40 tracking-[0.25em] font-medium">02</span>
+                        <span className="w-2.5 h-px bg-white/20" />
+                        <span className="font-mono text-[8px] sm:text-[9px] md:text-[10px] text-white/80 uppercase tracking-[0.22em] font-light">
+                          CLOUD &amp; INFRASTRUCTURE
                         </span>
                       </div>
-                      <span className="text-[7.5px] sm:text-[9px] md:text-[10px] text-white/50 font-mono tracking-wider px-1.5 sm:px-2.5 py-0.5 rounded-full bg-white/[0.02] border border-white/[0.06]">
-                        Sangli, IN
+                      <span className="text-[7.5px] sm:text-[9px] md:text-[9.5px] text-white/40 font-mono tracking-widest uppercase">
+                        SANGLI, IN
                       </span>
                     </div>
 
