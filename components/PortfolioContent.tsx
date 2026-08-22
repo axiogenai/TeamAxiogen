@@ -1372,120 +1372,94 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.97 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center max-w-6xl w-full gap-2.5 sm:gap-4 md:gap-5 justify-start lg:justify-center min-h-0 w-full"
+              className="flex flex-col items-center max-w-6xl w-full gap-2 sm:gap-3.5 md:gap-5 justify-start lg:justify-center min-h-0 w-full"
             >
               {/* Luxury Haute Header */}
-              <div className="text-center">
+              <div className="text-center mb-0.5 sm:mb-1">
                 <h2 
-                  className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-extralight tracking-[0.18em] sm:tracking-[0.25em] md:tracking-[0.32em] uppercase text-white drop-shadow-[0_4px_24px_rgba(255,255,255,0.06)] leading-tight"
+                  className="text-lg sm:text-2xl md:text-4xl lg:text-5xl font-extralight tracking-[0.18em] sm:tracking-[0.25em] md:tracking-[0.32em] uppercase text-white drop-shadow-[0_4px_24px_rgba(255,255,255,0.06)] leading-tight"
                   style={{ fontFamily: "'Rostex', sans-serif" }}
                 >
                   THE <span className="font-normal text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400">FOUNDERS</span>
                 </h2>
               </div>
 
-              {/* Mobile Executive Switcher (Hidden on Desktop) */}
-              <div className="flex lg:hidden items-center justify-center p-1 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl w-full max-w-[280px] mx-auto shadow-lg">
-                <button
-                  onClick={() => setFounderTab('patil')}
-                  className={`flex-1 py-1.5 px-3 rounded-full text-[9px] uppercase tracking-[0.16em] font-medium transition-all ${
-                    founderTab === 'patil'
-                      ? 'bg-white text-black font-semibold shadow-md'
-                      : 'text-white/50 hover:text-white'
-                  }`}
-                >
-                  Aditya Patil
-                </button>
-                <button
-                  onClick={() => setFounderTab('minchekar')}
-                  className={`flex-1 py-1.5 px-3 rounded-full text-[9px] uppercase tracking-[0.16em] font-medium transition-all ${
-                    founderTab === 'minchekar'
-                      ? 'bg-white text-black font-semibold shadow-md'
-                      : 'text-white/50 hover:text-white'
-                  }`}
-                >
-                  Aditya M.
-                </button>
-              </div>
-
-              <div className="grid grid-cols-12 gap-3 sm:gap-4 md:gap-6 lg:gap-8 items-stretch w-full px-2 sm:px-4 py-0.5">
+              <div className="grid grid-cols-12 gap-2 sm:gap-3.5 md:gap-6 lg:gap-8 items-stretch w-full px-1.5 sm:px-4 py-0.5">
                 
                 {/* Founder 1: Aditya Patil */}
                 <div
-                  className={`col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex-col justify-between h-full transition-all duration-300 relative overflow-hidden group ${
-                    founderTab === 'patil' ? 'flex' : 'hidden lg:flex'
-                  }`}
+                  className="col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-3 sm:p-5 md:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_15px_40px_rgba(0,0,0,0.8)] flex flex-col justify-between transition-all duration-300 relative overflow-hidden group"
                 >
                   <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/[0.03] rounded-full blur-3xl pointer-events-none group-hover:bg-white/[0.06] transition-colors" />
 
                   <div className="flex flex-col flex-1">
                     {/* Status Header */}
-                    <div className="flex flex-wrap items-center justify-between gap-1.5 pb-2.5 sm:pb-3.5 border-b border-white/[0.06]">
-                      <div className="inline-flex items-center gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.12),0_2px_10px_rgba(0,0,0,0.5)]">
-                        <span className="relative flex h-2 w-2 shrink-0">
+                    <div className="flex flex-wrap items-center justify-between gap-1 pb-1.5 sm:pb-2.5 md:pb-3.5 border-b border-white/[0.06]">
+                      <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.12),0_2px_10px_rgba(0,0,0,0.5)]">
+                        <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2 shrink-0">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
+                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
                         </span>
-                        <span className="font-mono text-[8px] sm:text-[9px] md:text-[9.5px] uppercase tracking-[0.2em] font-light text-white/90">
+                        <span className="font-mono text-[7.5px] sm:text-[9px] md:text-[9.5px] uppercase tracking-[0.16em] sm:tracking-[0.2em] font-light text-white/90">
                           LEADERSHIP 01 <span className="text-white/30 font-normal">/</span> CORE ARCHITECT
                         </span>
                       </div>
-                      <span className="text-[8px] sm:text-[9px] md:text-[10px] text-white/50 font-mono tracking-wider px-2 sm:px-2.5 py-0.5 rounded-full bg-white/[0.02] border border-white/[0.06]">
+                      <span className="text-[7.5px] sm:text-[9px] md:text-[10px] text-white/50 font-mono tracking-wider px-1.5 sm:px-2.5 py-0.5 rounded-full bg-white/[0.02] border border-white/[0.06]">
                         Kolhapur, IN
                       </span>
                     </div>
 
                     {/* Executive Identity */}
-                    <div className="mt-3 sm:mt-4 md:mt-5 mb-2 sm:mb-3">
+                    <div className="mt-1.5 sm:mt-3 md:mt-5 mb-1 sm:mb-2">
                       <h3 
-                        className="text-base sm:text-2xl md:text-3xl font-extralight tracking-[0.08em] sm:tracking-[0.14em] uppercase text-white leading-tight"
+                        className="text-sm sm:text-xl md:text-3xl font-extralight tracking-[0.08em] sm:tracking-[0.14em] uppercase text-white leading-tight"
                         style={{ fontFamily: "'Rostex', sans-serif" }}
                       >
                         ADITYA PATIL
                       </h3>
-                      <p className="text-[11px] sm:text-xs md:text-sm text-white/70 font-light tracking-wide mt-0.5 sm:mt-1">
+                      <p className="text-[9.5px] sm:text-xs md:text-sm text-white/70 font-light tracking-wide mt-0.5">
                         Founder &amp; Principal Systems Architect
                       </p>
                     </div>
 
                     {/* Philosophy Quote */}
-                    <div className="my-2 sm:my-3.5 md:my-4 pl-3 sm:pl-3.5 border-l-2 border-white/20 py-0.5">
-                      <p className="text-[10px] sm:text-xs md:text-sm text-white/80 font-light leading-relaxed italic">
+                    <div className="my-1.5 sm:my-2.5 md:my-3.5 pl-2 sm:pl-3 border-l border-white/20 py-0.5">
+                      <p className="text-[9px] sm:text-xs md:text-sm text-white/80 font-light leading-snug italic line-clamp-2 sm:line-clamp-none">
                         &ldquo;We engineer complete end-to-end software — from autonomous AI models and automation to web architectures, SaaS platforms, and bespoke systems built to scale.&rdquo;
                       </p>
                     </div>
 
                     {/* Domain Matrix */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 my-2 sm:my-3 text-[9px] sm:text-xs">
-                      <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                        <span className="text-white/40 font-mono block text-[7px] sm:text-[9px] uppercase tracking-widest mb-0.5">Core Discipline</span>
-                        <span className="text-white/90 font-light">Autonomous AI &amp; Web Platforms</span>
+                    <div className="grid grid-cols-2 gap-1 sm:gap-2 my-1 sm:my-2.5 text-[8px] sm:text-xs">
+                      <div className="p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                        <span className="text-white/40 font-mono block text-[6.5px] sm:text-[8px] md:text-[9px] uppercase tracking-wider mb-0.5">Core Discipline</span>
+                        <span className="text-white/90 font-light leading-tight block text-[8px] sm:text-[10px] md:text-xs">Autonomous AI &amp; Web Platforms</span>
                       </div>
-                      <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                        <span className="text-white/40 font-mono block text-[7px] sm:text-[9px] uppercase tracking-widest mb-0.5">Flagship Systems</span>
-                        <span className="text-white/90 font-light">ClinicOS · Custom Voice Engine</span>
+                      <div className="p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                        <span className="text-white/40 font-mono block text-[6.5px] sm:text-[8px] md:text-[9px] uppercase tracking-wider mb-0.5">Flagship Systems</span>
+                        <span className="text-white/90 font-light leading-tight block text-[8px] sm:text-[10px] md:text-xs">ClinicOS · Custom Voice Engine</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Actions Footer */}
-                  <div className="pt-3 sm:pt-4 border-t border-white/[0.06] mt-2.5 sm:mt-3 flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
+                  <div className="pt-2 sm:pt-3 md:pt-4 border-t border-white/[0.06] mt-1.5 sm:mt-2.5 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+                    <div className="flex items-center gap-1.5">
                       <a
                         href="https://github.com/axiogenai"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-3 sm:px-3.5 py-1.5 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.2] text-white/70 hover:text-white rounded-xl flex items-center gap-1.5 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.16em] transition-all duration-200"
+                        className="px-2.5 sm:px-3.5 py-1 sm:py-1.5 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.2] text-white/70 hover:text-white rounded-lg sm:rounded-xl flex items-center gap-1 font-light text-[7.5px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.14em] transition-all duration-200"
                       >
-                        <svg viewBox="0 0 24 24" className="w-3 h-3 fill-current opacity-70"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                        <svg viewBox="0 0 24 24" className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current opacity-70"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                         <span>GitHub</span>
                       </a>
                     </div>
                     <button
                       onClick={() => scrollToFrame(getSectionFrames()[4 + getProjectPagesCount()] ?? 418)}
-                      className="px-3.5 sm:px-4 py-1.5 bg-white/[0.08] hover:bg-white/[0.16] text-white border border-white/[0.18] hover:border-white/[0.3] rounded-xl flex items-center gap-1.5 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.16em] sm:tracking-[0.18em] transition-all duration-200 cursor-pointer"
+                      className="px-2.5 sm:px-4 py-1 sm:py-1.5 bg-white/[0.08] hover:bg-white/[0.16] text-white border border-white/[0.18] hover:border-white/[0.3] rounded-lg sm:rounded-xl flex items-center gap-1 font-light text-[7.5px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.14em] sm:tracking-[0.18em] transition-all duration-200 cursor-pointer"
                     >
-                      <Mail className="w-3 h-3 text-white/70" />
+                      <Mail className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white/70" />
                       <span>Contact Directly →</span>
                     </button>
                   </div>
@@ -1493,80 +1467,78 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
                 {/* Founder 2: Aditya Minchekar */}
                 <div
-                  className={`col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex-col justify-between h-full transition-all duration-300 relative overflow-hidden group ${
-                    founderTab === 'minchekar' ? 'flex' : 'hidden lg:flex'
-                  }`}
+                  className="col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-3 sm:p-5 md:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_15px_40px_rgba(0,0,0,0.8)] flex flex-col justify-between transition-all duration-300 relative overflow-hidden group"
                 >
                   <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/[0.03] rounded-full blur-3xl pointer-events-none group-hover:bg-white/[0.06] transition-colors" />
 
                   <div className="flex flex-col flex-1">
                     {/* Status Header */}
-                    <div className="flex flex-wrap items-center justify-between gap-1.5 pb-2.5 sm:pb-3.5 border-b border-white/[0.06]">
-                      <div className="inline-flex items-center gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.12),0_2px_10px_rgba(0,0,0,0.5)]">
-                        <span className="relative flex h-2 w-2 shrink-0">
+                    <div className="flex flex-wrap items-center justify-between gap-1 pb-1.5 sm:pb-2.5 md:pb-3.5 border-b border-white/[0.06]">
+                      <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.12),0_2px_10px_rgba(0,0,0,0.5)]">
+                        <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2 shrink-0">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
+                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
                         </span>
-                        <span className="font-mono text-[8px] sm:text-[9px] md:text-[9.5px] uppercase tracking-[0.2em] font-light text-white/90">
+                        <span className="font-mono text-[7.5px] sm:text-[9px] md:text-[9.5px] uppercase tracking-[0.16em] sm:tracking-[0.2em] font-light text-white/90">
                           LEADERSHIP 02 <span className="text-white/30 font-normal">/</span> CLOUD &amp; INFRA
                         </span>
                       </div>
-                      <span className="text-[8px] sm:text-[9px] md:text-[10px] text-white/50 font-mono tracking-wider px-2 sm:px-2.5 py-0.5 rounded-full bg-white/[0.02] border border-white/[0.06]">
+                      <span className="text-[7.5px] sm:text-[9px] md:text-[10px] text-white/50 font-mono tracking-wider px-1.5 sm:px-2.5 py-0.5 rounded-full bg-white/[0.02] border border-white/[0.06]">
                         Sangli, IN
                       </span>
                     </div>
 
                     {/* Executive Identity */}
-                    <div className="mt-3 sm:mt-4 md:mt-5 mb-2 sm:mb-3">
+                    <div className="mt-1.5 sm:mt-3 md:mt-5 mb-1 sm:mb-2">
                       <h3 
-                        className="text-base sm:text-2xl md:text-3xl font-extralight tracking-[0.08em] sm:tracking-[0.14em] uppercase text-white leading-tight"
+                        className="text-sm sm:text-xl md:text-3xl font-extralight tracking-[0.08em] sm:tracking-[0.14em] uppercase text-white leading-tight"
                         style={{ fontFamily: "'Rostex', sans-serif" }}
                       >
                         ADITYA MINCHEKAR
                       </h3>
-                      <p className="text-[11px] sm:text-xs md:text-sm text-white/70 font-light tracking-wide mt-0.5 sm:mt-1">
+                      <p className="text-[9.5px] sm:text-xs md:text-sm text-white/70 font-light tracking-wide mt-0.5">
                         Co-Founder &amp; Technology Lead
                       </p>
                     </div>
 
                     {/* Philosophy Quote */}
-                    <div className="my-2 sm:my-3.5 md:my-4 pl-3 sm:pl-3.5 border-l-2 border-white/20 py-0.5">
-                      <p className="text-[10px] sm:text-xs md:text-sm text-white/80 font-light leading-relaxed italic">
+                    <div className="my-1.5 sm:my-2.5 md:my-3.5 pl-2 sm:pl-3 border-l border-white/20 py-0.5">
+                      <p className="text-[9px] sm:text-xs md:text-sm text-white/80 font-light leading-snug italic line-clamp-2 sm:line-clamp-none">
                         &ldquo;Resilient engineering demands rock-solid backends, secure multi-tenant cloud infrastructure, and distributed pipelines that run continuously without fail.&rdquo;
                       </p>
                     </div>
 
                     {/* Domain Matrix */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 my-2 sm:my-3 text-[9px] sm:text-xs">
-                      <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                        <span className="text-white/40 font-mono block text-[7px] sm:text-[9px] uppercase tracking-widest mb-0.5">Core Discipline</span>
-                        <span className="text-white/90 font-light">Cloud Architecture &amp; Scale</span>
+                    <div className="grid grid-cols-2 gap-1 sm:gap-2 my-1 sm:my-2.5 text-[8px] sm:text-xs">
+                      <div className="p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                        <span className="text-white/40 font-mono block text-[6.5px] sm:text-[8px] md:text-[9px] uppercase tracking-wider mb-0.5">Core Discipline</span>
+                        <span className="text-white/90 font-light leading-tight block text-[8px] sm:text-[10px] md:text-xs">Cloud Architecture &amp; Scale</span>
                       </div>
-                      <div className="p-2 sm:p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                        <span className="text-white/40 font-mono block text-[7px] sm:text-[9px] uppercase tracking-widest mb-0.5">Core Specialization</span>
-                        <span className="text-white/90 font-light">Distributed Multi-Tenant Systems</span>
+                      <div className="p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                        <span className="text-white/40 font-mono block text-[6.5px] sm:text-[8px] md:text-[9px] uppercase tracking-wider mb-0.5">Core Specialization</span>
+                        <span className="text-white/90 font-light leading-tight block text-[8px] sm:text-[10px] md:text-xs">Distributed Multi-Tenant Systems</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Actions Footer */}
-                  <div className="pt-3 sm:pt-4 border-t border-white/[0.06] mt-2.5 sm:mt-3 flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
+                  <div className="pt-2 sm:pt-3 md:pt-4 border-t border-white/[0.06] mt-1.5 sm:mt-2.5 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+                    <div className="flex items-center gap-1.5">
                       <a
                         href="https://github.com/axiogenai"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-3 sm:px-3.5 py-1.5 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.2] text-white/70 hover:text-white rounded-xl flex items-center gap-1.5 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.16em] transition-all duration-200"
+                        className="px-2.5 sm:px-3.5 py-1 sm:py-1.5 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.2] text-white/70 hover:text-white rounded-lg sm:rounded-xl flex items-center gap-1 font-light text-[7.5px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.14em] transition-all duration-200"
                       >
-                        <svg viewBox="0 0 24 24" className="w-3 h-3 fill-current opacity-70"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                        <svg viewBox="0 0 24 24" className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current opacity-70"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                         <span>GitHub</span>
                       </a>
                     </div>
                     <button
                       onClick={() => scrollToFrame(getSectionFrames()[4 + getProjectPagesCount()] ?? 418)}
-                      className="px-3.5 sm:px-4 py-1.5 bg-white/[0.08] hover:bg-white/[0.16] text-white border border-white/[0.18] hover:border-white/[0.3] rounded-xl flex items-center gap-1.5 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.16em] sm:tracking-[0.18em] transition-all duration-200 cursor-pointer"
+                      className="px-2.5 sm:px-4 py-1 sm:py-1.5 bg-white/[0.08] hover:bg-white/[0.16] text-white border border-white/[0.18] hover:border-white/[0.3] rounded-lg sm:rounded-xl flex items-center gap-1 font-light text-[7.5px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.14em] sm:tracking-[0.18em] transition-all duration-200 cursor-pointer"
                     >
-                      <Mail className="w-3 h-3 text-white/70" />
+                      <Mail className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white/70" />
                       <span>Contact Directly →</span>
                     </button>
                   </div>
