@@ -1388,35 +1388,34 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 
                 {/* Founder 1: Aditya Patil */}
                 <div
-                  className="col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-3 sm:p-5 md:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_15px_40px_rgba(0,0,0,0.8)] flex flex-col justify-between transition-all duration-300 relative overflow-hidden group"
+                  className="col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-3.5 sm:p-5 md:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_15px_40px_rgba(0,0,0,0.8)] flex flex-col justify-between transition-all duration-300 relative overflow-hidden group"
                 >
                   <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/[0.03] rounded-full blur-3xl pointer-events-none group-hover:bg-white/[0.06] transition-colors" />
 
                   <div className="flex flex-col flex-1">
-                    {/* Architectural Studio Header */}
-                    <div className="flex items-center justify-between gap-1 pb-1.5 sm:pb-2.5 md:pb-3.5 border-b border-white/[0.08]">
-                      <span className="font-mono text-[9px] sm:text-[10px] md:text-[11px] text-white/40 tracking-[0.25em] font-medium">01</span>
+                    {/* Location Header */}
+                    <div className="flex items-center justify-end pb-1.5 sm:pb-2.5 border-b border-white/[0.06]">
                       <span className="text-[7.5px] sm:text-[9px] md:text-[9.5px] text-white/40 font-mono tracking-widest uppercase">
                         KOLHAPUR, IN
                       </span>
                     </div>
 
                     {/* Executive Identity */}
-                    <div className="mt-1.5 sm:mt-3 md:mt-5 mb-1 sm:mb-2">
+                    <div className="mt-1.5 sm:mt-3 md:mt-4 mb-1 sm:mb-2">
                       <h3 
-                        className="text-sm sm:text-xl md:text-3xl font-extralight tracking-[0.08em] sm:tracking-[0.14em] uppercase text-white leading-tight"
+                        className="text-[11.5px] min-[360px]:text-[13px] min-[400px]:text-sm sm:text-xl md:text-2xl lg:text-3xl font-extralight tracking-[0.03em] min-[360px]:tracking-[0.06em] sm:tracking-[0.12em] uppercase text-white leading-tight whitespace-nowrap"
                         style={{ fontFamily: "'Rostex', sans-serif" }}
                       >
                         ADITYA PATIL
                       </h3>
-                      <p className="text-[9.5px] sm:text-xs md:text-sm text-white/70 font-light tracking-wide mt-0.5">
+                      <p className="text-[9px] sm:text-xs md:text-sm text-white/70 font-light tracking-wide mt-0.5">
                         Founder &amp; Principal Systems Architect
                       </p>
                     </div>
 
                     {/* Philosophy Quote */}
                     <div className="my-1.5 sm:my-2.5 md:my-3.5 pl-2 sm:pl-3 border-l border-white/20 py-0.5">
-                      <p className="text-[9px] sm:text-xs md:text-sm text-white/80 font-light leading-snug italic line-clamp-2 sm:line-clamp-none">
+                      <p className="text-[8.5px] sm:text-xs md:text-sm text-white/80 font-light leading-snug italic line-clamp-2 sm:line-clamp-none">
                         &ldquo;We engineer complete end-to-end software — from autonomous AI models and automation to web architectures, SaaS platforms, and bespoke systems built to scale.&rdquo;
                       </p>
                     </div>
@@ -1459,35 +1458,34 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
                 {/* Founder 2: Aditya Minchekar */}
                 <div
-                  className="col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-3 sm:p-5 md:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_15px_40px_rgba(0,0,0,0.8)] flex flex-col justify-between transition-all duration-300 relative overflow-hidden group"
+                  className="col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-3.5 sm:p-5 md:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_15px_40px_rgba(0,0,0,0.8)] flex flex-col justify-between transition-all duration-300 relative overflow-hidden group"
                 >
                   <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/[0.03] rounded-full blur-3xl pointer-events-none group-hover:bg-white/[0.06] transition-colors" />
 
                   <div className="flex flex-col flex-1">
-                    {/* Architectural Studio Header */}
-                    <div className="flex items-center justify-between gap-1 pb-1.5 sm:pb-2.5 md:pb-3.5 border-b border-white/[0.08]">
-                      <span className="font-mono text-[9px] sm:text-[10px] md:text-[11px] text-white/40 tracking-[0.25em] font-medium">02</span>
+                    {/* Location Header */}
+                    <div className="flex items-center justify-end pb-1.5 sm:pb-2.5 border-b border-white/[0.06]">
                       <span className="text-[7.5px] sm:text-[9px] md:text-[9.5px] text-white/40 font-mono tracking-widest uppercase">
                         SANGLI, IN
                       </span>
                     </div>
 
                     {/* Executive Identity */}
-                    <div className="mt-1.5 sm:mt-3 md:mt-5 mb-1 sm:mb-2">
+                    <div className="mt-1.5 sm:mt-3 md:mt-4 mb-1 sm:mb-2">
                       <h3 
-                        className="text-sm sm:text-xl md:text-3xl font-extralight tracking-[0.08em] sm:tracking-[0.14em] uppercase text-white leading-tight"
+                        className="text-[10.5px] min-[360px]:text-[12px] min-[400px]:text-sm sm:text-xl md:text-2xl lg:text-3xl font-extralight tracking-[0.02em] min-[360px]:tracking-[0.05em] sm:tracking-[0.12em] uppercase text-white leading-tight whitespace-nowrap"
                         style={{ fontFamily: "'Rostex', sans-serif" }}
                       >
                         ADITYA MINCHEKAR
                       </h3>
-                      <p className="text-[9.5px] sm:text-xs md:text-sm text-white/70 font-light tracking-wide mt-0.5">
+                      <p className="text-[9px] sm:text-xs md:text-sm text-white/70 font-light tracking-wide mt-0.5">
                         Co-Founder &amp; Technology Lead
                       </p>
                     </div>
 
                     {/* Philosophy Quote */}
                     <div className="my-1.5 sm:my-2.5 md:my-3.5 pl-2 sm:pl-3 border-l border-white/20 py-0.5">
-                      <p className="text-[9px] sm:text-xs md:text-sm text-white/80 font-light leading-snug italic line-clamp-2 sm:line-clamp-none">
+                      <p className="text-[8.5px] sm:text-xs md:text-sm text-white/80 font-light leading-snug italic line-clamp-2 sm:line-clamp-none">
                         &ldquo;Resilient engineering demands rock-solid backends, secure multi-tenant cloud infrastructure, and distributed pipelines that run continuously without fail.&rdquo;
                       </p>
                     </div>
