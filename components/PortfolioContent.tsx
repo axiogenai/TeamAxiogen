@@ -1397,8 +1397,21 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     </div>
                     
                     <div className="flex items-center gap-2.5 sm:gap-3.5 mb-2 sm:mb-3">
-                      <div className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-gradient-to-br from-white/[0.14] via-white/[0.05] to-transparent border border-white/[0.14] flex items-center justify-center text-[11px] sm:text-sm md:text-base font-bold text-white shadow-xl shrink-0 group-hover:border-white/30 transition-colors">
-                        AP
+                      {/* AP Luxury Monogram Emblem */}
+                      <div className="relative shrink-0 p-0.5 rounded-2xl bg-gradient-to-b from-white/25 via-white/[0.08] to-transparent shadow-[0_10px_30px_rgba(0,0,0,0.7)] group/avatar">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-[14px] md:rounded-[18px] bg-[#08080e] flex items-center justify-center relative overflow-hidden transition-all duration-300 group-hover/avatar:scale-[1.02]">
+                          <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.08] via-transparent to-white/[0.03] pointer-events-none" />
+                          <div className="absolute -top-6 -right-6 w-12 h-12 bg-white/[0.08] rounded-full blur-md pointer-events-none" />
+                          
+                          <span 
+                            className="text-xs sm:text-sm md:text-base font-extralight tracking-[0.16em] text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400 select-none pl-[0.16em] z-10"
+                            style={{ fontFamily: "'Rostex', sans-serif" }}
+                          >
+                            AP
+                          </span>
+                          
+                          <div className="absolute inset-0 rounded-[14px] md:rounded-[18px] border border-white/[0.12] pointer-events-none group-hover/avatar:border-white/[0.25] transition-colors" />
+                        </div>
                       </div>
                       <div>
                         <h3 className="text-sm sm:text-xl md:text-2xl font-light tracking-[0.12em] uppercase leading-none text-white" style={{ fontFamily: "'Rostex', sans-serif" }}>
@@ -1456,8 +1469,21 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     </div>
                     
                     <div className="flex items-center gap-2.5 sm:gap-3.5 mb-2 sm:mb-3">
-                      <div className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-gradient-to-br from-white/[0.14] via-white/[0.05] to-transparent border border-white/[0.14] flex items-center justify-center text-[11px] sm:text-sm md:text-base font-bold text-white shadow-xl shrink-0 group-hover:border-white/30 transition-colors">
-                        AM
+                      {/* AM Luxury Monogram Emblem */}
+                      <div className="relative shrink-0 p-0.5 rounded-2xl bg-gradient-to-b from-white/25 via-white/[0.08] to-transparent shadow-[0_10px_30px_rgba(0,0,0,0.7)] group/avatar">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-[14px] md:rounded-[18px] bg-[#08080e] flex items-center justify-center relative overflow-hidden transition-all duration-300 group-hover/avatar:scale-[1.02]">
+                          <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.08] via-transparent to-white/[0.03] pointer-events-none" />
+                          <div className="absolute -top-6 -right-6 w-12 h-12 bg-white/[0.08] rounded-full blur-md pointer-events-none" />
+                          
+                          <span 
+                            className="text-xs sm:text-sm md:text-base font-extralight tracking-[0.16em] text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400 select-none pl-[0.16em] z-10"
+                            style={{ fontFamily: "'Rostex', sans-serif" }}
+                          >
+                            AM
+                          </span>
+                          
+                          <div className="absolute inset-0 rounded-[14px] md:rounded-[18px] border border-white/[0.12] pointer-events-none group-hover/avatar:border-white/[0.25] transition-colors" />
+                        </div>
                       </div>
                       <div>
                         <h3 className="text-sm sm:text-xl md:text-2xl font-light tracking-[0.12em] uppercase leading-none text-white" style={{ fontFamily: "'Rostex', sans-serif" }}>
