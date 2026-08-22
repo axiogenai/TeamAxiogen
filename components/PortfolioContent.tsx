@@ -1395,13 +1395,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   <div className="flex flex-col flex-1">
                     {/* Architectural Studio Header */}
                     <div className="flex items-center justify-between gap-1 pb-1.5 sm:pb-2.5 md:pb-3.5 border-b border-white/[0.08]">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-[9px] sm:text-[10px] md:text-[11px] text-white/40 tracking-[0.25em] font-medium">01</span>
-                        <span className="w-2.5 h-px bg-white/20" />
-                        <span className="font-mono text-[8px] sm:text-[9px] md:text-[10px] text-white/80 uppercase tracking-[0.22em] font-light">
-                          SYSTEMS ARCHITECTURE
-                        </span>
-                      </div>
+                      <span className="font-mono text-[9px] sm:text-[10px] md:text-[11px] text-white/40 tracking-[0.25em] font-medium">01</span>
                       <span className="text-[7.5px] sm:text-[9px] md:text-[9.5px] text-white/40 font-mono tracking-widest uppercase">
                         KOLHAPUR, IN
                       </span>
@@ -1472,13 +1466,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   <div className="flex flex-col flex-1">
                     {/* Architectural Studio Header */}
                     <div className="flex items-center justify-between gap-1 pb-1.5 sm:pb-2.5 md:pb-3.5 border-b border-white/[0.08]">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-[9px] sm:text-[10px] md:text-[11px] text-white/40 tracking-[0.25em] font-medium">02</span>
-                        <span className="w-2.5 h-px bg-white/20" />
-                        <span className="font-mono text-[8px] sm:text-[9px] md:text-[10px] text-white/80 uppercase tracking-[0.22em] font-light">
-                          CLOUD &amp; INFRASTRUCTURE
-                        </span>
-                      </div>
+                      <span className="font-mono text-[9px] sm:text-[10px] md:text-[11px] text-white/40 tracking-[0.25em] font-medium">02</span>
                       <span className="text-[7.5px] sm:text-[9px] md:text-[9.5px] text-white/40 font-mono tracking-widest uppercase">
                         SANGLI, IN
                       </span>
