@@ -1420,12 +1420,19 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
                   <div className="flex flex-col flex-1">
                     {/* Status Header */}
-                    <div className="flex flex-wrap items-center justify-between gap-1.5 pb-2 sm:pb-3 border-b border-white/[0.06]">
-                      <span className="font-mono text-[8px] sm:text-[9px] md:text-[10px] text-white/50 tracking-wider sm:tracking-widest uppercase flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)] shrink-0" />
-                        LEADERSHIP 01 // CORE ARCHITECT
+                    <div className="flex flex-wrap items-center justify-between gap-1.5 pb-2.5 sm:pb-3.5 border-b border-white/[0.06]">
+                      <div className="inline-flex items-center gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.12),0_2px_10px_rgba(0,0,0,0.5)]">
+                        <span className="relative flex h-2 w-2 shrink-0">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
+                        </span>
+                        <span className="font-mono text-[8px] sm:text-[9px] md:text-[9.5px] uppercase tracking-[0.2em] font-light text-white/90">
+                          LEADERSHIP 01 <span className="text-white/30 font-normal">/</span> CORE ARCHITECT
+                        </span>
+                      </div>
+                      <span className="text-[8px] sm:text-[9px] md:text-[10px] text-white/50 font-mono tracking-wider px-2 sm:px-2.5 py-0.5 rounded-full bg-white/[0.02] border border-white/[0.06]">
+                        Kolhapur, IN
                       </span>
-                      <span className="text-[8px] sm:text-[9px] md:text-[10px] text-white/40 font-mono tracking-wider">Kolhapur, IN</span>
                     </div>
 
                     {/* Executive Identity */}
@@ -1494,12 +1501,19 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
                   <div className="flex flex-col flex-1">
                     {/* Status Header */}
-                    <div className="flex flex-wrap items-center justify-between gap-1.5 pb-2 sm:pb-3 border-b border-white/[0.06]">
-                      <span className="font-mono text-[8px] sm:text-[9px] md:text-[10px] text-white/50 tracking-wider sm:tracking-widest uppercase flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)] shrink-0" />
-                        LEADERSHIP 02 // CLOUD &amp; INFRA
+                    <div className="flex flex-wrap items-center justify-between gap-1.5 pb-2.5 sm:pb-3.5 border-b border-white/[0.06]">
+                      <div className="inline-flex items-center gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.12),0_2px_10px_rgba(0,0,0,0.5)]">
+                        <span className="relative flex h-2 w-2 shrink-0">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
+                        </span>
+                        <span className="font-mono text-[8px] sm:text-[9px] md:text-[9.5px] uppercase tracking-[0.2em] font-light text-white/90">
+                          LEADERSHIP 02 <span className="text-white/30 font-normal">/</span> CLOUD &amp; INFRA
+                        </span>
+                      </div>
+                      <span className="text-[8px] sm:text-[9px] md:text-[10px] text-white/50 font-mono tracking-wider px-2 sm:px-2.5 py-0.5 rounded-full bg-white/[0.02] border border-white/[0.06]">
+                        Sangli, IN
                       </span>
-                      <span className="text-[8px] sm:text-[9px] md:text-[10px] text-white/40 font-mono tracking-wider">Sangli, IN</span>
                     </div>
 
                     {/* Executive Identity */}
