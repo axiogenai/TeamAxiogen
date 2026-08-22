@@ -1427,8 +1427,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                         <span className="text-white/90 font-light leading-tight block text-[8px] sm:text-[10px] md:text-xs">Autonomous AI &amp; Web Platforms</span>
                       </div>
                       <div className="p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                        <span className="text-white/40 font-mono block text-[6.5px] sm:text-[8px] md:text-[9px] uppercase tracking-wider mb-0.5">Flagship Systems</span>
-                        <span className="text-white/90 font-light leading-tight block text-[8px] sm:text-[10px] md:text-xs">ClinicOS · Custom Voice Engine</span>
+                        <span className="text-white/40 font-mono block text-[6.5px] sm:text-[8px] md:text-[9px] uppercase tracking-wider mb-0.5">Core Specialization</span>
+                        <span className="text-white/90 font-light leading-tight block text-[8px] sm:text-[10px] md:text-xs">Full-Stack AI &amp; Product Architecture</span>
                       </div>
                     </div>
                   </div>
