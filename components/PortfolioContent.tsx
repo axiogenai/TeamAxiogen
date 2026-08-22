@@ -1372,7 +1372,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.97 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center max-w-6xl w-full gap-3 sm:gap-4 md:gap-5 justify-center min-h-0 my-auto"
+              className="flex flex-col items-center max-w-6xl w-full gap-2.5 sm:gap-4 md:gap-5 justify-start lg:justify-center min-h-0 w-full"
             >
               {/* Luxury Haute Header */}
               <div className="text-center">
@@ -1384,17 +1384,43 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 </h2>
               </div>
 
-              <div className="grid grid-cols-12 gap-3 sm:gap-4 md:gap-6 lg:gap-8 items-stretch w-full px-1 sm:px-2 py-0.5">
+              {/* Mobile Executive Switcher (Hidden on Desktop) */}
+              <div className="flex lg:hidden items-center justify-center p-1 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl w-full max-w-[280px] mx-auto shadow-lg">
+                <button
+                  onClick={() => setFounderTab('patil')}
+                  className={`flex-1 py-1.5 px-3 rounded-full text-[9px] uppercase tracking-[0.16em] font-medium transition-all ${
+                    founderTab === 'patil'
+                      ? 'bg-white text-black font-semibold shadow-md'
+                      : 'text-white/50 hover:text-white'
+                  }`}
+                >
+                  Aditya Patil
+                </button>
+                <button
+                  onClick={() => setFounderTab('minchekar')}
+                  className={`flex-1 py-1.5 px-3 rounded-full text-[9px] uppercase tracking-[0.16em] font-medium transition-all ${
+                    founderTab === 'minchekar'
+                      ? 'bg-white text-black font-semibold shadow-md'
+                      : 'text-white/50 hover:text-white'
+                  }`}
+                >
+                  Aditya M.
+                </button>
+              </div>
+
+              <div className="grid grid-cols-12 gap-3 sm:gap-4 md:gap-6 lg:gap-8 items-stretch w-full px-2 sm:px-4 py-0.5">
                 
                 {/* Founder 1: Aditya Patil */}
                 <div
-                  className="col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col justify-between h-full transition-all duration-300 relative overflow-hidden group"
+                  className={`col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex-col justify-between h-full transition-all duration-300 relative overflow-hidden group ${
+                    founderTab === 'patil' ? 'flex' : 'hidden lg:flex'
+                  }`}
                 >
                   <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/[0.03] rounded-full blur-3xl pointer-events-none group-hover:bg-white/[0.06] transition-colors" />
 
                   <div className="flex flex-col flex-1">
                     {/* Status Header */}
-                    <div className="flex flex-wrap items-center justify-between gap-1.5 pb-2.5 sm:pb-3 border-b border-white/[0.06]">
+                    <div className="flex flex-wrap items-center justify-between gap-1.5 pb-2 sm:pb-3 border-b border-white/[0.06]">
                       <span className="font-mono text-[8px] sm:text-[9px] md:text-[10px] text-white/50 tracking-wider sm:tracking-widest uppercase flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)] shrink-0" />
                         LEADERSHIP 01 // CORE ARCHITECT
@@ -1405,7 +1431,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     {/* Executive Identity */}
                     <div className="mt-3 sm:mt-4 md:mt-5 mb-2 sm:mb-3">
                       <h3 
-                        className="text-lg sm:text-2xl md:text-3xl font-extralight tracking-[0.1em] sm:tracking-[0.14em] uppercase text-white leading-tight"
+                        className="text-base sm:text-2xl md:text-3xl font-extralight tracking-[0.08em] sm:tracking-[0.14em] uppercase text-white leading-tight"
                         style={{ fontFamily: "'Rostex', sans-serif" }}
                       >
                         ADITYA PATIL
@@ -1416,7 +1442,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     </div>
 
                     {/* Philosophy Quote */}
-                    <div className="my-2.5 sm:my-3.5 md:my-4 pl-3 sm:pl-3.5 border-l-2 border-white/20 py-0.5">
+                    <div className="my-2 sm:my-3.5 md:my-4 pl-3 sm:pl-3.5 border-l-2 border-white/20 py-0.5">
                       <p className="text-[10px] sm:text-xs md:text-sm text-white/80 font-light leading-relaxed italic">
                         &ldquo;We engineer complete end-to-end software — from autonomous AI models and automation to web architectures, SaaS platforms, and bespoke systems built to scale.&rdquo;
                       </p>
@@ -1460,13 +1486,15 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
                 {/* Founder 2: Aditya Minchekar */}
                 <div
-                  className="col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col justify-between h-full transition-all duration-300 relative overflow-hidden group"
+                  className={`col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex-col justify-between h-full transition-all duration-300 relative overflow-hidden group ${
+                    founderTab === 'minchekar' ? 'flex' : 'hidden lg:flex'
+                  }`}
                 >
                   <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/[0.03] rounded-full blur-3xl pointer-events-none group-hover:bg-white/[0.06] transition-colors" />
 
                   <div className="flex flex-col flex-1">
                     {/* Status Header */}
-                    <div className="flex flex-wrap items-center justify-between gap-1.5 pb-2.5 sm:pb-3 border-b border-white/[0.06]">
+                    <div className="flex flex-wrap items-center justify-between gap-1.5 pb-2 sm:pb-3 border-b border-white/[0.06]">
                       <span className="font-mono text-[8px] sm:text-[9px] md:text-[10px] text-white/50 tracking-wider sm:tracking-widest uppercase flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)] shrink-0" />
                         LEADERSHIP 02 // CLOUD &amp; INFRA
@@ -1477,7 +1505,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     {/* Executive Identity */}
                     <div className="mt-3 sm:mt-4 md:mt-5 mb-2 sm:mb-3">
                       <h3 
-                        className="text-lg sm:text-2xl md:text-3xl font-extralight tracking-[0.1em] sm:tracking-[0.14em] uppercase text-white leading-tight"
+                        className="text-base sm:text-2xl md:text-3xl font-extralight tracking-[0.08em] sm:tracking-[0.14em] uppercase text-white leading-tight"
                         style={{ fontFamily: "'Rostex', sans-serif" }}
                       >
                         ADITYA MINCHEKAR
@@ -1488,7 +1516,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     </div>
 
                     {/* Philosophy Quote */}
-                    <div className="my-2.5 sm:my-3.5 md:my-4 pl-3 sm:pl-3.5 border-l-2 border-white/20 py-0.5">
+                    <div className="my-2 sm:my-3.5 md:my-4 pl-3 sm:pl-3.5 border-l-2 border-white/20 py-0.5">
                       <p className="text-[10px] sm:text-xs md:text-sm text-white/80 font-light leading-relaxed italic">
                         &ldquo;Resilient engineering demands rock-solid backends, secure multi-tenant cloud infrastructure, and distributed pipelines that run continuously without fail.&rdquo;
                       </p>
