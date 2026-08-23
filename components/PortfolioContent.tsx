@@ -1327,10 +1327,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 className="space-y-1 sm:space-y-2"
               >
                 <h2 
-                  className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-extralight tracking-[0.18em] sm:tracking-[0.25em] md:tracking-[0.35em] text-white/80 drop-shadow-[0_10px_40px_rgba(0,0,0,0.8)] uppercase leading-none"
+                  className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-extralight tracking-[0.18em] sm:tracking-[0.25em] md:tracking-[0.35em] text-white/80 drop-shadow-[0_10px_40px_rgba(0,0,0,0.8)] uppercase leading-none inline-flex items-center justify-center gap-3 sm:gap-4"
                   style={{ fontFamily: "'Rostex', sans-serif" }}
                 >
-                  MEET OUR
+                  <span>MEET</span>
+                  <span>OUR</span>
                 </h2>
                 <h2 
                   className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-normal tracking-[0.18em] sm:tracking-[0.25em] md:tracking-[0.35em] text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-400 drop-shadow-[0_0_30px_rgba(255,255,255,0.15)] uppercase leading-none"
@@ -1377,10 +1378,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               {/* Luxury Haute Header */}
               <div className="text-center mb-1 sm:mb-2">
                 <h2 
-                  className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-extralight tracking-[0.18em] sm:tracking-[0.25em] md:tracking-[0.32em] uppercase text-white drop-shadow-[0_4px_24px_rgba(255,255,255,0.06)] leading-tight"
+                  className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-extralight tracking-[0.18em] sm:tracking-[0.25em] md:tracking-[0.32em] uppercase text-white drop-shadow-[0_4px_24px_rgba(255,255,255,0.06)] leading-tight inline-flex items-center justify-center gap-2.5 sm:gap-3.5"
                   style={{ fontFamily: "'Rostex', sans-serif" }}
                 >
-                  THE <span className="font-normal text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400">FOUNDERS</span>
+                  <span>THE</span>
+                  <span className="font-normal text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400">FOUNDERS</span>
                 </h2>
               </div>
 
@@ -1403,10 +1405,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     {/* Executive Identity */}
                     <div className="mt-2 sm:mt-3 md:mt-4 mb-1.5 sm:mb-2">
                       <h3 
-                        className="text-[12px] min-[360px]:text-[13.5px] min-[400px]:text-sm sm:text-xl md:text-2xl lg:text-3xl font-extralight tracking-[0.03em] min-[360px]:tracking-[0.06em] sm:tracking-[0.12em] uppercase text-white leading-tight whitespace-nowrap"
+                        className="text-[12px] min-[360px]:text-[13.5px] min-[400px]:text-sm sm:text-xl md:text-2xl lg:text-3xl font-extralight tracking-[0.03em] min-[360px]:tracking-[0.06em] sm:tracking-[0.12em] uppercase text-white leading-tight whitespace-nowrap inline-flex items-center gap-2 sm:gap-3"
                         style={{ fontFamily: "'Rostex', sans-serif" }}
                       >
-                        ADITYA PATIL
+                        <span>ADITYA</span>
+                        <span>PATIL</span>
                       </h3>
                       <p className="text-[9.5px] sm:text-xs md:text-sm text-white/70 font-light tracking-wide mt-0.5">
                         Founder &amp; Principal Systems Architect
@@ -1473,10 +1476,11 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     {/* Executive Identity */}
                     <div className="mt-2 sm:mt-3 md:mt-4 mb-1.5 sm:mb-2">
                       <h3 
-                        className="text-[11px] min-[360px]:text-[12.5px] min-[400px]:text-sm sm:text-xl md:text-2xl lg:text-3xl font-extralight tracking-[0.02em] min-[360px]:tracking-[0.05em] sm:tracking-[0.12em] uppercase text-white leading-tight whitespace-nowrap"
+                        className="text-[11px] min-[360px]:text-[12.5px] min-[400px]:text-sm sm:text-xl md:text-2xl lg:text-3xl font-extralight tracking-[0.02em] min-[360px]:tracking-[0.05em] sm:tracking-[0.12em] uppercase text-white leading-tight whitespace-nowrap inline-flex items-center gap-1.5 min-[360px]:gap-2 sm:gap-3"
                         style={{ fontFamily: "'Rostex', sans-serif" }}
                       >
-                        ADITYA MINCHEKAR
+                        <span>ADITYA</span>
+                        <span>MINCHEKAR</span>
                       </h3>
                       <p className="text-[9.5px] sm:text-xs md:text-sm text-white/70 font-light tracking-wide mt-0.5">
                         Co-Founder &amp; Technology Lead

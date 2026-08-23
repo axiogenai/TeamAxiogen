@@ -137,10 +137,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
             initial={{ x: -40 }}
             animate={{ x: showText ? 0 : -40 }}
             transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-            className="text-white font-extralight tracking-[0.16em] sm:tracking-[0.25em] md:tracking-[0.35em] text-sm sm:text-lg md:text-2xl mb-1 mr-[-0.16em] sm:mr-[-0.25em] md:mr-[-0.35em] text-center"
+            className="text-white font-extralight tracking-[0.16em] sm:tracking-[0.25em] md:tracking-[0.35em] text-sm sm:text-lg md:text-2xl mb-1 mr-[-0.16em] sm:mr-[-0.25em] md:mr-[-0.35em] text-center inline-flex items-center justify-center gap-2 sm:gap-3"
             style={{ fontFamily: "'Rostex', sans-serif" }}
           >
-            {brandName}
+            <span>TEAM</span>
+            <span>AXIOGEN</span>
           </motion.h1>
 
           {/* Animated Horizontal Divider Line */}
