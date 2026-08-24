@@ -194,14 +194,23 @@ const SkillIcon = ({ name }: { name: string }) => {
   }
 };
 
-const fallbackProjects = [
+interface ProjectItem {
+  name: string;
+  category: string;
+  year: string;
+  desc: string;
+  tech: string[];
+  link?: string;
+  preview: string;
+}
+
+const fallbackProjects: ProjectItem[] = [
   {
     name: 'Axiogen AI',
     category: 'Artificial Intelligence',
     year: '2026',
     desc: 'Core neural network training workspace powering predictive analytics and cognitive assistant agents.',
     tech: ['Python', 'FastAPI', 'PyTorch', 'Docker'],
-    link: '#',
     preview: 'from-purple-600 to-indigo-600'
   },
   {
@@ -226,7 +235,6 @@ const fallbackProjects = [
     year: '2025',
     desc: 'High-performance cryptographic sandbox tool for generating, mining, and auditing distributed chains.',
     tech: ['TypeScript', 'Node.js', 'Framer Motion', 'TailwindCSS'],
-    link: '#',
     preview: 'from-pink-600 to-rose-600'
   },
   {
@@ -235,7 +243,6 @@ const fallbackProjects = [
     year: '2025',
     desc: 'Advanced academic accreditation suite streamlining documentation, criteria metrics, and reporting.',
     tech: ['Next.js', 'TypeScript', 'Prisma ORM', 'PostgreSQL'],
-    link: '#',
     preview: 'from-teal-600 to-emerald-600'
   },
   {
@@ -244,7 +251,6 @@ const fallbackProjects = [
     year: '2025',
     desc: 'Active session protection agent intercepting hijack attempts and managing token rotation in real-time.',
     tech: ['JavaScript', 'Express', 'JWT Security', 'TailwindCSS'],
-    link: '#',
     preview: 'from-yellow-600 to-amber-600'
   },
   {
@@ -253,7 +259,6 @@ const fallbackProjects = [
     year: '2025',
     desc: 'Library of fluid particle simulations and interactive canvas shaders built for premium web graphics.',
     tech: ['WebGL', 'GLSL', 'Canvas API', 'Vanilla CSS'],
-    link: '#',
     preview: 'from-cyan-600 to-blue-600'
   },
   {
@@ -301,7 +306,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   const [founderPhase, setFounderPhase] = useState<'intro' | 'cards'>('intro');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [projects, setProjects] = useState(fallbackProjects);
+  const [projects, setProjects] = useState<ProjectItem[]>(fallbackProjects);
 
   // Automatically transition from "Meet Our Founders" splash to cards after 1.5s
   useEffect(() => {
@@ -368,17 +373,30 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   }, []);
 
   useEffect(() => {
-    const CACHE_KEY = 'axiogen_projects_cache';
+    const CACHE_KEY = 'axiogen_projects_cache_v2';
+
+    const sanitizeLink = (link: any): string | undefined => {
+      if (!link || typeof link !== 'string') return undefined;
+      const trimmed = link.trim();
+      if (trimmed === '' || trimmed === '#' || trimmed.toLowerCase().includes('github.com')) {
+        return undefined;
+      }
+      return trimmed;
+    };
 
     async function fetchProjects() {
       // Load cached projects immediately so the UI is never empty
       try {
-        const cached = localStorage.getItem(CACHE_KEY);
+        const cached = localStorage.getItem(CACHE_KEY) || localStorage.getItem('axiogen_projects_cache');
         if (cached) {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            setProjects(parsed);
-            setProjectCount(parsed.length);
+            const cleaned = parsed.map((p: any) => ({
+              ...p,
+              link: sanitizeLink(p.link)
+            }));
+            setProjects(cleaned);
+            setProjectCount(cleaned.length);
           }
         }
       } catch (_) { /* ignore localStorage errors */ }
@@ -419,7 +437,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   year: p.year,
                   desc: p.desc,
                   tech: Array.isArray(p.tech) ? p.tech : JSON.parse(p.tech || '[]'),
-                  link: p.link || undefined,
+                  link: sanitizeLink(p.link),
                   preview: p.preview || gradients[index % gradients.length]
                 }));
                 setProjects(formatted);
@@ -466,7 +484,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             year: p.year,
             desc: p.desc,
             tech: Array.isArray(p.tech) ? p.tech : JSON.parse(p.tech || '[]'),
-            link: p.link || undefined,
+            link: sanitizeLink(p.link),
             preview: p.preview || gradients[index % gradients.length]
           }));
           // Update UI with fresh data
@@ -502,13 +520,13 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   year: p.year,
                   desc: p.desc,
                   tech: Array.isArray(p.tech) ? p.tech : JSON.parse(p.tech || '[]'),
-                  link: p.link || undefined,
+                  link: sanitizeLink(p.link),
                   preview: p.preview || gradients[index % gradients.length]
                 }));
                 setProjects(formatted);
                 setProjectCount(visibleData.length);
                 try {
-                  localStorage.setItem('axiogen_projects_cache', JSON.stringify(formatted));
+                  localStorage.setItem(CACHE_KEY, JSON.stringify(formatted));
                 } catch (_) {}
               }
             }
