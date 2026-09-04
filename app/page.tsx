@@ -130,7 +130,7 @@ export default function Home() {
     fetch('/api/settings')
       .then((r) => r.json())
       .then((d) => {
-        const cleanBg = d.activeBg && !d.activeBg.includes('nightmode.webp') ? d.activeBg : '';
+        const cleanBg = d.activeBg || '';
         setActiveBg(cleanBg);
       })
       .catch(() => {});
