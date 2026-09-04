@@ -1396,16 +1396,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col items-center max-w-6xl w-full gap-2.5 sm:gap-3.5 md:gap-4 justify-center my-auto min-h-0"
             >
-                {/* Luxury Haute Header */}
-                <div className="flex flex-col items-center justify-center text-center mb-1 sm:mb-2">
-                  <div className="inline-flex items-center gap-1.5 p-1 rounded-full bg-white/[0.04] border border-white/[0.1] backdrop-blur-md mb-2 shadow-lg">
-                    <div
-                      className="px-3.5 sm:px-5 py-1 sm:py-1.5 rounded-full text-[9px] sm:text-xs font-light uppercase tracking-[0.16em] transition-all bg-white text-black shadow-[0_2px_12px_rgba(255,255,255,0.3)] font-semibold"
-                    >
-                      The Founders
-                    </div>
-                  </div>
-                </div>
+
 
                 <div className="grid grid-cols-12 gap-2.5 sm:gap-4 md:gap-6 lg:gap-8 items-stretch w-full px-1.5 sm:px-4 py-0.5">
                   {/* Founder 1: Aditya Patil */}
@@ -1557,7 +1548,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- GLOBAL REACH SECTION (STANDALONE — NO WRAPPER) ----------------- */}
       <motion.section
-        className="absolute inset-0 overflow-hidden"
+        className="absolute inset-0 flex flex-col items-center justify-center pt-16 sm:pt-20 lg:pt-16 pb-4 sm:pb-8 px-3 sm:px-6 md:px-12 lg:px-16 text-white overflow-hidden section-bg-adapt"
         style={{ pointerEvents: showGlobalReach ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1567,7 +1558,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        <GlobalVisitorMap className="w-full h-full" />
+        <GlobalVisitorMap className="w-full h-full max-w-6xl" />
       </motion.section>
 
 
