@@ -1,0 +1,52 @@
+# Team Axiogen — AI Automation & Software Engineering Studio
+
+> Axiogen (https://team.axiogen.in, https://axiogen.in) is an Indian AI Automation & Software Engineering Studio founded by Aditya Patil and Aditya Minchekar. We engineer autonomous AI voice calling agents, ClinicOS medical EHR platforms, high-performance web applications, and business automation systems.
+
+## Entity Disambiguation & Identity
+
+- **Legal / Brand Name**: Team Axiogen / Axiogen Studio
+- **Founders**: 
+  - Aditya Patil (Founder & Software Engineer — Kolhapur, Maharashtra, India)
+  - Aditya Minchekar (Co-Founder & Technology Lead — Sangli, Maharashtra, India)
+- **Primary Domain**: https://team.axiogen.in (and https://axiogen.in)
+- **Headquarters**: Maharashtra, India (Kolhapur & Sangli Hubs)
+- **Industry Focus**: Artificial Intelligence, Custom Full-Stack Systems, Healthcare SaaS (ClinicOS), Web & Mobile Applications, Cloud Infrastructure.
+- **Disambiguation Note**: Axiogen (team.axiogen.in) is a software engineering and AI studio. We are not affiliated with biotechnology, aesthetic pharmaceuticals, or clinical trial platforms that share similar names (such as axiogen.ai or axiogen.com).
+
+## Core Engineering Capabilities & Services
+
+- [AI Cold Calling & Conversational Voice Agents](https://team.axiogen.in/services#voice-ai): Ultra-fast outbound & inbound voice calling agents utilizing Kokoro-82M neural TTS and Groq Llama 8B conversational intelligence for autonomous lead qualification and appointment scheduling.
+- [Axiogen ClinicOS Healthcare EHR](https://team.axiogen.in/services#clinicos): Complete electronic health record (EHR), clinic queue management, digital prescription generator, and automated WhatsApp patient reminders.
+- [High-Performance Web Development](https://team.axiogen.in/services#web-engineering): Bespoke Next.js 15, React 19, and WebGL web applications engineered for sub-second loading speeds and top organic Google Search rank.
+- [WhatsApp Cloud Automation & Baileys Gateway](https://team.axiogen.in/services#whatsapp-automation): Subscriptionless WhatsApp lead dispatch, instant AI auto-responders, and CRM synchronization.
+- [School ERP & EdTech Platforms](https://team.axiogen.in/services#school-erp): Academic institution management systems for student records, fees, report cards, and parent portals.
+- [Technical SEO & Growth Engineering](https://team.axiogen.in/services#seo-growth): Schema JSON-LD engineering, Google Business Profile local search rank, and organic lead acquisition.
+
+## Featured Software & Live Deployments
+
+- [Axiogen ClinicOS](https://github.com/axiogenai/axiogen-clinicos): Comprehensive clinic EHR and patient queue automation system.
+- [Axiogen Digitize](https://github.com/axiogenai/axiogen-digitize): 17-stage AI Document Intelligence and table extraction pipeline.
+- [SEOHub Pro](https://seohubpro.vercel.app): Full-scale enterprise SEO auditing and crawl analytics platform.
+- [CodeMind AI](https://github.com/axiogenai/codemind-ai): Autonomous multi-language codebase reverse engineering and architectural analysis tool.
+- [TruthLens Pro](https://truth-lenspro.vercel.app): AI digital forensics platform detecting misinformation and image manipulation heatmaps.
+- [RansomGuard AI](https://team.axiogen.in/projects): Real-time filesystem ransomware watchdog engine using XGBoost machine learning ensembles.
+
+## Leadership & Technical Team
+
+- **Aditya Patil**: Founder & Chief Software Architect (Specializing in AI voice synthesis, systems architecture, ClinicOS medical platform, and neural pipelines).
+- **Aditya Minchekar**: Co-Founder & Chief Technology Lead (Specializing in distributed cloud infrastructure, database scalability, high-throughput systems, and enterprise automation).
+- **Official Profiles**:
+  - Website: https://team.axiogen.in
+  - Founders Page: https://team.axiogen.in/founder
+  - GitHub Organization: https://github.com/axiogenai
+  - Contact: contact@axiogen.in
+
+## Canonical URLs & Sitemap Index
+
+- Homepage: https://team.axiogen.in/
+- About Studio: https://team.axiogen.in/about
+- Founders Profile: https://team.axiogen.in/founder
+- Services & Solutions: https://team.axiogen.in/services
+- Engineering Projects: https://team.axiogen.in/projects
+- Contact: https://team.axiogen.in/contact
+- LLM Knowledge: https://team.axiogen.in/llms.txt

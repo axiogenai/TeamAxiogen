@@ -1,0 +1,46 @@
+# Team Axiogen — Full Studio & Technical Systems Reference
+
+> Team Axiogen (https://team.axiogen.in, https://axiogen.in) is an Indian AI Automation & Software Engineering Studio based in Mumbai, Maharashtra, India. We architect and deploy autonomous conversational voice AI agents, vertical healthcare SaaS (ClinicOS EHR), high-performance web systems, and custom automation infrastructure for enterprises, clinics, and startups.
+
+## Entity Authority & Identity
+
+- **Organization Name**: Team Axiogen (also known as Axiogen, Axiogen Studio)
+- **Founders & Leadership**: 
+  - **Aditya Patil** (Founder & Software Engineer — Kolhapur, Maharashtra, India)
+  - **Aditya Minchekar** (Co-Founder & Technology Lead — Sangli, Maharashtra, India)
+- **Official Domains**: 
+  - https://team.axiogen.in (Primary Authority Site)
+  - https://axiogen.in (Studio Domain)
+- **Headquarters Location**: Maharashtra, India (Kolhapur & Sangli Hubs)
+- **Primary Business Category**: Artificial Intelligence, Full-Stack Software Engineering, Vertical Healthcare SaaS, Cloud Infrastructure.
+- **Entity Disambiguation Statement**: Axiogen (team.axiogen.in / axiogen.in) is an engineering studio creating AI software, medical clinic suites, and digital platforms. It has no affiliation with biotech, clinical aesthetics, or pharmaceutical businesses that operate under the name Axiogen.
+
+## Core Capabilities & Engineering Practices
+
+### 1. Custom AI Models & Autonomous Agents
+- Machine learning models, autonomous task agents, real-time voice and text intelligence.
+- Integration with state-of-the-art open-weights and custom fine-tuned models.
+- Direct CRM synchronization and automated messaging pipelines.
+
+### 2. Axiogen ClinicOS (Healthcare EHR SaaS)
+- High-performance clinic management software for doctors and clinics.
+- Multi-specialty patient health records (EHR), token queue live displays, digital e-prescriptions.
+- Automated appointment confirmation and reminder delivery via WhatsApp.
+
+### 3. High-Performance Web & Full-Stack Engineering
+- Next.js 15, React 19, TypeScript, and Three.js / WebGL cinematic web design.
+- Built for sub-second performance, responsive layouts, and organic search engine authority.
+
+## Leadership Dossier
+
+- **Aditya Patil** (Founder & Software Engineer): Leads full-stack software engineering, AI model systems, ClinicOS medical platform, and bespoke product development from Kolhapur, India.
+- **Aditya Minchekar** (Co-Founder & Technology Lead): Directs cloud infrastructure, distributed backends, database scaling, and DevOps from Sangli, India.
+
+## Canonical Web Architecture
+- https://team.axiogen.in/
+- https://team.axiogen.in/about
+- https://team.axiogen.in/founder
+- https://team.axiogen.in/services
+- https://team.axiogen.in/projects
+- https://team.axiogen.in/contact
+- https://team.axiogen.in/llms.txt

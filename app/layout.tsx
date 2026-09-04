@@ -1,49 +1,105 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 const keywords = [
   "Axiogen",
+  "Axiogen AI",
+  "Team Axiogen",
+  "Axiogen Studio",
+  "Aditya Patil",
+  "Aditya Minchekar",
+  "Aditya Patil Axiogen",
+  "Aditya Minchekar Axiogen",
+  "Aditya Patil Kolhapur",
+  "Aditya Minchekar Sangli",
+  "Axiogen ClinicOS",
+  "Axiogen Digitize",
+  "CodeMind AI",
   "Creative Engineering Studio",
+  "Digital Experience Agency",
   "Immersive Digital Experiences",
   "High-Performance Web Development",
   "Cinematic Web Design",
   "Web Engineering Solutions",
-  "Digital Experience Agency",
   "Interactive Web Development",
   "Creative Technology Studio",
   "Bespoke Web Design",
   "Cutting-Edge Web Solutions",
-  "Digital Product Engineering"
+  "Digital Product Engineering",
+  "Custom AI Software Development",
+  "Clinic Management Software India",
+  "School ERP System Development",
+  "WhatsApp Automation Platform",
+  "Technical SEO Agency Mumbai"
 ];
 
+export const viewport: Viewport = {
+  themeColor: "#07070c",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
-  title: "Axiogen | Creative Engineering Studio & High-Performance Web Development",
-  description: "Axiogen is a Creative Technology Studio & Digital Experience Agency crafting Immersive Digital Experiences, Cinematic Web Design, Bespoke Web Design, Interactive Web Development, Cutting-Edge Web Solutions, and High-Performance Web Engineering Solutions.",
-  keywords: keywords.join(", "),
-  authors: [{ name: "Axiogen", url: "https://team.axiogen.in" }],
-  creator: "Axiogen Creative Technology Studio",
-  publisher: "Axiogen",
   metadataBase: new URL("https://team.axiogen.in"),
+  title: {
+    default: "Team Axiogen | Creative Engineering Studio & High-Performance Web Development",
+    template: "%s | Team Axiogen Creative Technology Studio",
+  },
+  description: "Axiogen is a premier Systems Architecture & Digital Product Engineering Studio crafting Bespoke Full-Stack Web Applications, Autonomous AI Models, ClinicOS Healthcare Platforms, and Resilient Cloud Infrastructure. Founded by Aditya Patil & Aditya Minchekar.",
+  keywords: keywords.join(", "),
+  authors: [
+    { name: "Aditya Patil", url: "https://team.axiogen.in/#founder" },
+    { name: "Aditya Minchekar", url: "https://team.axiogen.in/#founder" },
+    { name: "Team Axiogen", url: "https://team.axiogen.in" }
+  ],
+  creator: "Aditya Patil & Aditya Minchekar",
+  publisher: "Team Axiogen",
   alternates: {
     canonical: "https://team.axiogen.in",
-  },
-  openGraph: {
-    title: "Axiogen | Creative Engineering Studio & Digital Product Engineering",
-    description: "Digital Experience Agency specializing in Immersive Digital Experiences, Cinematic Web Design, High-Performance Web Development, and Cutting-Edge Web Engineering Solutions.",
-    url: "https://team.axiogen.in",
-    siteName: "Axiogen",
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Axiogen | Creative Engineering Studio",
-    description: "Bespoke Web Design & Digital Product Engineering at the intersection of cinematic design and high-performance web development.",
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
+  openGraph: {
+    title: "Team Axiogen | Creative Engineering Studio & Digital Product Agency",
+    description: "Digital Experience Agency crafting Immersive Digital Experiences, Cinematic Web Design, High-Performance Web Development, and Enterprise AI Solutions. Founded by Aditya Patil & Aditya Minchekar.",
+    url: "https://team.axiogen.in",
+    siteName: "Team Axiogen",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "https://team.axiogen.in/logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Team Axiogen — Creative Engineering Studio Founded by Aditya Patil & Aditya Minchekar",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Team Axiogen | Systems Engineering & AI Studio",
+    description: "Bespoke Web Design & Digital Product Engineering at the intersection of cinematic design and high-performance web development. Founded by Aditya Patil & Aditya Minchekar.",
+    images: ["https://team.axiogen.in/logo.png"],
+    creator: "@axiogenai",
+  },
+  category: "technology",
+  other: {
+    "founder": "Aditya Patil & Aditya Minchekar",
+    "founder:aditya_patil": "Aditya Patil - Founder & Principal Systems Architect (Kolhapur)",
+    "founder:aditya_minchekar": "Aditya Minchekar - Co-Founder & Technology Lead (Sangli)",
+    "google-site-verification": "621B3825D10663EF47942F6661B27080",
+    "rating": "General",
+  }
 };
 
 export default function RootLayout({
@@ -53,34 +109,206 @@ export default function RootLayout({
 }>) {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "Axiogen",
-    "alternateName": "Axiogen Creative Engineering Studio",
-    "url": "https://team.axiogen.in",
-    "description": "Creative Technology Studio & Digital Experience Agency crafting Immersive Digital Experiences, Cinematic Web Design, High-Performance Web Development, Bespoke Web Design, Interactive Web Development, and Cutting-Edge Web Solutions.",
-    "knowsAbout": keywords,
-    "serviceType": [
-      "Creative Engineering Studio",
-      "Immersive Digital Experiences",
-      "High-Performance Web Development",
-      "Cinematic Web Design",
-      "Web Engineering Solutions",
-      "Digital Experience Agency",
-      "Interactive Web Development",
-      "Creative Technology Studio",
-      "Bespoke Web Design",
-      "Cutting-Edge Web Solutions",
-      "Digital Product Engineering"
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://team.axiogen.in/#organization",
+        "name": "Axiogen",
+        "legalName": "Team Axiogen",
+        "alternateName": ["Team Axiogen", "Axiogen AI", "Axiogen Studio", "Axiogen India"],
+        "url": "https://team.axiogen.in",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://team.axiogen.in/logo.png",
+          "caption": "Axiogen AI Automation & Software Engineering Studio"
+        },
+        "description": "Axiogen is an Indian AI Automation & Software Engineering Studio founded by Aditya Patil and Aditya Minchekar. We engineer autonomous AI voice calling agents, ClinicOS medical EHR platforms, custom web applications, mobile apps, and business workflow automation. Founded by Aditya Patil & Aditya Minchekar.",
+        "disambiguatingDescription": "Axiogen (Team Axiogen) is an Indian AI Automation and Software Engineering Studio specializing in AI agents, ClinicOS medical EHR, and custom digital infrastructure. Founded by Aditya Patil & Aditya Minchekar. Not affiliated with biotechnology or pharmaceutical entities.",
+        "foundingDate": "2024",
+        "founder": [
+          {
+            "@type": "Person",
+            "@id": "https://team.axiogen.in/#founder-aditya-patil",
+            "name": "Aditya Patil",
+            "jobTitle": "Founder & Principal Systems Architect",
+            "url": "https://team.axiogen.in/founder",
+            "sameAs": [
+              "https://github.com/axiogenai"
+            ]
+          },
+          {
+            "@type": "Person",
+            "@id": "https://team.axiogen.in/#founder-aditya-minchekar",
+            "name": "Aditya Minchekar",
+            "jobTitle": "Co-Founder & Technology Lead",
+            "url": "https://team.axiogen.in/founder",
+            "sameAs": [
+              "https://github.com/axiogenai"
+            ]
+          }
+        ],
+        "sameAs": [
+          "https://github.com/axiogenai",
+          "https://team.axiogen.in",
+          "https://axiogen.in"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer service & sales",
+          "email": "contact@axiogen.in",
+          "availableLanguage": ["English", "Hindi", "Marathi"],
+          "url": "https://team.axiogen.in/#contact"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Mumbai",
+          "addressRegion": "Maharashtra",
+          "addressCountry": "IN"
+        }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://team.axiogen.in/#founder-aditya-patil",
+        "name": "Aditya Patil",
+        "jobTitle": "Founder & Principal Systems Architect",
+        "worksFor": {
+          "@id": "https://team.axiogen.in/#organization"
+        },
+        "url": "https://team.axiogen.in/founder",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Kolhapur",
+          "addressRegion": "Maharashtra",
+          "addressCountry": "IN"
+        },
+        "description": "Aditya Patil is the founder & Principal Systems Architect of Team Axiogen based in Kolhapur, specializing in AI models, full-stack systems engineering, ClinicOS healthcare platform, web & mobile applications, and scalable production software.",
+        "knowsAbout": [
+          "Artificial Intelligence & LLMs",
+          "Full-Stack Software Engineering",
+          "Healthcare Clinic Operating Systems (ClinicOS)",
+          "Next.js, React & Mobile Architecture",
+          "High-Performance Web Applications",
+          "Autonomous AI Agents"
+        ]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://team.axiogen.in/#founder-aditya-minchekar",
+        "name": "Aditya Minchekar",
+        "jobTitle": "Co-Founder & Technology Lead",
+        "worksFor": {
+          "@id": "https://team.axiogen.in/#organization"
+        },
+        "url": "https://team.axiogen.in/founder",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Sangli",
+          "addressRegion": "Maharashtra",
+          "addressCountry": "IN"
+        },
+        "description": "Aditya Minchekar is the co-founder & Technology Lead of Team Axiogen based in Sangli, specializing in distributed cloud infrastructure, high-throughput systems, database scalability, DevOps, and enterprise automation.",
+        "knowsAbout": [
+          "Cloud & Distributed Systems",
+          "High-Throughput Database Scalability",
+          "Microservice Architecture",
+          "Enterprise Automation & DevOps",
+          "PostgreSQL & Real-Time Queues"
+        ]
+      },
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://team.axiogen.in/#service",
+        "name": "Team Axiogen AI Automation & Software Engineering Studio",
+        "url": "https://team.axiogen.in",
+        "priceRange": "$$",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Mumbai",
+          "addressRegion": "Maharashtra",
+          "addressCountry": "IN"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "19.0760",
+          "longitude": "72.8777"
+        },
+        "description": "Premier AI Automation & Software Engineering Studio crafting Autonomous AI Agents, Bespoke Web Applications, ClinicOS Healthcare Software, School ERP, and WhatsApp Cloud Automation. Founded by Aditya Patil & Aditya Minchekar.",
+        "knowsAbout": keywords,
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.9",
+          "reviewCount": "128"
+        },
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Axiogen Core Solutions",
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "AI Cold Calling & Conversational Agents",
+                "description": "Real-time voice calling agents with neural TTS, speech-to-text, and automated CRM lead qualification."
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "High-Performance Web Development",
+                "description": "Custom Next.js, React, and WebGL web applications engineered for sub-second load times, SEO rank, and high conversion."
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Axiogen ClinicOS Healthcare EHR",
+                "description": "Complete clinic queue management, digital prescriptions, patient electronic health records, and WhatsApp appointment reminders."
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "WhatsApp Cloud Automation",
+                "description": "Subscriptionless automated WhatsApp lead capture, instant auto-reply engines, and CRM dispatch."
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "School ERP & Academic Management",
+                "description": "Educational institution software managing student records, fees, report cards, and parent portals."
+              }
+            }
+          ]
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://team.axiogen.in/#website",
+        "url": "https://team.axiogen.in",
+        "name": "Team Axiogen",
+        "alternateName": "Team Axiogen Studio",
+        "publisher": {
+          "@id": "https://team.axiogen.in/#organization"
+        }
+      }
     ]
   };
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#07070c" />
-        <meta name="keywords" content={keywords.join(", ")} />
+        <meta name="geo.region" content="IN-MH" />
+        <meta name="geo.placename" content="Mumbai" />
+        <meta name="geo.position" content="19.0760;72.8777" />
+        <meta name="ICBM" content="19.0760, 72.8777" />
+        <meta name="msvalidate.01" content="621B3825D10663EF47942F6661B27080" />
         <link rel="icon" href="/icon.png" type="image/png" />
+        <link rel="manifest" href="/manifest.webmanifest" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@100..900&display=swap" rel="stylesheet" />

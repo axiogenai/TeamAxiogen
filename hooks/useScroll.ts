@@ -53,7 +53,8 @@ export function getProjectPagesCount(): number {
 }
 
 export function getTotalStates(): number {
-  return 4 + getProjectPagesCount();
+  // Hero (0), About (1), Founder (2), Projects (P pages), Services, Contact
+  return 5 + getProjectPagesCount();
 }
 
 export function getMaxScrollMultiplier(): number {
@@ -61,7 +62,6 @@ export function getMaxScrollMultiplier(): number {
 }
 
 export function getSectionFrames(): number[] {
-  const P = getProjectPagesCount();
   const totalStates = getTotalStates();
   const slice = 502 / totalStates;
   
@@ -108,7 +108,6 @@ function onResize() {
   const w = window.innerWidth;
   const h = window.innerHeight;
   
-  // Only update stable dimensions if width changed (orientation change) or height changed significantly (keyboard open, etc.)
   if (w !== stableWidth || Math.abs(h - stableHeight) > 150) {
     stableWidth = w;
     stableHeight = h;
@@ -147,23 +146,9 @@ function getServerSnapshot(): ScrollSnapshot {
   return SERVER_SNAPSHOT;
 }
 
-/**
- * Raw scroll hook — use ONLY in components needing per-pixel updates
- * (e.g., FrameSequenceViewer canvas drawing).
- * Every component using this re-renders on EVERY scroll pixel.
- */
 export function useScroll(): ScrollSnapshot {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
-
-// --------------------------------------------------------------------------
-// Derived Hooks — only trigger re-renders when the derived value changes.
-// This is the key to Apple/Google-level scroll performance.
-//
-// useSyncExternalStore uses Object.is() comparison:
-//   - Primitives (string, number, boolean): value equality
-//   - Objects: reference equality (cached ref reused when unchanged)
-// --------------------------------------------------------------------------
 
 const TOTAL_FRAMES = 502;
 
@@ -174,10 +159,6 @@ function getCurrentFrame(scrollProgress: number): number {
   );
 }
 
-/**
- * Returns the active nav section name.
- * Only re-renders when the section actually changes (~5 transitions total).
- */
 export function useNavSection(): string {
   return useSyncExternalStore(
     subscribe,
@@ -189,23 +170,21 @@ export function useNavSection(): string {
 
       if (frame <= slice) return 'hero';
       if (frame <= slice * 2) return 'about';
-      if (frame <= slice * (2 + P)) return 'work';
-      if (frame <= slice * (3 + P)) return 'services';
+      if (frame <= slice * 3) return 'founder';
+      if (frame <= slice * (3 + P)) return 'work';
+      if (frame <= slice * (4 + P)) return 'services';
       return 'contact';
     },
     () => 'hero'
   );
 }
 
-/**
- * Section visibility flags — only re-renders when a boundary is crossed.
- * Uses cached object reference to avoid unnecessary re-renders.
- */
 interface SectionVisibility {
   showHero: boolean;
   showAbout: boolean;
   showAboutUs: boolean;
   showSkills: boolean;
+  showFounder: boolean;
   showProjects: boolean;
   projectPage: number;
   showServices: boolean;
@@ -217,6 +196,7 @@ let cachedVisibility: SectionVisibility = {
   showAbout: false,
   showAboutUs: false,
   showSkills: false,
+  showFounder: false,
   showProjects: false,
   projectPage: 0,
   showServices: false,
@@ -236,6 +216,7 @@ export function useSectionVisibility(): SectionVisibility {
       let showAbout = false;
       let showAboutUs = false;
       let showSkills = false;
+      let showFounder = false;
       let showProjects = false;
       let projectPage = 0;
       let showServices = false;
@@ -245,19 +226,21 @@ export function useSectionVisibility(): SectionVisibility {
       showAbout = frame > slice && frame <= slice * 2;
       showAboutUs = showAbout;
       showSkills = showAbout;
-      showProjects = frame > slice * 2 && frame <= slice * (2 + P);
+      showFounder = frame > slice * 2 && frame <= slice * 3;
+      showProjects = frame > slice * 3 && frame <= slice * (3 + P);
       if (showProjects) {
-        const relativeFrame = frame - slice * 2;
+        const relativeFrame = frame - slice * 3;
         projectPage = Math.min(P - 1, Math.floor(relativeFrame / slice));
       }
-      showServices = frame > slice * (2 + P) && frame <= slice * (3 + P);
-      showContact = frame > slice * (3 + P) && frame <= TOTAL_FRAMES;
+      showServices = frame > slice * (3 + P) && frame <= slice * (4 + P);
+      showContact = frame > slice * (4 + P) && frame <= TOTAL_FRAMES;
 
       if (
         cachedVisibility.showHero !== showHero ||
         cachedVisibility.showAbout !== showAbout ||
         cachedVisibility.showAboutUs !== showAboutUs ||
         cachedVisibility.showSkills !== showSkills ||
+        cachedVisibility.showFounder !== showFounder ||
         cachedVisibility.showProjects !== showProjects ||
         cachedVisibility.projectPage !== projectPage ||
         cachedVisibility.showServices !== showServices ||
@@ -268,6 +251,7 @@ export function useSectionVisibility(): SectionVisibility {
           showAbout,
           showAboutUs,
           showSkills,
+          showFounder,
           showProjects,
           projectPage,
           showServices,
@@ -280,9 +264,6 @@ export function useSectionVisibility(): SectionVisibility {
   );
 }
 
-/**
- * Blur state — only re-renders ONCE when crossing frame 250.
- */
 export function useIsBlurred(): boolean {
   return useSyncExternalStore(
     subscribe,
@@ -291,9 +272,6 @@ export function useIsBlurred(): boolean {
   );
 }
 
-/**
- * Vignette opacity — only re-renders at frame 235 and 265 boundaries.
- */
 export function useVignetteOpacity(): number {
   return useSyncExternalStore(
     subscribe,

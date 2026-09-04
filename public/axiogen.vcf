@@ -1,0 +1,11 @@
+BEGIN:VCARD
+VERSION:3.0
+FN:Axiogen Studio
+ORG:Axiogen Studio
+TITLE:AI Automation & Software Engineering Studio
+TEL;TYPE=CELL,VOICE;VALUE=uri:tel:+918010127704
+TEL;TYPE=CELL,VOICE;VALUE=uri:tel:+917972884083
+EMAIL;TYPE=PREF,INTERNET:axiogen01@gmail.com
+URL:https://axiogen.ai
+NOTE:Indian AI Automation & Software Engineering Studio. We build autonomous AI voice agents, ClinicOS medical platform, and high-performance applications.
+END:VCARD

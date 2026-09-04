@@ -1,12 +1,14 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   useSectionVisibility, 
   useNavSection,
   getStableHeight, 
   setProjectCount, 
+  getProjectPagesCount,
   getSectionFrames, 
   getMaxScrollMultiplier 
 } from '../hooks/useScroll';
@@ -16,6 +18,7 @@ import { ScrollVelocity } from './ScrollVelocity';
 import { AnimatedCounter } from './AnimatedCounter';
 import { TextReveal } from './TextReveal';
 import { MagneticButton } from './MagneticButton';
+import LightTunnel from './LightTunnel';
 
 import { 
   ArrowDown, 
@@ -25,7 +28,6 @@ import {
   Briefcase,
   ChevronRight,
   Send,
-  Sparkles,
   BookOpen,
   Brain,
   Globe,
@@ -37,7 +39,8 @@ import {
   Search,
   GraduationCap,
   Building2,
-  Rocket
+  Rocket,
+  Layers
 } from 'lucide-react';
 
 const SkillIcon = ({ name }: { name: string }) => {
@@ -191,14 +194,23 @@ const SkillIcon = ({ name }: { name: string }) => {
   }
 };
 
-const fallbackProjects = [
+interface ProjectItem {
+  name: string;
+  category: string;
+  year: string;
+  desc: string;
+  tech: string[];
+  link?: string;
+  preview: string;
+}
+
+const fallbackProjects: ProjectItem[] = [
   {
     name: 'Axiogen AI',
     category: 'Artificial Intelligence',
     year: '2026',
     desc: 'Core neural network training workspace powering predictive analytics and cognitive assistant agents.',
     tech: ['Python', 'FastAPI', 'PyTorch', 'Docker'],
-    link: '#',
     preview: 'from-purple-600 to-indigo-600'
   },
   {
@@ -223,7 +235,6 @@ const fallbackProjects = [
     year: '2025',
     desc: 'High-performance cryptographic sandbox tool for generating, mining, and auditing distributed chains.',
     tech: ['TypeScript', 'Node.js', 'Framer Motion', 'TailwindCSS'],
-    link: '#',
     preview: 'from-pink-600 to-rose-600'
   },
   {
@@ -232,7 +243,6 @@ const fallbackProjects = [
     year: '2025',
     desc: 'Advanced academic accreditation suite streamlining documentation, criteria metrics, and reporting.',
     tech: ['Next.js', 'TypeScript', 'Prisma ORM', 'PostgreSQL'],
-    link: '#',
     preview: 'from-teal-600 to-emerald-600'
   },
   {
@@ -241,7 +251,6 @@ const fallbackProjects = [
     year: '2025',
     desc: 'Active session protection agent intercepting hijack attempts and managing token rotation in real-time.',
     tech: ['JavaScript', 'Express', 'JWT Security', 'TailwindCSS'],
-    link: '#',
     preview: 'from-yellow-600 to-amber-600'
   },
   {
@@ -250,7 +259,6 @@ const fallbackProjects = [
     year: '2025',
     desc: 'Library of fluid particle simulations and interactive canvas shaders built for premium web graphics.',
     tech: ['WebGL', 'GLSL', 'Canvas API', 'Vanilla CSS'],
-    link: '#',
     preview: 'from-cyan-600 to-blue-600'
   },
   {
@@ -285,17 +293,33 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   const { 
     showHero, 
     showAbout, 
-    showAboutUs,
+    showAboutUs, 
     showSkills,
+    showFounder,
     showProjects, 
     projectPage, 
     showServices, 
     showContact 
   } = useSectionVisibility();
   const [activeTab, setActiveTab] = useState<'languages' | 'mobile' | 'web' | 'systems'>('languages');
+  const [founderTab, setFounderTab] = useState<'patil' | 'minchekar'>('patil');
+  const [founderPhase, setFounderPhase] = useState<'intro' | 'cards'>('intro');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [projects, setProjects] = useState(fallbackProjects);
+  const [projects, setProjects] = useState<ProjectItem[]>(fallbackProjects);
+
+  // Automatically transition from "Meet Our Founders" splash to cards after 1.5s
+  useEffect(() => {
+    if (showFounder) {
+      setFounderPhase('intro');
+      const timer = setTimeout(() => {
+        setFounderPhase('cards');
+      }, 1500);
+      return () => clearTimeout(timer);
+    } else {
+      setFounderPhase('intro');
+    }
+  }, [showFounder]);
 
   // Tech switcher data
   const techData = {
@@ -349,17 +373,30 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   }, []);
 
   useEffect(() => {
-    const CACHE_KEY = 'axiogen_projects_cache';
+    const CACHE_KEY = 'axiogen_projects_cache_v2';
+
+    const sanitizeLink = (link: any): string | undefined => {
+      if (!link || typeof link !== 'string') return undefined;
+      const trimmed = link.trim();
+      if (trimmed === '' || trimmed === '#' || trimmed.toLowerCase().includes('github.com')) {
+        return undefined;
+      }
+      return trimmed;
+    };
 
     async function fetchProjects() {
       // Load cached projects immediately so the UI is never empty
       try {
-        const cached = localStorage.getItem(CACHE_KEY);
+        const cached = localStorage.getItem(CACHE_KEY) || localStorage.getItem('axiogen_projects_cache');
         if (cached) {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            setProjects(parsed);
-            setProjectCount(parsed.length);
+            const cleaned = parsed.map((p: any) => ({
+              ...p,
+              link: sanitizeLink(p.link)
+            }));
+            setProjects(cleaned);
+            setProjectCount(cleaned.length);
           }
         }
       } catch (_) { /* ignore localStorage errors */ }
@@ -400,7 +437,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   year: p.year,
                   desc: p.desc,
                   tech: Array.isArray(p.tech) ? p.tech : JSON.parse(p.tech || '[]'),
-                  link: p.link || undefined,
+                  link: sanitizeLink(p.link),
                   preview: p.preview || gradients[index % gradients.length]
                 }));
                 setProjects(formatted);
@@ -447,7 +484,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             year: p.year,
             desc: p.desc,
             tech: Array.isArray(p.tech) ? p.tech : JSON.parse(p.tech || '[]'),
-            link: p.link || undefined,
+            link: sanitizeLink(p.link),
             preview: p.preview || gradients[index % gradients.length]
           }));
           // Update UI with fresh data
@@ -483,13 +520,13 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   year: p.year,
                   desc: p.desc,
                   tech: Array.isArray(p.tech) ? p.tech : JSON.parse(p.tech || '[]'),
-                  link: p.link || undefined,
+                  link: sanitizeLink(p.link),
                   preview: p.preview || gradients[index % gradients.length]
                 }));
                 setProjects(formatted);
                 setProjectCount(visibleData.length);
                 try {
-                  localStorage.setItem('axiogen_projects_cache', JSON.stringify(formatted));
+                  localStorage.setItem(CACHE_KEY, JSON.stringify(formatted));
                 } catch (_) {}
               }
             }
@@ -509,26 +546,44 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
-    // Force scroll to top on page reload/refresh
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
-    window.scrollTo(0, 0);
 
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+
+    const checkHashAndScroll = () => {
+      const hash = window.location.hash.toLowerCase().replace('#', '');
+      const frames = getSectionFrames();
+      const P = getProjectPagesCount();
+      const maxScroll = getMaxScrollMultiplier() * getStableHeight();
+
+      let targetFrame = -1;
+      if (hash === 'about') targetFrame = frames[1] ?? 83;
+      else if (hash === 'founder' || hash === 'founders') targetFrame = frames[2] ?? 167;
+      else if (hash === 'work' || hash === 'projects') targetFrame = frames[3] ?? 250;
+      else if (hash === 'services') targetFrame = frames[3 + P] ?? 334;
+      else if (hash === 'contact') targetFrame = frames[4 + P] ?? 418;
+
+      if (targetFrame > 0 && maxScroll > 0) {
+        const targetY = (targetFrame / 502) * maxScroll;
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      } else if (!window.location.hash) {
+        window.scrollTo(0, 0);
+      }
+    };
+
+    const timer = setTimeout(checkHashAndScroll, 300);
+    window.addEventListener('hashchange', checkHashAndScroll);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('hashchange', checkHashAndScroll);
+    };
   }, []);
-
-  const scrollResetRef = useRef(false);
-
-  useEffect(() => {
-    if (mounted && !scrollResetRef.current) {
-      window.scrollTo(0, 0);
-      scrollResetRef.current = true;
-    }
-  }, [mounted]);
 
   const activeSection = useNavSection();
 
@@ -743,8 +798,8 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
   }, [mounted]);
 
   const scrollToFrame = (frame: number) => {
-    // Calculate maxScroll mathematically based on 500vh page height
-    const maxScroll = 4 * getStableHeight();
+    // Calculate maxScroll based on dynamic getTotalStates() multiplier
+    const maxScroll = getMaxScrollMultiplier() * getStableHeight();
     const targetY = (frame / totalFrames) * maxScroll;
     window.scrollTo({
       top: targetY,
@@ -914,7 +969,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const isInteractive = showHero || showAbout || showProjects || showServices || showContact;
+  const isInteractive = showHero || showAbout || showFounder || showProjects || showServices || showContact;
 
   // Motion variants for service card icons
   const getIconVariants = (title: string): any => {
@@ -966,7 +1021,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- HERO SECTION ----------------- */}
       <motion.section 
-        className="absolute inset-0 flex flex-col items-center justify-center text-center pt-16 pb-4 px-4"
+        className="absolute inset-0 flex flex-col items-center justify-center text-center pt-16 pb-4 px-4 overflow-hidden"
         style={{ pointerEvents: showHero ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -976,72 +1031,107 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
+        {/* LightTunnel Hero Background (Hero Only) */}
+        <div className="absolute inset-0 pointer-events-auto z-0 flex items-center justify-center overflow-hidden">
+          <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+            <LightTunnel
+              cableColor="#A855F7"
+              pulseColor="#A855F7"
+              tunnelColor="#5227FF"
+              tunnelOpacity={0}
+              speed={0.1}
+              flowDirection="outward"
+              pulseSpeed={2}
+              pulseLength={0.28}
+              pulseBlend={1}
+              pulseWidth={1}
+              cableCount={20}
+              thickness={0.35}
+              rimWidth={0.15}
+              waviness={0.3}
+              sway={0.5}
+              size={1}
+              centerX={0}
+              centerY={0}
+              glow={1}
+              fadeNear={0.5}
+              fadeFar={2}
+              brightness={1}
+              colorVariance
+              grain
+              grainIntensity={0.05}
+              opacity={1}
+              mouseInteraction
+              mouseStrength={0.1}
+            />
+          </div>
+        </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={showHero ? "visible" : "hidden"}
-          className="mb-6"
-        >
-          <h1 
-            className="text-5xl md:text-7xl lg:text-8xl font-black tracking-normal text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] leading-none"
-            style={{ fontFamily: "'Turbo Driver', sans-serif" }}
+        <div className="relative z-10 flex flex-col items-center justify-center pointer-events-none">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate={showHero ? "visible" : "hidden"}
+            className="mb-6"
           >
-            <motion.span 
-              variants={charVariants} 
-              className="inline-block mr-4 md:mr-6"
-              style={{ paddingRight: '0.1em' }}
+            <h1 
+              className="text-5xl md:text-7xl lg:text-8xl font-black tracking-normal text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] leading-none"
+              style={{ fontFamily: "'Turbo Driver', sans-serif" }}
             >
-              TEAM
-            </motion.span>
-            <br />
-            <motion.span 
-              variants={charVariants} 
-              className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-400 to-indigo-400"
-              style={{ paddingBottom: '0.15em', paddingRight: '0.25em', marginRight: '-0.25em' }}
-            >
-              AXIOGEN
-            </motion.span>
-          </h1>
-        </motion.div>
+              <motion.span 
+                variants={charVariants} 
+                className="inline-block mr-4 md:mr-6"
+                style={{ paddingRight: '0.1em' }}
+              >
+                TEAM
+              </motion.span>
+              <br />
+              <motion.span 
+                variants={charVariants} 
+                className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-400 to-indigo-400"
+                style={{ paddingBottom: '0.15em', paddingRight: '0.25em', marginRight: '-0.25em' }}
+              >
+                AXIOGEN
+              </motion.span>
+            </h1>
+          </motion.div>
 
-        <motion.p 
-          variants={fadeUpVariants}
-          initial="hidden"
-          animate={showHero ? "visible" : "hidden"}
-          className="text-sm md:text-lg lg:text-xl text-white/60 font-normal max-w-xl md:max-w-3xl lg:max-w-4xl leading-relaxed drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] mb-8"
-        >
-          Axiogen builds everything — AI models, mobile apps, cinematic web experiences, cloud infrastructure, and deep research systems.
-        </motion.p>
+          <motion.p 
+            variants={fadeUpVariants}
+            initial="hidden"
+            animate={showHero ? "visible" : "hidden"}
+            className="text-sm md:text-lg lg:text-xl text-white/70 font-normal max-w-xl md:max-w-3xl lg:max-w-4xl leading-relaxed drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] mb-8"
+          >
+            Axiogen is an AI Automation &amp; Software Engineering Studio. We engineer autonomous AI agents, SaaS platforms, bespoke web applications, mobile apps, and business automation systems for startups, healthcare clinics, and enterprises.
+          </motion.p>
 
-        {/* CTA Button */}
-        <motion.button
-          variants={fadeUpVariants}
-          initial="hidden"
-          animate={showHero ? "visible" : "hidden"}
-          onClick={() => scrollToFrame(getSectionFrames()[2] ?? 209)}
-          className="group px-7 py-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-white/20 hover:border-white/40 rounded-full text-xs md:text-sm font-bold uppercase tracking-widest text-white hover:bg-white/10 transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
-        >
-          <span>Explore Projects</span>
-        </motion.button>
+          {/* CTA Button */}
+          <motion.button
+            variants={fadeUpVariants}
+            initial="hidden"
+            animate={showHero ? "visible" : "hidden"}
+            onClick={() => scrollToFrame(getSectionFrames()[2] ?? 209)}
+            className="group px-7 py-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-white/20 hover:border-white/40 rounded-full text-xs md:text-sm font-bold uppercase tracking-widest text-white hover:bg-white/10 transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2 pointer-events-auto"
+          >
+            <span>Explore Projects</span>
+          </motion.button>
+        </div>
 
         {/* Scroll Down Indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: showHero ? 0.6 : 0 }}
           transition={{ delay: 1.5, duration: 1 }}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10 pointer-events-none"
         >
           <span className="text-[8px] uppercase tracking-[0.3em] text-white/40 font-semibold">Scroll</span>
           <ArrowDown className="w-4 h-4 text-white/40 animate-bounce-down" />
         </motion.div>
-        
       </motion.section>
-
 
       {/* ----------------- ABOUT SECTION ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-16 pb-4 px-4 md:px-16 text-white section-bg-adapt overflow-hidden`}
+        className={`absolute inset-0 flex flex-col items-center justify-center pt-8 md:pt-12 pb-6 md:pb-8 px-4 md:px-16 text-white section-bg-adapt overflow-hidden`}
         style={{ pointerEvents: showAbout ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1052,10 +1142,10 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
         <div 
-          className={`flex flex-col items-center max-w-7xl w-full gap-3 md:gap-6 justify-start ${isMobile ? '' : 'min-h-0 max-h-full'}`}
+          className="flex flex-col items-center max-w-7xl w-full gap-2.5 md:gap-4 justify-center min-h-0 max-h-full"
         >
           <div 
-            className={`grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full px-2 py-2`}
+            className={`grid grid-cols-12 gap-3 md:gap-8 items-start lg:items-stretch w-full px-2 py-1`}
           >
             <AnimatePresence mode={isMobile ? "wait" : "sync"}>
               {/* Bio statement */}
@@ -1066,109 +1156,106 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={isMobile ? { opacity: 0, y: -15 } : undefined}
                   transition={{ duration: 0.25 }}
-                  className="col-span-12 lg:col-span-6 text-white bg-[var(--card-bg)] p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] glass-card gradient-border flex flex-col justify-between h-full"
+                  className="col-span-12 lg:col-span-6 text-white bg-[var(--card-bg)] p-4 sm:p-6 md:p-8 rounded-[1.25rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] glass-card gradient-border flex flex-col justify-between h-full"
                 >
                   <div className="flex flex-col flex-1">
-                    <div className="flex items-center gap-2 mb-1.5 md:mb-2">
-                      <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">Creative Technology Studio · Digital Experience Agency</span>
+                    <div className="flex items-center gap-2 mb-1 md:mb-2">
+                      <span className="text-[9px] md:text-xs font-semibold uppercase tracking-wider text-purple-300">AI Automation &amp; Software Engineering Studio</span>
                     </div>
-                    <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tighter mb-2 md:mb-3 leading-none whitespace-nowrap">
-                      AXIOGEN.
+                    <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tighter mb-1.5 md:mb-3 leading-none whitespace-nowrap">
+                      TEAM AXIOGEN.
                     </h2>
-                    <p className="text-xs sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-3 md:mb-4">
-                      Axiogen is a premier Creative Engineering Studio & Digital Product Engineering team. We deliver Immersive Digital Experiences, High-Performance Web Development, and Cinematic Web Design.
+                    <p className="text-[11px] sm:text-sm md:text-base text-white/80 font-normal leading-relaxed mb-1.5 md:mb-3">
+                      Axiogen is an Indian AI Automation &amp; Software Engineering Studio. We build autonomous AI voice agents, ClinicOS medical platform, and high-performance bespoke applications.
                     </p>
-                    <p className="text-[10px] sm:text-xs md:text-sm text-white/60 font-normal leading-relaxed mb-3 md:mb-5">
-                      Specializing in Web Engineering Solutions, Interactive Web Development, Bespoke Web Design, and Cutting-Edge Web Solutions, we build high-impact applications tailored for enterprise scale.
+                    <p className="text-[9px] sm:text-xs md:text-sm text-white/60 font-normal leading-relaxed mb-3 md:mb-6">
+                      Specializing in autonomous AI models, healthcare clinic operating systems, and scalable cloud engineering, we build high-impact production architectures tailored for enterprise scale.
                     </p>
-                    <div className="flex gap-4 mb-3 md:mb-6">
-                      <a 
-                        href="#" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="px-4 py-2 md:px-5 md:py-2.5 bg-white text-black hover:bg-white/95 rounded-full flex items-center gap-1.5 font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 btn-view-profile"
+
+                    <div className="flex flex-wrap gap-2.5 mb-2 md:mb-6">
+                      <button 
+                        onClick={() => scrollToFrame(getSectionFrames()[3] ?? 250)}
+                        className="px-3.5 py-1.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-full flex items-center gap-1.5 font-bold text-[10px] md:text-xs uppercase tracking-widest transition-all hover:scale-105 cursor-pointer"
                       >
-                        <BookOpen className="w-4 h-4" />
-                        <span>View Profile</span>
-                      </a>
+                        <BookOpen className="w-3.5 h-3.5 text-purple-400" />
+                        <span>View Projects</span>
+                      </button>
                     </div>
                   </div>
 
                   {/* Stats Row - Numbers Side-to-Side */}
-                  <div className="grid grid-cols-4 gap-3 pt-5 border-t border-white/10 mt-auto">
+                  <div className="grid grid-cols-4 gap-2 md:gap-3 pt-3 md:pt-5 border-t border-white/10 mt-auto">
                     <div className="flex flex-col">
-                      <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-purple-400">
+                      <span className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black text-purple-400">
                         <AnimatedCounter value={50} suffix="+" trigger={showAbout} />
                       </span>
-                      <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-white/50 font-bold mt-1">Projects</span>
+                      <span className="text-[7px] sm:text-[9px] uppercase tracking-wider text-white/50 font-bold mt-0.5 md:mt-1">Projects</span>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-indigo-400">
-                        <AnimatedCounter value={10} suffix="+" trigger={showAbout} />
+                      <span className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black text-white">
+                        <AnimatedCounter value={100} suffix="%" trigger={showAbout} />
                       </span>
-                      <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-white/50 font-bold mt-1">Techs</span>
+                      <span className="text-[7px] sm:text-[9px] uppercase tracking-wider text-white/50 font-bold mt-0.5 md:mt-1">Custom Built</span>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-cyan-400">
-                        <AnimatedCounter value={99} suffix="%" trigger={showAbout} />
+                      <span className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black text-purple-400">
+                        <AnimatedCounter value={99} suffix=".9%" trigger={showAbout} />
                       </span>
-                      <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-white/50 font-bold mt-1">Satisfied</span>
+                      <span className="text-[7px] sm:text-[9px] uppercase tracking-wider text-white/50 font-bold mt-0.5 md:mt-1">Uptime SLA</span>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-pink-400">
-                        <AnimatedCounter value={24} suffix="/7" trigger={showAbout} />
-                      </span>
-                      <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-white/50 font-bold mt-1">Support</span>
+                      <span className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black text-white">24/7</span>
+                      <span className="text-[7px] sm:text-[9px] uppercase tracking-wider text-white/50 font-bold mt-0.5 md:mt-1">Automated</span>
                     </div>
                   </div>
                 </motion.div>
               )}
-              
-              {/* Tech switcher block */}
+
+              {/* Skills Interactive Switcher */}
               {showAbout && (
                 <motion.div
-                  key="tech-switcher"
+                  key="skills-card"
                   initial={isMobile ? { opacity: 0, y: 15 } : undefined}
                   animate={{ opacity: 1, y: 0 }}
                   exit={isMobile ? { opacity: 0, y: -15 } : undefined}
                   transition={{ duration: 0.25 }}
-                  className="col-span-12 lg:col-span-6 flex flex-col gap-2 md:gap-4 w-full h-full"
+                  className="col-span-12 lg:col-span-6 bg-[var(--card-bg)] p-4 sm:p-6 md:p-8 rounded-[1.25rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] glass-card gradient-border flex flex-col justify-between h-full"
                 >
-                  {isMobile && (
-                    <div className="w-full select-none pointer-events-auto h-16 flex items-center">
-                      <LogoLoop logos={loopLogos} />
+                  <div className="flex flex-col flex-1">
+                    <div className="flex items-center justify-between mb-2 md:mb-4">
+                      <div>
+                        <h3 className="text-base sm:text-xl md:text-2xl font-black tracking-tight leading-none text-white">
+                          CORE COMPETENCIES
+                        </h3>
+                        <p className="text-[9px] md:text-xs text-white/50 font-normal mt-0.5">Software Engineering &amp; AI Stack</p>
+                      </div>
+                      <span className="text-[9px] font-mono text-purple-300 font-bold uppercase bg-purple-500/20 px-2 py-0.5 rounded border border-purple-500/30">
+                        {activeTab}
+                      </span>
                     </div>
-                  )}
-                  <div className="flex flex-col bg-[var(--card-bg)] p-3.5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-[var(--card-border)] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white w-full flex-1 min-h-[140px] sm:min-h-[300px] md:min-h-[380px] glass-card gradient-border">
-                    <div className="flex justify-between items-center mb-2 md:mb-6">
-                      <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider text-white">Skills</h3>
-                    </div>
-  
-                    {/* Selector tabs */}
-                    <div className="relative z-20 flex flex-row flex-nowrap gap-1 mb-2 md:mb-6 bg-white/5 p-1 rounded-xl md:rounded-2xl border border-white/5 pointer-events-auto w-full justify-between items-center">
+
+                    {/* Pill Bar Tabs */}
+                    <div className="grid grid-cols-4 gap-1 p-1 bg-white/5 rounded-xl border border-white/10 mb-2 md:mb-4 relative z-20 pointer-events-auto">
                       {(['languages', 'mobile', 'web', 'systems'] as const).map((tab) => (
                         <button
                           key={tab}
-                          onClick={() => setActiveTab(tab)}
-                          className={`flex-1 text-center px-1 sm:px-3 py-1.5 md:py-2.5 rounded-lg md:rounded-xl text-[8px] sm:text-xs uppercase tracking-normal sm:tracking-widest font-extrabold transition-all duration-200 cursor-pointer pointer-events-auto select-none ${
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveTab(tab);
+                          }}
+                          className={`py-1 md:py-2 text-[8px] sm:text-[10px] md:text-xs font-bold uppercase tracking-wider rounded-lg transition-all cursor-pointer relative z-30 pointer-events-auto ${
                             activeTab === tab 
-                              ? 'bg-white text-black shadow-[0_4px_15px_rgba(255,255,255,0.2)]' 
+                              ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30' 
                               : 'text-white/60 hover:text-white hover:bg-white/5'
                           }`}
                         >
-                          {tab === 'languages' 
-                            ? 'Languages' 
-                            : tab === 'mobile' 
-                              ? (isMobile ? 'Mobile' : 'Mobile Apps') 
-                              : tab === 'web' 
-                                ? (isMobile ? 'Web' : 'Web & Creative') 
-                                : 'AI & Systems'}
+                          {tab}
                         </button>
                       ))}
                     </div>
-  
-                    {/* List with animated switcher */}
-                    <div className="flex-1 grid grid-cols-2 gap-2 md:gap-4">
+
+                    {/* Skill Details Display */}
+                    <div className="flex-1">
                       <AnimatePresence mode="wait">
                         <motion.div
                           key={activeTab}
@@ -1176,24 +1263,24 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -8 }}
                           transition={{ duration: 0.2, ease: 'easeOut' }}
-                          className="col-span-2 grid grid-cols-2 gap-2 md:gap-4"
+                          className="col-span-2 grid grid-cols-2 gap-1.5 md:gap-4"
                         >
                           {techData[activeTab].map((skill, index) => (
                             <div 
                               key={index}
-                              className="p-2 md:p-5 rounded-lg md:rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/10 flex flex-col md:justify-center gap-1 md:gap-1.5 shadow-lg group relative overflow-hidden"
+                              className="p-2 md:p-5 rounded-lg md:rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all hover:bg-white/10 flex flex-col md:justify-center gap-0.5 md:gap-1.5 shadow-lg group relative overflow-hidden"
                             >
                               {/* Glow outline hover effect */}
                               <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
                               
                               <div className="flex items-center justify-between md:mb-1.5 w-full">
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-1.5 md:gap-2">
                                   <SkillIcon name={skill.name} />
-                                  <span className="font-bold text-[9px] sm:text-xs md:text-sm text-white group-hover:text-purple-300 transition-colors">{skill.name}</span>
+                                  <span className="font-bold text-[8px] sm:text-xs md:text-sm text-white group-hover:text-purple-300 transition-colors">{skill.name}</span>
                                 </div>
-                                <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-60 group-hover:translate-x-0 transition-all text-purple-300 block" />
+                                <ChevronRight className="w-3 h-3 md:w-3.5 md:h-3.5 opacity-0 -translate-x-2 group-hover:opacity-60 group-hover:translate-x-0 transition-all text-purple-300 block" />
                               </div>
-                              <p className="text-[9px] sm:text-xs text-white/60 leading-relaxed font-normal">{skill.desc}</p>
+                              <p className="text-[8px] sm:text-xs text-white/60 leading-relaxed font-normal">{skill.desc}</p>
                             </div>
                           ))}
                         </motion.div>
@@ -1205,24 +1292,276 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             </AnimatePresence>
           </div>
 
-          {/* Logo Loop Section */}
-          {!isMobile && (
-            <div className="w-full px-2 overflow-hidden select-none pointer-events-auto">
-              <LogoLoop logos={loopLogos} />
-            </div>
-          )}
+          {/* Logo Loop Section - ALWAYS visible & continuously moving */}
+          <div className="w-full px-2 overflow-hidden select-none pointer-events-auto mt-1 md:mt-2">
+            <LogoLoop logos={loopLogos} />
+          </div>
         </div>
       </motion.section>
 
 
-      {/* ----------------- PROJECTS SECTION ----------------- */}
+      {/* ----------------- FOUNDERS SECTION (AUTO-REVEAL INTRO -> CARDS) ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-start pt-16 pb-4 px-4 md:px-16 section-bg-adapt overflow-y-auto md:overflow-hidden`}
+        className={`absolute inset-0 flex flex-col items-center justify-start lg:justify-center pt-20 sm:pt-24 lg:pt-0 pb-16 sm:pb-20 lg:pb-0 px-3 sm:px-6 md:px-12 lg:px-16 text-white overflow-y-auto lg:overflow-hidden transition-colors duration-500 ${
+          founderPhase === 'intro' ? 'bg-black' : 'section-bg-adapt'
+        }`}
+        style={{ pointerEvents: showFounder ? 'auto' : 'none' }}
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: showFounder ? 1 : 0,
+          x: showFounder ? "0%" : (['hero', 'about'].includes(activeSection) ? "100%" : "-100%"),
+          display: showFounder ? 'flex' : 'none'
+        }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <AnimatePresence mode="wait">
+          {founderPhase === 'intro' ? (
+            /* Stage 1: Automated Fullscreen Reveal Splash */
+            <motion.div
+              key="founders-intro-splash"
+              initial={{ opacity: 0, scale: 0.94, filter: 'blur(12px)' }}
+              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, scale: 1.04, filter: 'blur(12px)', transition: { duration: 0.45, ease: 'easeInOut' } }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              onClick={() => setFounderPhase('cards')}
+              className="relative z-10 flex flex-col items-center justify-center max-w-[92vw] sm:max-w-2xl w-full mx-auto space-y-3.5 sm:space-y-5 text-center cursor-pointer pointer-events-auto select-none my-auto"
+            >
+              {/* Luxury Studio Badge */}
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-white/[0.03] border border-white/[0.1] backdrop-blur-xl text-white/75 text-[9px] sm:text-xs font-light uppercase tracking-[0.22em] sm:tracking-[0.3em] shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-white/70 animate-pulse" />
+                <span>The Minds Behind Axiogen</span>
+              </motion.div>
+
+              {/* Bespoke Luxury Haute Headline */}
+              <motion.div
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                className="space-y-1 sm:space-y-2"
+              >
+                <h2 
+                  className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-extralight tracking-[0.18em] sm:tracking-[0.25em] md:tracking-[0.35em] text-white/80 drop-shadow-[0_10px_40px_rgba(0,0,0,0.8)] uppercase leading-none inline-flex items-center justify-center gap-3 sm:gap-4"
+                  style={{ fontFamily: "'Rostex', sans-serif" }}
+                >
+                  <span>MEET</span>
+                  <span>OUR</span>
+                </h2>
+                <h2 
+                  className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-normal tracking-[0.18em] sm:tracking-[0.25em] md:tracking-[0.35em] text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-400 drop-shadow-[0_0_30px_rgba(255,255,255,0.15)] uppercase leading-none"
+                  style={{ fontFamily: "'Rostex', sans-serif" }}
+                >
+                  FOUNDERS
+                </h2>
+              </motion.div>
+
+              {/* Subtitle */}
+              <motion.p
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.25 }}
+                className="text-[11px] sm:text-sm md:text-base text-white/60 font-light max-w-lg sm:max-w-xl leading-relaxed mx-auto tracking-wide px-2"
+              >
+                Software engineers &amp; system architects engineering autonomous AI models, high-performance web architectures, and enterprise cloud infrastructure.
+              </motion.p>
+
+              {/* Luxury Hairline Progress Indicator */}
+              <div className="w-36 sm:w-56 h-[2px] bg-white/[0.08] rounded-full overflow-hidden mt-2 sm:mt-3 shadow-inner">
+                <motion.div 
+                  initial={{ width: "0%" }}
+                  animate={{ width: "100%" }}
+                  transition={{ duration: 1.5, ease: "linear" }}
+                  className="h-full bg-gradient-to-r from-white/30 via-white to-white/30 shadow-[0_0_12px_rgba(255,255,255,0.8)]"
+                />
+              </div>
+
+              <div className="flex items-center gap-1.5 text-[8px] sm:text-[10px] text-white/35 uppercase tracking-[0.2em] sm:tracking-[0.25em] font-light pt-0.5">
+                <span>Revealing Profiles</span>
+              </div>
+            </motion.div>
+          ) : (
+            /* Stage 2: Founder Details Cards */
+            <motion.div
+              key="founders-cards-view"
+              initial={{ opacity: 0, y: 25, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.97 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col items-center max-w-6xl w-full gap-2.5 sm:gap-3.5 md:gap-5 justify-center my-auto min-h-0 w-full"
+            >
+              {/* Luxury Haute Header */}
+              <div className="text-center mb-1 sm:mb-2">
+                <h2 
+                  className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-extralight tracking-[0.18em] sm:tracking-[0.25em] md:tracking-[0.32em] uppercase text-white drop-shadow-[0_4px_24px_rgba(255,255,255,0.06)] leading-tight inline-flex items-center justify-center gap-2.5 sm:gap-3.5"
+                  style={{ fontFamily: "'Rostex', sans-serif" }}
+                >
+                  <span>THE</span>
+                  <span className="font-normal text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400">FOUNDERS</span>
+                </h2>
+              </div>
+
+              <div className="grid grid-cols-12 gap-2.5 sm:gap-4 md:gap-6 lg:gap-8 items-stretch w-full px-1.5 sm:px-4 py-0.5">
+                
+                {/* Founder 1: Aditya Patil */}
+                <div
+                  className="col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_15px_40px_rgba(0,0,0,0.8)] flex flex-col justify-between transition-all duration-300 relative overflow-hidden group"
+                >
+                  <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/[0.03] rounded-full blur-3xl pointer-events-none group-hover:bg-white/[0.06] transition-colors" />
+
+                  <div className="flex flex-col flex-1">
+                    {/* Location Header */}
+                    <div className="flex items-center justify-end pb-1.5 sm:pb-2.5 border-b border-white/[0.06]">
+                      <span className="text-[8px] sm:text-[9px] md:text-[9.5px] text-white/40 font-mono tracking-widest uppercase">
+                        KOLHAPUR, IN
+                      </span>
+                    </div>
+
+                    {/* Executive Identity */}
+                    <div className="mt-2 sm:mt-3 md:mt-4 mb-1.5 sm:mb-2">
+                      <h3 
+                        className="text-[12px] min-[360px]:text-[13.5px] min-[400px]:text-sm sm:text-xl md:text-2xl lg:text-3xl font-extralight tracking-[0.03em] min-[360px]:tracking-[0.06em] sm:tracking-[0.12em] uppercase text-white leading-tight whitespace-nowrap inline-flex items-center gap-2 sm:gap-3"
+                        style={{ fontFamily: "'Rostex', sans-serif" }}
+                      >
+                        <span>ADITYA</span>
+                        <span>PATIL</span>
+                      </h3>
+                      <p className="text-[9.5px] sm:text-xs md:text-sm text-white/70 font-light tracking-wide mt-0.5">
+                        Founder &amp; Principal Systems Architect
+                      </p>
+                    </div>
+
+                    {/* Philosophy Quote */}
+                    <div className="my-2 sm:my-3 md:my-3.5 pl-2.5 sm:pl-3.5 border-l border-white/20 py-0.5">
+                      <p className="text-[9px] sm:text-xs md:text-sm text-white/80 font-light leading-relaxed italic line-clamp-2 sm:line-clamp-none">
+                        &ldquo;We engineer complete end-to-end software — from autonomous AI models and automation to web architectures, SaaS platforms, and bespoke systems built to scale.&rdquo;
+                      </p>
+                    </div>
+
+                    {/* Domain Matrix */}
+                    <div className="grid grid-cols-2 gap-1.5 sm:gap-2 my-1.5 sm:my-2.5 text-[8.5px] sm:text-xs">
+                      <div className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                        <span className="text-white/40 font-mono block text-[7px] sm:text-[8px] md:text-[9px] uppercase tracking-wider mb-0.5">Core Discipline</span>
+                        <span className="text-white/90 font-light leading-tight block text-[8.5px] sm:text-[10px] md:text-xs">Autonomous AI &amp; Web Platforms</span>
+                      </div>
+                      <div className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                        <span className="text-white/40 font-mono block text-[7px] sm:text-[8px] md:text-[9px] uppercase tracking-wider mb-0.5">Core Specialization</span>
+                        <span className="text-white/90 font-light leading-tight block text-[8.5px] sm:text-[10px] md:text-xs">Full-Stack AI &amp; Product Architecture</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Actions Footer */}
+                  <div className="pt-2.5 sm:pt-3 md:pt-4 border-t border-white/[0.06] mt-2 sm:mt-2.5 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <a
+                        href="https://github.com/axiogenai"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 sm:px-3.5 py-1.5 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.2] text-white/70 hover:text-white rounded-lg sm:rounded-xl flex items-center gap-1 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.14em] transition-all duration-200"
+                      >
+                        <svg viewBox="0 0 24 24" className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current opacity-70"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                        <span>GitHub</span>
+                      </a>
+                    </div>
+                    <button
+                      onClick={() => scrollToFrame(getSectionFrames()[4 + getProjectPagesCount()] ?? 418)}
+                      className="px-3 sm:px-4 py-1.5 bg-white/[0.08] hover:bg-white/[0.16] text-white border border-white/[0.18] hover:border-white/[0.3] rounded-lg sm:rounded-xl flex items-center gap-1 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.14em] sm:tracking-[0.18em] transition-all duration-200 cursor-pointer"
+                    >
+                      <Mail className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white/70" />
+                      <span>Contact Directly →</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Founder 2: Aditya Minchekar */}
+                <div
+                  className="col-span-12 lg:col-span-6 text-white bg-gradient-to-b from-[#12121c]/95 via-[#0a0a10]/98 to-[#06060a]/98 backdrop-blur-2xl p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl border border-white/[0.08] hover:border-white/[0.18] shadow-[0_15px_40px_rgba(0,0,0,0.8)] flex flex-col justify-between transition-all duration-300 relative overflow-hidden group"
+                >
+                  <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/[0.03] rounded-full blur-3xl pointer-events-none group-hover:bg-white/[0.06] transition-colors" />
+
+                  <div className="flex flex-col flex-1">
+                    {/* Location Header */}
+                    <div className="flex items-center justify-end pb-1.5 sm:pb-2.5 border-b border-white/[0.06]">
+                      <span className="text-[8px] sm:text-[9px] md:text-[9.5px] text-white/40 font-mono tracking-widest uppercase">
+                        SANGLI, IN
+                      </span>
+                    </div>
+
+                    {/* Executive Identity */}
+                    <div className="mt-2 sm:mt-3 md:mt-4 mb-1.5 sm:mb-2">
+                      <h3 
+                        className="text-[11px] min-[360px]:text-[12.5px] min-[400px]:text-sm sm:text-xl md:text-2xl lg:text-3xl font-extralight tracking-[0.02em] min-[360px]:tracking-[0.05em] sm:tracking-[0.12em] uppercase text-white leading-tight whitespace-nowrap inline-flex items-center gap-1.5 min-[360px]:gap-2 sm:gap-3"
+                        style={{ fontFamily: "'Rostex', sans-serif" }}
+                      >
+                        <span>ADITYA</span>
+                        <span>MINCHEKAR</span>
+                      </h3>
+                      <p className="text-[9.5px] sm:text-xs md:text-sm text-white/70 font-light tracking-wide mt-0.5">
+                        Co-Founder &amp; Technology Lead
+                      </p>
+                    </div>
+
+                    {/* Philosophy Quote */}
+                    <div className="my-2 sm:my-3 md:my-3.5 pl-2.5 sm:pl-3.5 border-l border-white/20 py-0.5">
+                      <p className="text-[9px] sm:text-xs md:text-sm text-white/80 font-light leading-relaxed italic line-clamp-2 sm:line-clamp-none">
+                        &ldquo;Resilient engineering demands rock-solid backends, secure multi-tenant cloud infrastructure, and distributed pipelines that run continuously without fail.&rdquo;
+                      </p>
+                    </div>
+
+                    {/* Domain Matrix */}
+                    <div className="grid grid-cols-2 gap-1.5 sm:gap-2 my-1.5 sm:my-2.5 text-[8.5px] sm:text-xs">
+                      <div className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                        <span className="text-white/40 font-mono block text-[7px] sm:text-[8px] md:text-[9px] uppercase tracking-wider mb-0.5">Core Discipline</span>
+                        <span className="text-white/90 font-light leading-tight block text-[8.5px] sm:text-[10px] md:text-xs">Cloud Architecture &amp; Scale</span>
+                      </div>
+                      <div className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-white/[0.02] border border-white/[0.05]">
+                        <span className="text-white/40 font-mono block text-[7px] sm:text-[8px] md:text-[9px] uppercase tracking-wider mb-0.5">Core Specialization</span>
+                        <span className="text-white/90 font-light leading-tight block text-[8.5px] sm:text-[10px] md:text-xs">Distributed Multi-Tenant Systems</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Actions Footer */}
+                  <div className="pt-2.5 sm:pt-3 md:pt-4 border-t border-white/[0.06] mt-2 sm:mt-2.5 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <a
+                        href="https://github.com/axiogenai"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 sm:px-3.5 py-1.5 bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.2] text-white/70 hover:text-white rounded-lg sm:rounded-xl flex items-center gap-1 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.14em] transition-all duration-200"
+                      >
+                        <svg viewBox="0 0 24 24" className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current opacity-70"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                        <span>GitHub</span>
+                      </a>
+                    </div>
+                    <button
+                      onClick={() => scrollToFrame(getSectionFrames()[4 + getProjectPagesCount()] ?? 418)}
+                      className="px-3 sm:px-4 py-1.5 bg-white/[0.08] hover:bg-white/[0.16] text-white border border-white/[0.18] hover:border-white/[0.3] rounded-lg sm:rounded-xl flex items-center gap-1 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.14em] sm:tracking-[0.18em] transition-all duration-200 cursor-pointer"
+                    >
+                      <Mail className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white/70" />
+                      <span>Contact Directly →</span>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.section>
+
+
+      <motion.section
+        className={`absolute inset-0 flex flex-col items-center justify-center pt-8 md:pt-12 pb-4 px-4 md:px-16 section-bg-adapt overflow-hidden`}
         style={{ pointerEvents: showProjects ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
           opacity: showProjects ? 1 : 0,
-          y: showProjects ? "0%" : (['hero', 'about'].includes(activeSection) ? "100%" : "-100%"),
+          y: showProjects ? "0%" : (['hero', 'about', 'founder'].includes(activeSection) ? "100%" : "-100%"),
           display: showProjects ? 'flex' : 'none'
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -1234,7 +1573,6 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
             <div>
               <h2 className="text-3xl md:text-5xl font-black tracking-tighter bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Selected Work</h2>
               <div className="flex items-center space-x-2 text-white/40 text-xs mt-1">
-                <Sparkles className="w-3.5 h-3.5 text-purple-400 animate-pulse" />
                 <span>
                   {(() => {
                     const totalProjectPages = isMobile 
@@ -1250,14 +1588,23 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               </div>
             </div>
 
-            {/* Visual Page Indicator Dots */}
-            <div className="flex gap-1.5 pb-2">
+            {/* Interactive Page Indicator Dots */}
+            <div className="flex gap-2 pb-2 items-center">
               {Array.from({ length: isMobile ? Math.max(1, Math.ceil(projects.length / 3)) : Math.max(1, Math.ceil(projects.length / 6)) }).map((_, i) => (
-                <div
+                <button
                   key={i}
-                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                    projectPage === i ? 'bg-purple-400 w-4 shadow-[0_0_8px_rgba(168,85,247,0.6)]' : 'bg-white/20'
+                  type="button"
+                  onClick={() => {
+                    const frames = getSectionFrames();
+                    const targetFrame = frames[2 + i];
+                    if (targetFrame !== undefined) {
+                      scrollToFrame(targetFrame);
+                    }
+                  }}
+                  className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                    projectPage === i ? 'bg-purple-400 w-5 shadow-[0_0_8px_rgba(168,85,247,0.6)]' : 'bg-white/20 hover:bg-white/40 w-2'
                   }`}
+                  title={`Jump to Page ${i + 1}`}
                 />
               ))}
             </div>
@@ -1340,7 +1687,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         initial={{ opacity: 0 }}
         animate={{ 
           opacity: showServices ? 1 : 0,
-          x: showServices ? "0%" : (['hero', 'about', 'work'].includes(activeSection) ? "-100%" : "100%"),
+          x: showServices ? "0%" : (['hero', 'about', 'founder', 'work'].includes(activeSection) ? "-100%" : "100%"),
           display: showServices ? 'flex' : 'none'
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -1535,34 +1882,15 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                 </a>
               </div>
 
-              {/* Shuffled Social Buttons to the Bottom of Left Panel */}
-              <div className="flex items-center gap-2 pt-1 pointer-events-auto">
-                <a 
-                  href="#" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="p-2 bg-white/5 border border-white/10 hover:border-white/30 rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
-                  aria-label="Instagram Profile"
+              <div className="pt-1.5 pointer-events-auto">
+                <a
+                  href="/axiogen.vcf"
+                  download="Axiogen.vcf"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-pink-500/30 text-white/80 hover:text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
                 >
-                  <BookOpen className="w-4 h-4" />
-                </a>
-                <a 
-                  href="#" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="p-2 bg-white/5 border border-white/10 hover:border-white/30 rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
-                  aria-label="Twitter Profile"
-                >
-                  <MessageSquare className="w-4 h-4" />
-                </a>
-                <a 
-                  href="#" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="p-2 bg-white/5 border border-white/10 hover:border-white/30 rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:scale-105"
-                  aria-label="LinkedIn Profile"
-                >
-                  <Briefcase className="w-4 h-4" />
+                  <FileText className="w-4 h-4 text-pink-400 shrink-0" />
+                  <span>Save Contact Card</span>
                 </a>
               </div>
 
@@ -1648,7 +1976,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                   transition={{ duration: 0.2 }}
                 >
                   <div className="w-14 h-14 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
-                    <Sparkles className="w-6 h-6 text-emerald-400" />
+                    <svg viewBox="0 0 24 24" className="w-6 h-6 text-emerald-400 fill-none stroke-current stroke-2"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                   </div>
                   <h3 className="text-lg font-bold mb-2">Message Sent!</h3>
                   <p className="text-xs text-white/60 leading-relaxed max-w-[240px]">
