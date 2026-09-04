@@ -121,8 +121,8 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
   }, []);
 
   return (
-    <div className={'w-full flex flex-col items-center select-none ' + className}>
-      {/* ─── Header Text Above Map ─── */}
+    <div className={'w-full max-w-5xl mx-auto flex flex-col items-center select-none ' + className}>
+      {/* ─── Haute Header Above Map ─── */}
       <div className="text-center mb-3 sm:mb-4 px-2">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.1] backdrop-blur-xl text-white/70 text-[8.5px] sm:text-[10px] font-light uppercase tracking-[0.2em] mb-2 shadow-lg">
           <Globe className="w-3 h-3 text-purple-400" />
@@ -142,13 +142,13 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
         </p>
       </div>
 
-      {/* ─── Map — NO card wrapper, just the raw map with stats overlay ─── */}
+      {/* ─── Map Card Canvas ─── */}
       <div
         ref={containerRef}
-        className="relative w-full flex-1 min-h-0 overflow-hidden"
+        className="relative w-full rounded-2xl sm:rounded-3xl border border-white/[0.1] bg-gradient-to-b from-[#0c0d14]/95 via-[#08090f]/98 to-[#05060a]/98 shadow-[0_20px_60px_rgba(0,0,0,0.8)] overflow-hidden"
       >
         {/* Top Overlay Stats */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between p-4 sm:p-6 pb-16">
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between bg-gradient-to-b from-[#08090f]/95 via-[#08090f]/60 to-transparent p-4 sm:p-6 pb-16">
           <div className="flex flex-col gap-0.5">
             <span className="text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-white/50">
               Unique Visitors
@@ -186,8 +186,8 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
           </div>
         )}
 
-        {/* Map Rendering — fills remaining space, no card border */}
-        <div className="relative w-full h-full min-h-[280px] sm:min-h-[380px] md:min-h-[440px]">
+        {/* Map Rendering Container */}
+        <div className="relative w-full aspect-[16/9] min-h-[280px] sm:min-h-[380px] md:min-h-[440px]">
           {isLoading || !worldData ? (
             <div className="flex h-full w-full items-center justify-center gap-2 text-white/40 text-xs py-20">
               <div className="size-5 animate-spin rounded-full border-2 border-white/20 border-t-white" />
