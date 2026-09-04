@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Mercator } from '@visx/geo';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { geoMercator, geoPath } from 'd3-geo';
 import { ParentSize } from '@visx/responsive';
 import { feature } from 'topojson-client';
 import type { FeatureCollection, Geometry } from 'geojson';
@@ -20,36 +20,56 @@ interface WorldTopology extends Topology {
 }
 
 const defaultVisitorsByCountry: Record<string, number> = {
-  'United States': 18,
-  'United Kingdom': 12,
-  'Germany': 17,
-  'France': 9,
-  'Canada': 8,
-  'Australia': 6,
-  'Netherlands': 5,
-  'Brazil': 7,
-  'India': 83,
-  'Japan': 4,
-  'Spain': 3,
-  'Italy': 6,
-  'Mexico': 5,
-  'Poland': 4,
-  'Sweden': 3,
-  'Belgium': 2,
-  'Switzerland': 2,
-  'Austria': 1,
-  'Norway': 2,
-  'Denmark': 1,
-  'Ireland': 3,
-  'Portugal': 2,
-  'New Zealand': 1,
-  'Finland': 1,
-  'South Africa': 4,
-  'Argentina': 3,
-  'Indonesia': 2,
-  'Philippines': 3,
-  'Thailand': 2,
-  'Vietnam': 1,
+  'India': 342,
+  'United States': 289,
+  'United Kingdom': 114,
+  'Germany': 98,
+  'Canada': 82,
+  'France': 64,
+  'Australia': 51,
+  'Japan': 47,
+  'Brazil': 43,
+  'Russia': 38,
+  'China': 34,
+  'Netherlands': 29,
+  'Singapore': 24,
+  'United Arab Emirates': 21,
+  'South Korea': 19,
+  'Spain': 18,
+  'Italy': 16,
+  'Sweden': 14,
+  'Switzerland': 13,
+  'Poland': 12,
+  'Mexico': 11,
+  'South Africa': 10,
+  'Indonesia': 9,
+  'Norway': 8,
+  'Ireland': 8,
+  'Denmark': 7,
+  'New Zealand': 6,
+  'Argentina': 6,
+  'Saudi Arabia': 5,
+  'Turkey': 5,
+  'Austria': 4,
+  'Belgium': 4,
+  'Finland': 4,
+  'Portugal': 4,
+  'Philippines': 4,
+  'Thailand': 3,
+  'Vietnam': 3,
+  'Egypt': 2,
+  'Greece': 2,
+  'Israel': 2,
+  'Malaysia': 2,
+  'Chile': 2,
+  'Colombia': 2,
+  'Czech Republic': 2,
+  'Hungary': 1,
+  'Romania': 1,
+  'Kenya': 1,
+  'Nigeria': 1,
+  'Pakistan': 1,
+  'Bangladesh': 1,
 };
 
 let globalWorldDataCache: FeatureCollection<Geometry, CountryProperties> | null = null;
@@ -95,34 +115,19 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
 
   const getColor = useCallback((name: string) => {
     const count = defaultVisitorsByCountry[name];
-    if (!count) return '#222736';
+    if (!count) return '#1b2030'; // Clearly visible base landmass, never disappears
 
-    if (
-      name === 'Argentina' ||
-      name === 'South Africa' ||
-      name === 'Norway' ||
-      name === 'Sweden' ||
-      name === 'Finland' ||
-      name === 'Germany' ||
-      count >= 15
-    ) {
-      return '#f8fafc';
-    }
-    if (name === 'Canada' || name === 'Japan' || name === 'United Kingdom' || count >= 8) {
-      return '#cbd5e1';
-    }
-    if (name === 'India' || name === 'Brazil' || name === 'Australia' || name === 'France' || count >= 5) {
-      return '#94a3b8';
-    }
-    if (name === 'United States' || name === 'Italy' || name === 'Netherlands' || count >= 3) {
-      return '#64748b';
-    }
-    return '#4b5563';
+    if (count >= 100) return '#ffffff'; // Top tier: pure white
+    if (count >= 50) return '#f1f5f9';  // Tier 2: bright silver
+    if (count >= 25) return '#cbd5e1';  // Tier 3: light slate
+    if (count >= 10) return '#94a3b8';  // Tier 4: mid slate
+    if (count >= 5) return '#64748b';   // Tier 5: muted slate
+    return '#475569';                   // Tier 6: dark slate
   }, []);
 
   return (
     <div className={'w-full max-w-5xl mx-auto flex flex-col items-center select-none ' + className}>
-      {/* ─── Haute Header Above Map ─── */}
+      {/* ─── Header Typography Above Map ─── */}
       <div className="text-center mb-3 sm:mb-4 px-2">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.1] backdrop-blur-xl text-white/70 text-[8.5px] sm:text-[10px] font-light uppercase tracking-[0.2em] mb-2 shadow-lg">
           <Globe className="w-3 h-3 text-purple-400" />
@@ -147,24 +152,24 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
         ref={containerRef}
         className="relative w-full rounded-2xl sm:rounded-3xl border border-white/[0.1] bg-gradient-to-b from-[#0c0d14]/95 via-[#08090f]/98 to-[#05060a]/98 shadow-[0_20px_60px_rgba(0,0,0,0.8)] overflow-hidden"
       >
-        {/* Top Overlay Stats */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between bg-gradient-to-b from-[#08090f]/95 via-[#08090f]/60 to-transparent p-4 sm:p-6 pb-16">
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-white/50">
+        {/* Top Overlay Stats (Clean, translucent badges without blacking out countries) */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between p-4 sm:p-6">
+          <div className="flex flex-col gap-0.5 bg-black/40 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/[0.06]">
+            <span className="text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase text-white/50">
               Unique Visitors
             </span>
-            <div className="flex items-baseline gap-2 mt-0.5">
-              <span className="text-2xl sm:text-4xl font-black tracking-tight text-white">
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl sm:text-3xl font-black tracking-tight text-white">
                 {displayValue.toLocaleString()}
               </span>
             </div>
-            <span className="text-[10px] sm:text-xs text-white/60 font-medium">
+            <span className="text-[9px] sm:text-[11px] text-white/60 font-medium">
               {displayLabel}
             </span>
           </div>
 
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/40 border border-white/[0.08] backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
             <span className="text-[9px] sm:text-[10px] font-mono text-white/70 uppercase tracking-wider">
               Live Global Reach
             </span>
@@ -174,20 +179,22 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
         {/* Floating Tooltip */}
         {hoveredCountry && (
           <div
-            className="pointer-events-none absolute z-50 -translate-x-1/2 -translate-y-full mb-3"
+            className="pointer-events-none absolute z-50 -translate-x-1/2 -translate-y-full mb-3 transition-transform duration-75"
             style={{ left: hoveredCountry.x, top: hoveredCountry.y }}
           >
-            <div className="px-3 py-1.5 rounded-xl bg-zinc-900/95 border border-white/15 shadow-2xl backdrop-blur-xl text-white text-xs flex items-center gap-2 font-medium">
+            <div className="px-3 py-1.5 rounded-xl bg-zinc-900/95 border border-white/20 shadow-2xl backdrop-blur-xl text-white text-xs flex items-center gap-2 font-medium">
               <MapPin className="w-3 h-3 text-purple-400 shrink-0" />
               <span>{hoveredCountry.name}</span>
               <span className="text-white/40 font-mono">|</span>
-              <span className="font-bold text-white/95">{hoveredCountry.count} visitors</span>
+              <span className="font-bold text-white/95">
+                {hoveredCountry.count > 0 ? `${hoveredCountry.count} visitors` : 'Global Node'}
+              </span>
             </div>
           </div>
         )}
 
-        {/* Map Rendering Container */}
-        <div className="relative w-full aspect-[16/9] min-h-[280px] sm:min-h-[380px] md:min-h-[440px]">
+        {/* Map Rendering Container — fitted perfectly with d3-geo */}
+        <div className="relative w-full aspect-[16/9] min-h-[300px] sm:min-h-[400px] md:min-h-[460px]">
           {isLoading || !worldData ? (
             <div className="flex h-full w-full items-center justify-center gap-2 text-white/40 text-xs py-20">
               <div className="size-5 animate-spin rounded-full border-2 border-white/20 border-t-white" />
@@ -197,61 +204,60 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
             <ParentSize debounceTime={10}>
               {({ width, height }) => {
                 if (width < 10 || height < 10) return null;
-                const scale = width / 6.2831853;
-                const translate: [number, number] = [width / 2, height / 2];
+
+                // Use d3-geo fitExtent to ensure 100% of countries (Russia, Greenland, Canada, Chile, etc.) fit inside viewport without any clipping
+                const projection = geoMercator().fitExtent(
+                  [
+                    [16, 16],
+                    [width - 16, height - 16],
+                  ],
+                  worldData
+                );
+                const pathGenerator = geoPath().projection(projection);
 
                 return (
-                  <Mercator
-                    center={[0, 16]}
-                    data={worldData.features}
-                    scale={scale}
-                    translate={translate}
+                  <svg
+                    aria-hidden="true"
+                    className="w-full h-full block"
+                    height={height}
+                    onMouseLeave={() => {
+                      setHoveredCountry(null);
+                      setHoveredIndex(null);
+                    }}
+                    style={{ contain: 'layout style paint', touchAction: 'none' }}
+                    viewBox={`0 0 ${width} ${height}`}
+                    width={width}
                   >
-                    {(mercator) => (
-                      <svg
-                        aria-hidden="true"
-                        className="w-full h-full block"
-                        height={height}
-                        onMouseLeave={() => {
-                          setHoveredCountry(null);
-                          setHoveredIndex(null);
-                        }}
-                        style={{ contain: 'layout style paint', touchAction: 'none' }}
-                        viewBox={'0 0 ' + width + ' ' + height}
-                        width={width}
-                      >
-                        <g>
-                          {worldData.features.map((feature, idx) => {
-                            const path = mercator.path(feature);
-                            if (!path) return null;
-                            const name = (feature.properties && feature.properties.name) || '';
-                            const isHovered = hoveredIndex === idx;
-                            const fill = getColor(name);
+                    <g>
+                      {worldData.features.map((countryFeature, idx) => {
+                        const pathData = pathGenerator(countryFeature);
+                        if (!pathData) return null;
+                        const countryName = (countryFeature.properties && countryFeature.properties.name) || '';
+                        const isHovered = hoveredIndex === idx;
+                        const fill = getColor(countryName);
 
-                            return (
-                              <path
-                                key={'country-' + idx}
-                                className="cursor-pointer transition-all duration-150"
-                                d={path}
-                                fill={fill}
-                                onMouseEnter={(e) => {
-                                  const rect = containerRef.current && containerRef.current.getBoundingClientRect();
-                                  const x = rect ? e.clientX - rect.left : width / 2;
-                                  const y = rect ? e.clientY - rect.top : height / 2;
-                                  const count = defaultVisitorsByCountry[name] || 0;
-                                  setHoveredIndex(idx);
-                                  setHoveredCountry({ name, count, x, y });
-                                }}
-                                opacity={hoveredIndex === null ? 0.95 : isHovered ? 1 : 0.6}
-                                stroke={isHovered ? '#ffffff' : 'rgba(0, 0, 0, 0.65)'}
-                                strokeWidth={isHovered ? 1.4 : 0.5}
-                              />
-                            );
-                          })}
-                        </g>
-                      </svg>
-                    )}
-                  </Mercator>
+                        return (
+                          <path
+                            key={'country-' + idx}
+                            className="cursor-pointer transition-all duration-150"
+                            d={pathData}
+                            fill={fill}
+                            onMouseEnter={(e) => {
+                              const rect = containerRef.current && containerRef.current.getBoundingClientRect();
+                              const x = rect ? e.clientX - rect.left : width / 2;
+                              const y = rect ? e.clientY - rect.top : height / 2;
+                              const count = defaultVisitorsByCountry[countryName] || 0;
+                              setHoveredIndex(idx);
+                              setHoveredCountry({ name: countryName, count, x, y });
+                            }}
+                            opacity={hoveredIndex === null ? 0.95 : isHovered ? 1 : 0.65}
+                            stroke={isHovered ? '#ffffff' : 'rgba(255, 255, 255, 0.12)'}
+                            strokeWidth={isHovered ? 1.5 : 0.6}
+                          />
+                        );
+                      })}
+                    </g>
+                  </svg>
                 );
               }}
             </ParentSize>
