@@ -1555,9 +1555,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         </AnimatePresence>
       </motion.section>
 
-      {/* ----------------- GLOBAL REACH SECTION (STANDALONE) ----------------- */}
+      {/* ----------------- GLOBAL REACH SECTION (STANDALONE — NO WRAPPER) ----------------- */}
       <motion.section
-        className={`absolute inset-0 flex flex-col items-center justify-center pt-20 sm:pt-24 lg:pt-0 pb-16 sm:pb-20 lg:pb-0 px-3 sm:px-6 md:px-12 lg:px-16 text-white overflow-hidden section-bg-adapt`}
+        className="absolute inset-0 overflow-hidden"
         style={{ pointerEvents: showGlobalReach ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1567,15 +1567,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="w-full max-w-6xl mx-auto flex flex-col items-center justify-center min-h-0 pointer-events-auto h-full">
-          <div className="text-center mb-4 sm:mb-8 mt-4 sm:mt-0">
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black tracking-tighter bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Global Reach</h2>
-            <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] font-semibold text-white/50 mt-1 sm:mt-2">Real-time Visitor Map</p>
-          </div>
-          <div className="w-full flex-1 max-h-[70vh]">
-            <GlobalVisitorMap />
-          </div>
-        </div>
+        <GlobalVisitorMap className="w-full h-full" />
       </motion.section>
 
 
