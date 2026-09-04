@@ -1548,7 +1548,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
 
       {/* ----------------- GLOBAL REACH SECTION (STANDALONE — NO WRAPPER) ----------------- */}
       <motion.section
-        className="absolute inset-0 flex flex-col items-center justify-center pt-16 sm:pt-20 lg:pt-16 pb-4 sm:pb-8 px-3 sm:px-6 md:px-12 lg:px-16 text-white overflow-hidden section-bg-adapt"
+        className="absolute inset-0 flex flex-col items-center justify-center pt-14 sm:pt-16 lg:pt-0 pb-6 sm:pb-8 lg:pb-0 px-3 sm:px-6 md:px-10 lg:px-12 text-white overflow-hidden section-bg-adapt"
         style={{ pointerEvents: showGlobalReach ? 'auto' : 'none' }}
         initial={{ opacity: 0 }}
         animate={{ 
@@ -1558,7 +1558,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        <GlobalVisitorMap className="w-full h-full max-w-6xl" />
+        <GlobalVisitorMap className="w-full max-w-5xl my-auto" />
       </motion.section>
 
 

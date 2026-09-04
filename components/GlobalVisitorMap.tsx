@@ -104,13 +104,13 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
   return (
     <div className={'w-full max-w-6xl mx-auto flex flex-col items-center select-none ' + className}>
       {/* ─── Header Typography Above Map ─── */}
-      <div className="w-full flex flex-col items-center mb-2 sm:mb-3 px-2 text-center">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.1] backdrop-blur-xl text-white/70 text-[8.5px] sm:text-[10px] font-light uppercase tracking-[0.2em] mb-2 shadow-lg">
+      <div className="w-full flex flex-col items-center mb-1.5 sm:mb-2 px-2 text-center">
+        <div className="inline-flex items-center gap-1.5 px-3 py-0.5 sm:py-1 rounded-full bg-white/[0.04] border border-white/[0.1] backdrop-blur-xl text-white/70 text-[8px] sm:text-[9.5px] font-light uppercase tracking-[0.2em] mb-1.5 shadow-lg">
           <Globe className="w-3 h-3 text-purple-400" />
           <span>Live Visitor Telemetry</span>
         </div>
         <h3
-          className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extralight tracking-[0.15em] sm:tracking-[0.22em] uppercase text-white leading-tight"
+          className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-extralight tracking-[0.15em] sm:tracking-[0.22em] uppercase text-white leading-tight"
           style={{ fontFamily: "'Rostex', sans-serif" }}
         >
           <span>VISITED</span>{' '}
@@ -118,32 +118,32 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
             ACROSS THE WORLD
           </span>
         </h3>
-        <p className="text-[10px] sm:text-xs text-white/55 font-light max-w-md mx-auto mt-1 tracking-wide">
+        <p className="text-[9.5px] sm:text-xs text-white/55 font-light max-w-md mx-auto mt-0.5 tracking-wide">
           Real-time verified global visits connecting to Axiogen platforms &amp; systems worldwide.
         </p>
       </div>
 
       {/* ─── Visitor Count Bar (Between Text and Map Wrapper) ─── */}
-      <div className="w-full flex items-center justify-between px-1 sm:px-2 mb-2 sm:mb-2.5">
+      <div className="w-full flex items-center justify-between px-1 sm:px-2 mb-1.5 sm:mb-2">
         {/* Unique Visitors Count */}
-        <div className="flex items-center gap-2 sm:gap-3 bg-white/[0.03] backdrop-blur-xl px-3 sm:px-4 py-1 sm:py-1.5 rounded-xl border border-white/[0.08] shadow-lg">
-          <span className="text-[9px] sm:text-[10px] font-mono tracking-wider uppercase text-white/50">
+        <div className="flex items-center gap-2 sm:gap-2.5 bg-white/[0.03] backdrop-blur-xl px-2.5 sm:px-3.5 py-1 rounded-xl border border-white/[0.08] shadow-lg">
+          <span className="text-[8.5px] sm:text-[9.5px] font-mono tracking-wider uppercase text-white/50">
             Unique Visitors
           </span>
-          <span className="text-sm sm:text-base md:text-lg font-black tracking-tight text-white font-mono">
+          <span className="text-xs sm:text-sm md:text-base font-black tracking-tight text-white font-mono">
             {displayValue.toLocaleString()}
           </span>
           {hoveredCountry && (
-            <span className="text-[8.5px] sm:text-[9.5px] text-purple-300 font-medium border-l border-white/10 pl-2">
+            <span className="text-[8px] sm:text-[9px] text-purple-300 font-medium border-l border-white/10 pl-2">
               {displayLabel}
             </span>
           )}
         </div>
 
         {/* Live Global Reach Badge */}
-        <div className="flex items-center gap-2 px-3 py-1 sm:py-1.5 rounded-xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-lg">
+        <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1 rounded-xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-lg">
           <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
-          <span className="text-[9px] sm:text-[10px] font-mono text-white/70 uppercase tracking-wider flex items-center gap-1.5">
+          <span className="text-[8.5px] sm:text-[9.5px] font-mono text-white/70 uppercase tracking-wider flex items-center gap-1.5">
             <span>Live Global Reach</span>
             <Activity className="w-3 h-3 text-green-400" />
           </span>
@@ -173,8 +173,8 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
           </div>
         )}
 
-        {/* Map Rendering Container — Full-span 2:1 natural projection across entire card */}
-        <div className="relative w-full aspect-[2/1] min-h-[300px] sm:min-h-[380px] md:min-h-[460px]">
+        {/* Map Rendering Container — 2.05:1 ratio, max-h-[58vh] for guaranteed screen fit */}
+        <div className="relative w-full aspect-[2.05/1] max-h-[58vh]">
           {isLoading || !worldData ? (
             <div className="flex h-full w-full items-center justify-center gap-2 text-white/40 text-xs py-20">
               <div className="size-5 animate-spin rounded-full border-2 border-white/20 border-t-white" />
