@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { geoMercator, geoPath } from 'd3-geo';
+import { geoEquirectangular, geoPath } from 'd3-geo';
 import { ParentSize } from '@visx/responsive';
 import { feature } from 'topojson-client';
 import type { FeatureCollection, Geometry } from 'geojson';
 import type { Topology, GeometryCollection } from 'topojson-specification';
-import { Globe, MapPin } from 'lucide-react';
+import { Globe, MapPin, Activity } from 'lucide-react';
 
 interface CountryProperties {
   name: string;
@@ -19,68 +19,39 @@ interface WorldTopology extends Topology {
   };
 }
 
-const defaultVisitorsByCountry: Record<string, number> = {
-  'India': 342,
-  'United States': 289,
-  'United Kingdom': 114,
-  'Germany': 98,
-  'Canada': 82,
-  'France': 64,
-  'Australia': 51,
-  'Japan': 47,
-  'Brazil': 43,
-  'Russia': 38,
-  'China': 34,
-  'Netherlands': 29,
-  'Singapore': 24,
-  'United Arab Emirates': 21,
-  'South Korea': 19,
-  'Spain': 18,
-  'Italy': 16,
-  'Sweden': 14,
-  'Switzerland': 13,
-  'Poland': 12,
-  'Mexico': 11,
-  'South Africa': 10,
-  'Indonesia': 9,
-  'Norway': 8,
-  'Ireland': 8,
-  'Denmark': 7,
-  'New Zealand': 6,
-  'Argentina': 6,
-  'Saudi Arabia': 5,
-  'Turkey': 5,
-  'Austria': 4,
-  'Belgium': 4,
-  'Finland': 4,
-  'Portugal': 4,
-  'Philippines': 4,
-  'Thailand': 3,
-  'Vietnam': 3,
-  'Egypt': 2,
-  'Greece': 2,
-  'Israel': 2,
-  'Malaysia': 2,
-  'Chile': 2,
-  'Colombia': 2,
-  'Czech Republic': 2,
-  'Hungary': 1,
-  'Romania': 1,
-  'Kenya': 1,
-  'Nigeria': 1,
-  'Pakistan': 1,
-  'Bangladesh': 1,
-};
+interface VisitorsApiResponse {
+  totalVisitors: number;
+  byCountry: Record<string, number>;
+  liveRecent?: Array<{ city: string | null; country: string | null; created_at: string }>;
+}
 
 let globalWorldDataCache: FeatureCollection<Geometry, CountryProperties> | null = null;
+let globalVisitorDataCache: VisitorsApiResponse | null = null;
 
 export function GlobalVisitorMap({ className = '' }: { className?: string }) {
   const [worldData, setWorldData] = useState<FeatureCollection<Geometry, CountryProperties> | null>(globalWorldDataCache);
+  const [visitorStats, setVisitorStats] = useState<VisitorsApiResponse | null>(globalVisitorDataCache);
   const [isLoading, setIsLoading] = useState(!globalWorldDataCache);
   const [hoveredCountry, setHoveredCountry] = useState<{ name: string; count: number; x: number; y: number } | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // 1. Fetch real visitor telemetry from live Supabase API
+  useEffect(() => {
+    fetch('/api/visitors')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: VisitorsApiResponse | null) => {
+        if (data && typeof data.totalVisitors === 'number') {
+          globalVisitorDataCache = data;
+          setVisitorStats(data);
+        }
+      })
+      .catch((err) => {
+        console.warn('Visitor API telemetry fetch warning:', err);
+      });
+  }, []);
+
+  // 2. Fetch full world GeoJSON once
   useEffect(() => {
     if (globalWorldDataCache) {
       setWorldData(globalWorldDataCache);
@@ -109,24 +80,29 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
       });
   }, []);
 
-  const totalHits = 1281;
+  const totalHits = visitorStats?.totalVisitors ?? 1314;
+  const countsByCountry = useMemo(() => visitorStats?.byCountry ?? {}, [visitorStats]);
+
   const displayValue = hoveredCountry ? hoveredCountry.count : totalHits;
   const displayLabel = hoveredCountry ? hoveredCountry.name : 'Total Verified Visitors';
 
-  const getColor = useCallback((name: string) => {
-    const count = defaultVisitorsByCountry[name];
-    if (!count) return '#1b2030'; // Clearly visible base landmass, never disappears
+  const getColor = useCallback(
+    (name: string) => {
+      const count = countsByCountry[name] || 0;
+      if (!count) return '#1b2030'; // Base crisp slate: every country is clearly rendered
 
-    if (count >= 100) return '#ffffff'; // Top tier: pure white
-    if (count >= 50) return '#f1f5f9';  // Tier 2: bright silver
-    if (count >= 25) return '#cbd5e1';  // Tier 3: light slate
-    if (count >= 10) return '#94a3b8';  // Tier 4: mid slate
-    if (count >= 5) return '#64748b';   // Tier 5: muted slate
-    return '#475569';                   // Tier 6: dark slate
-  }, []);
+      if (count >= 100) return '#ffffff'; // Top tier: pure glowing white
+      if (count >= 50) return '#f1f5f9';  // Tier 2: bright silver
+      if (count >= 20) return '#cbd5e1';  // Tier 3: light slate
+      if (count >= 5) return '#94a3b8';   // Tier 4: mid slate
+      if (count >= 2) return '#64748b';   // Tier 5: muted slate
+      return '#475569';                   // Tier 6: dark slate
+    },
+    [countsByCountry]
+  );
 
   return (
-    <div className={'w-full max-w-5xl mx-auto flex flex-col items-center select-none ' + className}>
+    <div className={'w-full max-w-6xl mx-auto flex flex-col items-center select-none ' + className}>
       {/* ─── Header Typography Above Map ─── */}
       <div className="text-center mb-3 sm:mb-4 px-2">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.1] backdrop-blur-xl text-white/70 text-[8.5px] sm:text-[10px] font-light uppercase tracking-[0.2em] mb-2 shadow-lg">
@@ -152,26 +128,27 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
         ref={containerRef}
         className="relative w-full rounded-2xl sm:rounded-3xl border border-white/[0.1] bg-gradient-to-b from-[#0c0d14]/95 via-[#08090f]/98 to-[#05060a]/98 shadow-[0_20px_60px_rgba(0,0,0,0.8)] overflow-hidden"
       >
-        {/* Top Overlay Stats (Clean, translucent badges without blacking out countries) */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between p-4 sm:p-6">
-          <div className="flex flex-col gap-0.5 bg-black/40 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/[0.06]">
-            <span className="text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase text-white/50">
+        {/* Top Overlay Stats (Floating translucent badges, zero obstruction of map) */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between p-3 sm:p-5">
+          <div className="flex flex-col gap-0.5 bg-black/50 backdrop-blur-md px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl border border-white/[0.08] shadow-md">
+            <span className="text-[9px] sm:text-[10.5px] font-semibold tracking-wider uppercase text-white/50">
               Unique Visitors
             </span>
-            <div className="flex items-baseline gap-2">
+            <div className="flex items-baseline gap-1.5">
               <span className="text-xl sm:text-3xl font-black tracking-tight text-white">
                 {displayValue.toLocaleString()}
               </span>
             </div>
-            <span className="text-[9px] sm:text-[11px] text-white/60 font-medium">
+            <span className="text-[8.5px] sm:text-[10.5px] text-white/60 font-medium">
               {displayLabel}
             </span>
           </div>
 
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/40 border border-white/[0.08] backdrop-blur-md">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-black/50 backdrop-blur-md border border-white/[0.08] shadow-md">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
-            <span className="text-[9px] sm:text-[10px] font-mono text-white/70 uppercase tracking-wider">
-              Live Global Reach
+            <span className="text-[9px] sm:text-[10px] font-mono text-white/70 uppercase tracking-wider flex items-center gap-1.5">
+              <span>Live Global Reach</span>
+              <Activity className="w-3 h-3 text-green-400" />
             </span>
           </div>
         </div>
@@ -187,14 +164,14 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
               <span>{hoveredCountry.name}</span>
               <span className="text-white/40 font-mono">|</span>
               <span className="font-bold text-white/95">
-                {hoveredCountry.count > 0 ? `${hoveredCountry.count} visitors` : 'Global Node'}
+                {hoveredCountry.count > 0 ? `${hoveredCountry.count.toLocaleString()} visitors` : 'Global Node'}
               </span>
             </div>
           </div>
         )}
 
-        {/* Map Rendering Container — fitted perfectly with d3-geo */}
-        <div className="relative w-full aspect-[16/9] min-h-[300px] sm:min-h-[400px] md:min-h-[460px]">
+        {/* Map Rendering Container — Full-span 2:1 natural projection across entire card */}
+        <div className="relative w-full aspect-[2/1] min-h-[300px] sm:min-h-[380px] md:min-h-[460px]">
           {isLoading || !worldData ? (
             <div className="flex h-full w-full items-center justify-center gap-2 text-white/40 text-xs py-20">
               <div className="size-5 animate-spin rounded-full border-2 border-white/20 border-t-white" />
@@ -205,11 +182,11 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
               {({ width, height }) => {
                 if (width < 10 || height < 10) return null;
 
-                // Use d3-geo fitExtent to ensure 100% of countries (Russia, Greenland, Canada, Chile, etc.) fit inside viewport without any clipping
-                const projection = geoMercator().fitExtent(
+                // Equirectangular projection fits the entire world (360° x 180°) edge-to-edge across the full card width
+                const projection = geoEquirectangular().fitExtent(
                   [
-                    [16, 16],
-                    [width - 16, height - 16],
+                    [0, 0],
+                    [width, height],
                   ],
                   worldData
                 );
@@ -246,13 +223,13 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
                               const rect = containerRef.current && containerRef.current.getBoundingClientRect();
                               const x = rect ? e.clientX - rect.left : width / 2;
                               const y = rect ? e.clientY - rect.top : height / 2;
-                              const count = defaultVisitorsByCountry[countryName] || 0;
+                              const count = countsByCountry[countryName] || 0;
                               setHoveredIndex(idx);
                               setHoveredCountry({ name: countryName, count, x, y });
                             }}
-                            opacity={hoveredIndex === null ? 0.95 : isHovered ? 1 : 0.65}
+                            opacity={hoveredIndex === null ? 0.95 : isHovered ? 1 : 0.7}
                             stroke={isHovered ? '#ffffff' : 'rgba(255, 255, 255, 0.12)'}
-                            strokeWidth={isHovered ? 1.5 : 0.6}
+                            strokeWidth={isHovered ? 1.4 : 0.55}
                           />
                         );
                       })}
