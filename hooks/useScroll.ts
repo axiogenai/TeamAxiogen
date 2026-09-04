@@ -53,8 +53,8 @@ export function getProjectPagesCount(): number {
 }
 
 export function getTotalStates(): number {
-  // Hero (0), About (1), Founder (2), Projects (P pages), Services, Contact
-  return 5 + getProjectPagesCount();
+  // Hero (0), About (1), Founder (2), Global Reach (3), Projects (P pages), Services, Contact
+  return 6 + getProjectPagesCount();
 }
 
 export function getMaxScrollMultiplier(): number {
@@ -171,8 +171,9 @@ export function useNavSection(): string {
       if (frame <= slice) return 'hero';
       if (frame <= slice * 2) return 'about';
       if (frame <= slice * 3) return 'founder';
-      if (frame <= slice * (3 + P)) return 'work';
-      if (frame <= slice * (4 + P)) return 'services';
+      if (frame <= slice * 4) return 'global-reach';
+      if (frame <= slice * (4 + P)) return 'work';
+      if (frame <= slice * (5 + P)) return 'services';
       return 'contact';
     },
     () => 'hero'
@@ -185,6 +186,7 @@ interface SectionVisibility {
   showAboutUs: boolean;
   showSkills: boolean;
   showFounder: boolean;
+  showGlobalReach: boolean;
   showProjects: boolean;
   projectPage: number;
   showServices: boolean;
@@ -197,6 +199,7 @@ let cachedVisibility: SectionVisibility = {
   showAboutUs: false,
   showSkills: false,
   showFounder: false,
+  showGlobalReach: false,
   showProjects: false,
   projectPage: 0,
   showServices: false,
@@ -217,6 +220,7 @@ export function useSectionVisibility(): SectionVisibility {
       let showAboutUs = false;
       let showSkills = false;
       let showFounder = false;
+      let showGlobalReach = false;
       let showProjects = false;
       let projectPage = 0;
       let showServices = false;
@@ -227,13 +231,14 @@ export function useSectionVisibility(): SectionVisibility {
       showAboutUs = showAbout;
       showSkills = showAbout;
       showFounder = frame > slice * 2 && frame <= slice * 3;
-      showProjects = frame > slice * 3 && frame <= slice * (3 + P);
+      showGlobalReach = frame > slice * 3 && frame <= slice * 4;
+      showProjects = frame > slice * 4 && frame <= slice * (4 + P);
       if (showProjects) {
-        const relativeFrame = frame - slice * 3;
+        const relativeFrame = frame - slice * 4;
         projectPage = Math.min(P - 1, Math.floor(relativeFrame / slice));
       }
-      showServices = frame > slice * (3 + P) && frame <= slice * (4 + P);
-      showContact = frame > slice * (4 + P) && frame <= TOTAL_FRAMES;
+      showServices = frame > slice * (4 + P) && frame <= slice * (5 + P);
+      showContact = frame > slice * (5 + P) && frame <= TOTAL_FRAMES;
 
       if (
         cachedVisibility.showHero !== showHero ||
@@ -241,6 +246,7 @@ export function useSectionVisibility(): SectionVisibility {
         cachedVisibility.showAboutUs !== showAboutUs ||
         cachedVisibility.showSkills !== showSkills ||
         cachedVisibility.showFounder !== showFounder ||
+        cachedVisibility.showGlobalReach !== showGlobalReach ||
         cachedVisibility.showProjects !== showProjects ||
         cachedVisibility.projectPage !== projectPage ||
         cachedVisibility.showServices !== showServices ||
@@ -252,6 +258,7 @@ export function useSectionVisibility(): SectionVisibility {
           showAboutUs,
           showSkills,
           showFounder,
+          showGlobalReach,
           showProjects,
           projectPage,
           showServices,

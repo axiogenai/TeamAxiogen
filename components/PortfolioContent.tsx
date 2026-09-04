@@ -297,6 +297,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
     showAboutUs, 
     showSkills,
     showFounder,
+    showGlobalReach,
     showProjects, 
     projectPage, 
     showServices, 
@@ -1386,47 +1387,26 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
               </div>
             </motion.div>
           ) : (
-            /* Stage 2: Founder Details Cards & Global Reach */
+            /* Stage 2: Founder Details Cards */
             <motion.div
               key="founders-cards-view"
               initial={{ opacity: 0, y: 25, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.97 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center max-w-6xl w-full gap-2.5 sm:gap-3.5 md:gap-4 justify-center my-auto min-h-0 w-full"
+              className="flex flex-col items-center max-w-6xl w-full gap-2.5 sm:gap-3.5 md:gap-4 justify-center my-auto min-h-0"
             >
-              {/* Luxury Haute Header & View Switcher */}
-              <div className="flex flex-col items-center justify-center text-center mb-1 sm:mb-2">
-                <div className="inline-flex items-center gap-1.5 p-1 rounded-full bg-white/[0.04] border border-white/[0.1] backdrop-blur-md mb-2 shadow-lg pointer-events-auto">
-                  <button
-                    onClick={() => setFounderView('founders')}
-                    className={`px-3.5 sm:px-5 py-1 sm:py-1.5 rounded-full text-[9px] sm:text-xs font-light uppercase tracking-[0.16em] transition-all cursor-pointer ${
-                      founderView === 'founders'
-                        ? 'bg-white text-black shadow-[0_2px_12px_rgba(255,255,255,0.3)] font-semibold'
-                        : 'text-white/60 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    The Founders
-                  </button>
-                  <button
-                    onClick={() => setFounderView('map')}
-                    className={`px-3.5 sm:px-5 py-1 sm:py-1.5 rounded-full text-[9px] sm:text-xs font-light uppercase tracking-[0.16em] transition-all cursor-pointer flex items-center gap-1.5 ${
-                      founderView === 'map'
-                        ? 'bg-white text-black shadow-[0_2px_12px_rgba(255,255,255,0.3)] font-semibold'
-                        : 'text-white/60 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    <Globe className="w-3 h-3 text-purple-400" />
-                    <span>Global Reach</span>
-                  </button>
+                {/* Luxury Haute Header */}
+                <div className="flex flex-col items-center justify-center text-center mb-1 sm:mb-2">
+                  <div className="inline-flex items-center gap-1.5 p-1 rounded-full bg-white/[0.04] border border-white/[0.1] backdrop-blur-md mb-2 shadow-lg">
+                    <div
+                      className="px-3.5 sm:px-5 py-1 sm:py-1.5 rounded-full text-[9px] sm:text-xs font-light uppercase tracking-[0.16em] transition-all bg-white text-black shadow-[0_2px_12px_rgba(255,255,255,0.3)] font-semibold"
+                    >
+                      The Founders
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              {founderView === 'map' ? (
-                <div className="w-full max-w-5xl pointer-events-auto">
-                  <GlobalVisitorMap />
-                </div>
-              ) : (
                 <div className="grid grid-cols-12 gap-2.5 sm:gap-4 md:gap-6 lg:gap-8 items-stretch w-full px-1.5 sm:px-4 py-0.5">
                   {/* Founder 1: Aditya Patil */}
                   <div
@@ -1477,7 +1457,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     </div>
 
                     {/* Actions Footer */}
-                    <div className="pt-2.5 sm:pt-3 md:pt-4 border-t border-white/[0.06] mt-2 sm:mt-2.5 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+                    <div className="pt-2.5 sm:pt-3 md:pt-4 border-t border-white/[0.06] mt-2 sm:mt-2.5 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 pointer-events-auto">
                       <div className="flex items-center gap-1.5">
                         <a
                           href="https://github.com/axiogenai"
@@ -1488,16 +1468,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                           <svg viewBox="0 0 24 24" className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current opacity-70"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                           <span>GitHub</span>
                         </a>
-                        <button
-                          onClick={() => setFounderView('map')}
-                          className="px-2.5 sm:px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 text-purple-300 rounded-lg sm:rounded-xl flex items-center gap-1 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.14em] transition-all duration-200 cursor-pointer"
-                        >
-                          <Globe className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-purple-400" />
-                          <span>Global Reach</span>
-                        </button>
                       </div>
                       <button
-                        onClick={() => scrollToFrame(getSectionFrames()[4 + getProjectPagesCount()] ?? 418)}
+                        onClick={() => scrollToFrame(getSectionFrames()[5 + getProjectPagesCount()] ?? 418)}
                         className="px-3 sm:px-4 py-1.5 bg-white/[0.08] hover:bg-white/[0.16] text-white border border-white/[0.18] hover:border-white/[0.3] rounded-lg sm:rounded-xl flex items-center gap-1 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.14em] sm:tracking-[0.18em] transition-all duration-200 cursor-pointer"
                       >
                         <Mail className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white/70" />
@@ -1555,7 +1528,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     </div>
 
                     {/* Actions Footer */}
-                    <div className="pt-2.5 sm:pt-3 md:pt-4 border-t border-white/[0.06] mt-2 sm:mt-2.5 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+                    <div className="pt-2.5 sm:pt-3 md:pt-4 border-t border-white/[0.06] mt-2 sm:mt-2.5 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 pointer-events-auto">
                       <div className="flex items-center gap-1.5">
                         <a
                           href="https://github.com/axiogenai"
@@ -1566,16 +1539,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                           <svg viewBox="0 0 24 24" className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current opacity-70"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                           <span>GitHub</span>
                         </a>
-                        <button
-                          onClick={() => setFounderView('map')}
-                          className="px-2.5 sm:px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 text-purple-300 rounded-lg sm:rounded-xl flex items-center gap-1 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.14em] transition-all duration-200 cursor-pointer"
-                        >
-                          <Globe className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-purple-400" />
-                          <span>Global Reach</span>
-                        </button>
                       </div>
                       <button
-                        onClick={() => scrollToFrame(getSectionFrames()[4 + getProjectPagesCount()] ?? 418)}
+                        onClick={() => scrollToFrame(getSectionFrames()[5 + getProjectPagesCount()] ?? 418)}
                         className="px-3 sm:px-4 py-1.5 bg-white/[0.08] hover:bg-white/[0.16] text-white border border-white/[0.18] hover:border-white/[0.3] rounded-lg sm:rounded-xl flex items-center gap-1 font-light text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-[0.14em] sm:tracking-[0.18em] transition-all duration-200 cursor-pointer"
                       >
                         <Mail className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white/70" />
@@ -1584,11 +1550,34 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
                     </div>
                   </div>
                 </div>
-              )}
-            </motion.div>
+              </motion.div>
           )}
         </AnimatePresence>
       </motion.section>
+
+      {/* ----------------- GLOBAL REACH SECTION (STANDALONE) ----------------- */}
+      <motion.section
+        className={`absolute inset-0 flex flex-col items-center justify-center pt-20 sm:pt-24 lg:pt-0 pb-16 sm:pb-20 lg:pb-0 px-3 sm:px-6 md:px-12 lg:px-16 text-white overflow-hidden section-bg-adapt`}
+        style={{ pointerEvents: showGlobalReach ? 'auto' : 'none' }}
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: showGlobalReach ? 1 : 0,
+          y: showGlobalReach ? "0%" : (['hero', 'about', 'founder'].includes(activeSection) ? "100%" : "-100%"),
+          display: showGlobalReach ? 'flex' : 'none'
+        }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <div className="w-full max-w-6xl mx-auto flex flex-col items-center justify-center min-h-0 pointer-events-auto h-full">
+          <div className="text-center mb-4 sm:mb-8 mt-4 sm:mt-0">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black tracking-tighter bg-gradient-to-r from-purple-200 via-indigo-400 to-slate-500 bg-clip-text text-transparent">Global Reach</h2>
+            <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] font-semibold text-white/50 mt-1 sm:mt-2">Real-time Visitor Map</p>
+          </div>
+          <div className="w-full flex-1 max-h-[70vh]">
+            <GlobalVisitorMap />
+          </div>
+        </div>
+      </motion.section>
+
 
 
       <motion.section
