@@ -566,9 +566,9 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
       let targetFrame = -1;
       if (hash === 'about') targetFrame = frames[1] ?? 83;
       else if (hash === 'founder' || hash === 'founders') targetFrame = frames[2] ?? 167;
-      else if (hash === 'work' || hash === 'projects') targetFrame = frames[3] ?? 250;
-      else if (hash === 'services') targetFrame = frames[3 + P] ?? 334;
-      else if (hash === 'contact') targetFrame = frames[4 + P] ?? 418;
+      else if (hash === 'work' || hash === 'projects') targetFrame = frames[4] ?? 250;
+      else if (hash === 'services') targetFrame = frames[4 + P] ?? 334;
+      else if (hash === 'contact') targetFrame = frames[5 + P] ?? 418;
 
       if (targetFrame > 0 && maxScroll > 0) {
         const targetY = (targetFrame / 502) * maxScroll;
@@ -1569,7 +1569,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         initial={{ opacity: 0 }}
         animate={{ 
           opacity: showProjects ? 1 : 0,
-          y: showProjects ? "0%" : (['hero', 'about', 'founder'].includes(activeSection) ? "100%" : "-100%"),
+          y: showProjects ? "0%" : (['hero', 'about', 'founder', 'global-reach'].includes(activeSection) ? "100%" : "-100%"),
           display: showProjects ? 'flex' : 'none'
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -1695,7 +1695,7 @@ export const PortfolioContent = ({ totalFrames }: { totalFrames: number }) => {
         initial={{ opacity: 0 }}
         animate={{ 
           opacity: showServices ? 1 : 0,
-          x: showServices ? "0%" : (['hero', 'about', 'founder', 'work'].includes(activeSection) ? "-100%" : "100%"),
+          x: showServices ? "0%" : (['hero', 'about', 'founder', 'global-reach', 'work'].includes(activeSection) ? "-100%" : "100%"),
           display: showServices ? 'flex' : 'none'
         }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
