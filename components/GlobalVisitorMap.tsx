@@ -185,11 +185,11 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
               {({ width, height }) => {
                 if (width < 10 || height < 10) return null;
 
-                // Equirectangular projection fits the entire world (360° x 180°) edge-to-edge across the full card width
+                // Equirectangular projection fitted with 24px clean padding from all card edges
                 const projection = geoEquirectangular().fitExtent(
                   [
-                    [0, 0],
-                    [width, height],
+                    [24, 24],
+                    [width - 24, height - 24],
                   ],
                   worldData
                 );
