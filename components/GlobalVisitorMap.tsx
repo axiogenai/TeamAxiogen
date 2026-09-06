@@ -1,23 +1,36 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { geoEquirectangular, geoPath } from 'd3-geo';
-import { ParentSize } from '@visx/responsive';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import {
+  geoOrthographic,
+  geoMercator,
+  geoPath,
+  geoGraticule,
+  geoCentroid,
+} from 'd3-geo';
 import { feature } from 'topojson-client';
 import type { FeatureCollection, Geometry } from 'geojson';
-import type { Topology, GeometryCollection } from 'topojson-specification';
-import { Globe, MapPin, Activity } from 'lucide-react';
+import { Globe2, Map as MapIcon, MapPin, RotateCcw } from 'lucide-react';
+import { COUNTRY_DATA, type CountryMetric } from '../data/countries';
 
-interface CountryProperties {
-  name: string;
-  [key: string]: unknown;
-}
+export type ProjectionMode = 'orthographic' | 'mercator';
 
-interface WorldTopology extends Topology {
-  objects: {
-    [key: string]: GeometryCollection<CountryProperties>;
-  };
-}
+export const MAP_THEME_COLORS = {
+  background: '#07080d',
+  sphere: '#0b0d15',
+  sphereStroke: '#1c2030',
+  graticule: 'rgba(255, 255, 255, 0.04)',
+  countryBase: '#151824',
+  countryStroke: '#0a0c12',
+  scales: [
+    '#222636', // Level 1
+    '#363c50', // Level 2
+    '#565e78', // Level 3
+    '#8b95b0', // Level 4
+    '#e2e8f0', // Level 5 (silver/titanium)
+  ],
+  highlightStroke: '#ffffff',
+};
 
 interface VisitorsApiResponse {
   totalVisitors: number;
@@ -25,18 +38,37 @@ interface VisitorsApiResponse {
   liveRecent?: Array<{ city: string | null; country: string | null; created_at: string }>;
 }
 
-let globalWorldDataCache: FeatureCollection<Geometry, CountryProperties> | null = null;
+let globalWorldDataCache: FeatureCollection<Geometry, any> | null = null;
 let globalVisitorDataCache: VisitorsApiResponse | null = null;
 
 export function GlobalVisitorMap({ className = '' }: { className?: string }) {
-  const [worldData, setWorldData] = useState<FeatureCollection<Geometry, CountryProperties> | null>(globalWorldDataCache);
+  const [worldData, setWorldData] = useState<FeatureCollection<Geometry, any> | null>(globalWorldDataCache);
   const [visitorStats, setVisitorStats] = useState<VisitorsApiResponse | null>(globalVisitorDataCache);
   const [isLoading, setIsLoading] = useState(!globalWorldDataCache);
-  const [hoveredCountry, setHoveredCountry] = useState<{ name: string; count: number; x: number; y: number } | null>(null);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [projectionMode, setProjectionMode] = useState<ProjectionMode>('orthographic');
+  const [selectedCountryId, setSelectedCountryId] = useState<string | null>('356'); // India by default
+  const [hoveredCountryId, setHoveredCountryId] = useState<string | null>(null);
 
-  // 1. Fetch real visitor telemetry from live Supabase API
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 800, height: 460 });
+  const [rotation, setRotation] = useState<[number, number, number]>([-78, -20, 0]);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const isPointerDownRef = useRef(false);
+  const hasDraggedRef = useRef(false);
+  const baseRotationRef = useRef<[number, number, number]>([-78, -20, 0]);
+  const dragStartRef = useRef<{ x: number; y: number; rotation: [number, number, number] }>({
+    x: 0,
+    y: 0,
+    rotation: [-78, -20, 0],
+  });
+
+  const gyroRef = useRef<{ current: [number, number]; target: [number, number] }>({
+    current: [0, 0],
+    target: [0, 0],
+  });
+
+  // 1. Fetch live Supabase visitor telemetry
   useEffect(() => {
     fetch('/api/visitors')
       .then((res) => (res.ok ? res.json() : null))
@@ -51,7 +83,7 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
       });
   }, []);
 
-  // 2. Fetch full world GeoJSON once
+  // 2. Fetch TopoJSON world data
   useEffect(() => {
     if (globalWorldDataCache) {
       setWorldData(globalWorldDataCache);
@@ -59,54 +91,283 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
       return;
     }
 
-    fetch('/geo/world-countries.json')
+    fetch('/countries-110m.json')
       .then((res) => res.json())
-      .then((topology: WorldTopology) => {
-        const objectKey = Object.keys(topology.objects)[0];
-        if (!objectKey) return;
-        const geoObject = topology.objects[objectKey];
-        if (!geoObject) return;
-        const geojson = feature(topology, geoObject) as unknown as FeatureCollection<Geometry, CountryProperties>;
+      .then((topology) => {
+        const geojson = feature(topology, topology.objects.countries) as unknown as FeatureCollection<Geometry, any>;
         geojson.features = geojson.features.filter(
-          (f) => f.properties?.name !== 'Antarctica' && f.properties?.name !== 'Fr. S. Antarctic Lands'
+          (f: any) => f.id !== '010' && f.properties?.name !== 'Antarctica'
         );
         globalWorldDataCache = geojson;
         setWorldData(geojson);
         setIsLoading(false);
       })
-      .catch((err) => {
-        console.error('Failed to load world map:', err);
-        setIsLoading(false);
+      .catch(() => {
+        fetch('/geo/countries-110m.json')
+          .then((r) => r.json())
+          .then((topology) => {
+            const geojson = feature(topology, topology.objects.countries) as unknown as FeatureCollection<Geometry, any>;
+            geojson.features = geojson.features.filter(
+              (f: any) => f.id !== '010' && f.properties?.name !== 'Antarctica'
+            );
+            globalWorldDataCache = geojson;
+            setWorldData(geojson);
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            console.error('Failed to load local map mesh, loading from CDN:', err);
+            fetch('https://unpkg.com/world-atlas@2.0.2/countries-110m.json')
+              .then((r) => r.json())
+              .then((topology) => {
+                const geojson = feature(topology, topology.objects.countries) as unknown as FeatureCollection<Geometry, any>;
+                geojson.features = geojson.features.filter(
+                  (f: any) => f.id !== '010' && f.properties?.name !== 'Antarctica'
+                );
+                globalWorldDataCache = geojson;
+                setWorldData(geojson);
+                setIsLoading(false);
+              });
+          });
       });
   }, []);
+
+  // 3. ResizeObserver
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry) {
+        setDimensions({
+          width: Math.max(entry.contentRect.width, 280),
+          height: Math.max(entry.contentRect.height, 260),
+        });
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // 4. Mobile DeviceOrientation Gyro
+  useEffect(() => {
+    if (projectionMode !== 'orthographic') return;
+
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      if (e.gamma === null || e.beta === null) return;
+      const gamma = Math.max(-45, Math.min(45, e.gamma));
+      const beta = Math.max(-45, Math.min(45, e.beta - 40));
+      gyroRef.current.target = [gamma * 0.35, -beta * 0.3];
+    };
+
+    window.addEventListener('deviceorientation', handleOrientation);
+    return () => window.removeEventListener('deviceorientation', handleOrientation);
+  }, [projectionMode]);
+
+  // 5. Ambient Drift + Gyro Parallax Loop
+  useEffect(() => {
+    if (projectionMode !== 'orthographic') return;
+
+    let animId: number;
+    let lastTime = performance.now();
+
+    const animate = (time: number) => {
+      const dt = time - lastTime;
+      lastTime = time;
+
+      const g = gyroRef.current;
+      g.current[0] += (g.target[0] - g.current[0]) * 0.08;
+      g.current[1] += (g.target[1] - g.current[1]) * 0.08;
+
+      if (!isPointerDownRef.current && !isDragging) {
+        const delta = (dt / 1000) * 2.2;
+        baseRotationRef.current[0] = (baseRotationRef.current[0] + delta) % 360;
+      }
+
+      const effectiveYaw = (baseRotationRef.current[0] + g.current[0]) % 360;
+      const effectivePitch = Math.max(-85, Math.min(85, baseRotationRef.current[1] + g.current[1]));
+
+      setRotation([effectiveYaw, effectivePitch, 0]);
+      animId = requestAnimationFrame(animate);
+    };
+
+    animId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animId);
+  }, [projectionMode, isDragging]);
+
+  const handleMouseMoveGyro = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isPointerDownRef.current || projectionMode !== 'orthographic' || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const nx = (e.clientX - rect.left) / rect.width - 0.5;
+    const ny = (e.clientY - rect.top) / rect.height - 0.5;
+    gyroRef.current.target = [nx * 14, -ny * 9];
+  };
+
+  const handleMouseLeaveGyro = () => {
+    gyroRef.current.target = [0, 0];
+  };
+
+  const handleResetRotation = () => {
+    baseRotationRef.current = [-78, -20, 0];
+    gyroRef.current.target = [0, 0];
+    setRotation([-78, -20, 0]);
+  };
+
+  // 6. D3 Projection
+  const { projection, pathGenerator } = useMemo(() => {
+    const isGlobe = projectionMode === 'orthographic';
+    const radius = Math.min(dimensions.width, dimensions.height) / 2 - 16;
+
+    const proj = isGlobe
+      ? geoOrthographic()
+          .scale(Math.max(radius, 40))
+          .translate([dimensions.width / 2, dimensions.height / 2])
+          .rotate(rotation)
+          .clipAngle(90)
+      : geoMercator()
+          .scale((dimensions.width / 640) * 98)
+          .translate([dimensions.width / 2, dimensions.height / 2 + 18]);
+
+    return {
+      projection: proj,
+      pathGenerator: geoPath(proj),
+    };
+  }, [dimensions, rotation, projectionMode]);
+
+  // Pointer drag
+  const handlePointerDown = (e: React.PointerEvent<SVGSVGElement>) => {
+    if (projectionMode !== 'orthographic') return;
+    isPointerDownRef.current = true;
+    hasDraggedRef.current = false;
+    dragStartRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      rotation: [...baseRotationRef.current],
+    };
+    gyroRef.current.target = [0, 0];
+    (e.currentTarget as Element).setPointerCapture?.(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
+    if (!isPointerDownRef.current || projectionMode !== 'orthographic') return;
+    const dx = e.clientX - dragStartRef.current.x;
+    const dy = e.clientY - dragStartRef.current.y;
+
+    if (!hasDraggedRef.current && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
+      hasDraggedRef.current = true;
+      setIsDragging(true);
+    }
+
+    if (hasDraggedRef.current) {
+      const sensitivity = 0.35;
+      const newYaw = (dragStartRef.current.rotation[0] + dx * sensitivity) % 360;
+      const newPitch = Math.max(-85, Math.min(85, dragStartRef.current.rotation[1] - dy * sensitivity));
+      baseRotationRef.current = [newYaw, newPitch, 0];
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<SVGSVGElement>) => {
+    if (!isPointerDownRef.current) return;
+    isPointerDownRef.current = false;
+    setIsDragging(false);
+    try {
+      (e.currentTarget as Element).releasePointerCapture?.(e.pointerId);
+    } catch {}
+    setTimeout(() => {
+      hasDraggedRef.current = false;
+    }, 60);
+  };
 
   const totalHits = visitorStats?.totalVisitors ?? 1314;
   const countsByCountry = useMemo(() => visitorStats?.byCountry ?? {}, [visitorStats]);
 
-  const displayValue = hoveredCountry ? hoveredCountry.count : totalHits;
-  const displayLabel = hoveredCountry ? hoveredCountry.name : 'Total Verified Visitors';
+  const getCountryTelemetry = useCallback(
+    (countryId: string, countryName: string) => {
+      const metric = COUNTRY_DATA[countryId];
+      const verifiedVisits =
+        countsByCountry[countryName] ||
+        countsByCountry[countryName.toLowerCase()] ||
+        0;
 
-  const getColor = useCallback(
-    (name: string) => {
-      const count = countsByCountry[name] || 0;
-      if (!count) return '#1b2030'; // Base crisp slate: every country is clearly rendered
-
-      if (count >= 100) return '#ffffff'; // Top tier: pure glowing white
-      if (count >= 50) return '#f1f5f9';  // Tier 2: bright silver
-      if (count >= 20) return '#cbd5e1';  // Tier 3: light slate
-      if (count >= 5) return '#94a3b8';   // Tier 4: mid slate
-      if (count >= 2) return '#64748b';   // Tier 5: muted slate
-      return '#475569';                   // Tier 6: dark slate
+      return {
+        metric,
+        verifiedVisits,
+      };
     },
     [countsByCountry]
   );
 
+  const getFill = useCallback(
+    (countryId: string, countryName: string) => {
+      const { metric, verifiedVisits } = getCountryTelemetry(countryId, countryName);
+      if (verifiedVisits > 0) {
+        if (verifiedVisits >= 50) return MAP_THEME_COLORS.scales[4];
+        if (verifiedVisits >= 20) return MAP_THEME_COLORS.scales[3];
+        if (verifiedVisits >= 10) return MAP_THEME_COLORS.scales[2];
+        if (verifiedVisits >= 3) return MAP_THEME_COLORS.scales[1];
+        return MAP_THEME_COLORS.scales[0];
+      }
+      if (metric) {
+        const users = metric.activeUsers;
+        if (users > 5000000) return MAP_THEME_COLORS.scales[4];
+        if (users > 2500000) return MAP_THEME_COLORS.scales[3];
+        if (users > 1200000) return MAP_THEME_COLORS.scales[2];
+        if (users > 500000) return MAP_THEME_COLORS.scales[1];
+        return MAP_THEME_COLORS.scales[0];
+      }
+      return MAP_THEME_COLORS.countryBase;
+    },
+    [getCountryTelemetry]
+  );
+
+  const activeId = hoveredCountryId || selectedCountryId;
+  const activeFeature = useMemo(() => {
+    if (!activeId || !worldData?.features) return null;
+    return (
+      worldData.features.find((f: any) => {
+        const id = String(f.id || f.properties?.id).padStart(3, '0');
+        return id === activeId;
+      }) || null
+    );
+  }, [worldData, activeId]);
+
+  const activePath = useMemo(() => {
+    if (!activeFeature) return null;
+    return pathGenerator(activeFeature);
+  }, [activeFeature, pathGenerator]);
+
+  const badgePos = useMemo(() => {
+    if (!activeFeature) return null;
+    try {
+      const center = geoCentroid(activeFeature);
+      if (projectionMode === 'orthographic') {
+        const centerLon = -rotation[0];
+        const centerLat = -rotation[1];
+        const rad = Math.PI / 180;
+        const dLon = (center[0] - centerLon) * rad;
+        const lat1 = centerLat * rad;
+        const lat2 = center[1] * rad;
+        const cosD = Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(dLon);
+        if (cosD <= 0.1) return null;
+      }
+      const projected = projection(center);
+      if (!projected || isNaN(projected[0]) || isNaN(projected[1])) return null;
+      return { x: projected[0], y: projected[1] };
+    } catch {
+      return null;
+    }
+  }, [activeFeature, projection, rotation, projectionMode]);
+
+  const graticuleLines = useMemo(() => {
+    return pathGenerator(geoGraticule().step([15, 15])());
+  }, [pathGenerator]);
+
+  const activeCountryName = activeFeature?.properties?.name || '';
+  const activeTelemetry = activeId ? getCountryTelemetry(activeId, activeCountryName) : null;
+
   return (
-    <div className={'w-full max-w-6xl mx-auto flex flex-col items-center select-none ' + className}>
-      {/* ─── Header Typography Above Map ─── */}
+    <div className={'w-full max-w-5xl mx-auto flex flex-col items-center select-none ' + className}>
+      {/* Header Typography Above Map */}
       <div className="w-full flex flex-col items-center mb-1.5 sm:mb-2 px-2 text-center">
         <div className="inline-flex items-center gap-1.5 px-3 py-0.5 sm:py-1 rounded-full bg-white/[0.04] border border-white/[0.1] backdrop-blur-xl text-white/70 text-[8px] sm:text-[9.5px] font-light uppercase tracking-[0.2em] mb-1.5 shadow-lg">
-          <Globe className="w-3 h-3 text-purple-400" />
+          <Globe2 className="w-3 h-3 text-purple-400" />
           <span>Live Visitor Telemetry</span>
         </div>
         <h3
@@ -123,127 +384,185 @@ export function GlobalVisitorMap({ className = '' }: { className?: string }) {
         </p>
       </div>
 
-      {/* ─── Visitor Count Bar (Between Text and Map Wrapper) ─── */}
-      <div className="w-full flex items-center justify-between px-1 sm:px-2 mb-1.5 sm:mb-2">
-        {/* Unique Visitors Count */}
-        <div className="flex items-center gap-2 sm:gap-2.5 bg-white/[0.03] backdrop-blur-xl px-2.5 sm:px-3.5 py-1 rounded-xl border border-white/[0.08] shadow-lg">
+      {/* Top Interactive Toolbar */}
+      <div className="w-full flex items-center justify-between px-1 sm:px-2 mb-1.5 sm:mb-2 gap-2">
+        <div className="flex items-center gap-2 sm:gap-2.5 bg-white/[0.03] backdrop-blur-xl px-2.5 sm:px-3.5 py-1 rounded-xl border border-white/[0.08] shadow-lg shrink-0">
           <span className="text-[8.5px] sm:text-[9.5px] font-mono tracking-wider uppercase text-white/50">
             Unique Visitors
           </span>
           <span className="text-xs sm:text-sm md:text-base font-black tracking-tight text-white font-mono">
-            {displayValue.toLocaleString()}
+            {totalHits.toLocaleString()}
           </span>
-          {hoveredCountry && (
-            <span className="text-[8px] sm:text-[9px] text-purple-300 font-medium border-l border-white/10 pl-2">
-              {displayLabel}
+          {activeCountryName && (
+            <span className="hidden sm:inline text-[8.5px] text-purple-300 font-medium border-l border-white/10 pl-2">
+              {activeCountryName}
             </span>
           )}
         </div>
 
-        {/* Live Global Reach Badge */}
-        <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1 rounded-xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-lg">
-          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
-          <span className="text-[8.5px] sm:text-[9.5px] font-mono text-white/70 uppercase tracking-wider flex items-center gap-1.5">
-            <span>Live Global Reach</span>
-            <Activity className="w-3 h-3 text-green-400" />
-          </span>
-        </div>
-      </div>
-
-      {/* ─── Map Card Canvas (Unobstructed, Clean) ─── */}
-      <div
-        ref={containerRef}
-        className="relative w-full rounded-2xl sm:rounded-3xl border border-white/[0.1] bg-gradient-to-b from-[#0c0d14]/95 via-[#08090f]/98 to-[#05060a]/98 shadow-[0_20px_60px_rgba(0,0,0,0.8)] overflow-hidden"
-      >
-
-        {/* Floating Tooltip */}
-        {hoveredCountry && (
-          <div
-            className="pointer-events-none absolute z-50 -translate-x-1/2 -translate-y-full mb-3 transition-transform duration-75"
-            style={{ left: hoveredCountry.x, top: hoveredCountry.y }}
+        <div className="flex items-center bg-[#0d0f1a]/80 backdrop-blur-xl rounded-xl p-0.5 sm:p-1 border border-white/[0.1] shadow-lg">
+          <button
+            type="button"
+            onClick={() => setProjectionMode('orthographic')}
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 text-[10px] sm:text-xs font-medium rounded-lg transition-all ${
+              projectionMode === 'orthographic'
+                ? 'bg-gradient-to-r from-slate-700 to-slate-800 text-white shadow-md border border-white/15'
+                : 'text-slate-400 hover:text-white'
+            }`}
           >
-            <div className="px-3 py-1.5 rounded-xl bg-zinc-900/95 border border-white/20 shadow-2xl backdrop-blur-xl text-white text-xs flex items-center gap-2 font-medium">
-              <MapPin className="w-3 h-3 text-purple-400 shrink-0" />
-              <span>{hoveredCountry.name}</span>
-              <span className="text-white/40 font-mono">|</span>
-              <span className="font-bold text-white/95">
-                {hoveredCountry.count > 0 ? `${hoveredCountry.count.toLocaleString()} visitors` : 'Global Node'}
-              </span>
-            </div>
-          </div>
-        )}
+            <Globe2 className="w-3 h-3 text-purple-400" />
+            <span>3D Globe</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setProjectionMode('mercator')}
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 text-[10px] sm:text-xs font-medium rounded-lg transition-all ${
+              projectionMode === 'mercator'
+                ? 'bg-gradient-to-r from-slate-700 to-slate-800 text-white shadow-md border border-white/15'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            <MapIcon className="w-3 h-3 text-slate-300" />
+            <span>Flat Map</span>
+          </button>
+        </div>
 
-        {/* Map Rendering Container — 2.05:1 ratio, max-h-[58vh] for guaranteed screen fit */}
-        <div className="relative w-full aspect-[2.05/1] max-h-[58vh]">
-          {isLoading || !worldData ? (
-            <div className="flex h-full w-full items-center justify-center gap-2 text-white/40 text-xs py-20">
-              <div className="size-5 animate-spin rounded-full border-2 border-white/20 border-t-white" />
-              <span>Loading Global Map…</span>
-            </div>
-          ) : (
-            <ParentSize debounceTime={10}>
-              {({ width, height }) => {
-                if (width < 10 || height < 10) return null;
-
-                // Equirectangular projection fitted with 24px clean padding from all card edges
-                const projection = geoEquirectangular().fitExtent(
-                  [
-                    [24, 24],
-                    [width - 24, height - 24],
-                  ],
-                  worldData
-                );
-                const pathGenerator = geoPath().projection(projection);
-
-                return (
-                  <svg
-                    aria-hidden="true"
-                    className="w-full h-full block"
-                    height={height}
-                    onMouseLeave={() => {
-                      setHoveredCountry(null);
-                      setHoveredIndex(null);
-                    }}
-                    style={{ contain: 'layout style paint', touchAction: 'none' }}
-                    viewBox={`0 0 ${width} ${height}`}
-                    width={width}
-                  >
-                    <g>
-                      {worldData.features.map((countryFeature, idx) => {
-                        const pathData = pathGenerator(countryFeature);
-                        if (!pathData) return null;
-                        const countryName = (countryFeature.properties && countryFeature.properties.name) || '';
-                        const isHovered = hoveredIndex === idx;
-                        const fill = getColor(countryName);
-
-                        return (
-                          <path
-                            key={'country-' + idx}
-                            className="cursor-pointer transition-all duration-150"
-                            d={pathData}
-                            fill={fill}
-                            onMouseEnter={(e) => {
-                              const rect = containerRef.current && containerRef.current.getBoundingClientRect();
-                              const x = rect ? e.clientX - rect.left : width / 2;
-                              const y = rect ? e.clientY - rect.top : height / 2;
-                              const count = countsByCountry[countryName] || 0;
-                              setHoveredIndex(idx);
-                              setHoveredCountry({ name: countryName, count, x, y });
-                            }}
-                            opacity={hoveredIndex === null ? 0.95 : isHovered ? 1 : 0.7}
-                            stroke={isHovered ? '#ffffff' : 'rgba(255, 255, 255, 0.12)'}
-                            strokeWidth={isHovered ? 1.4 : 0.55}
-                          />
-                        );
-                      })}
-                    </g>
-                  </svg>
-                );
-              }}
-            </ParentSize>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {projectionMode === 'orthographic' && (
+            <button
+              type="button"
+              onClick={handleResetRotation}
+              title="Reset globe view"
+              className="p-1 sm:p-1.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] text-white/60 hover:text-white transition-colors"
+            >
+              <RotateCcw className="w-3 h-3" />
+            </button>
           )}
         </div>
       </div>
+
+      {/* Globe / Map Canvas Wrapper */}
+      <div
+        ref={containerRef}
+        onMouseMove={handleMouseMoveGyro}
+        onMouseLeave={handleMouseLeaveGyro}
+        className="relative w-full aspect-[1.85/1] max-h-[50vh] min-h-[290px] rounded-2xl sm:rounded-3xl border border-white/[0.1] bg-gradient-to-b from-[#090b12]/98 via-[#06070c]/98 to-[#040508]/98 shadow-[0_20px_60px_rgba(0,0,0,0.85)] overflow-hidden flex items-center justify-center touch-none"
+      >
+        {isLoading || !worldData ? (
+          <div className="flex h-full w-full items-center justify-center gap-2.5 text-white/40 text-xs py-20 font-mono">
+            <div className="size-5 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+            <span>Loading Geographic Mesh…</span>
+          </div>
+        ) : (
+          <>
+            <svg
+              width={dimensions.width}
+              height={dimensions.height}
+              className={`w-full h-full select-none ${
+                projectionMode === 'orthographic'
+                  ? isDragging
+                    ? 'cursor-grabbing'
+                    : 'cursor-grab'
+                  : 'cursor-default'
+              }`}
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerUp}
+              onMouseLeave={() => setHoveredCountryId(null)}
+              style={{ contain: 'layout style paint', touchAction: 'none' }}
+            >
+              {projectionMode === 'orthographic' ? (
+                <path
+                  d={pathGenerator({ type: 'Sphere' }) || ''}
+                  fill={MAP_THEME_COLORS.sphere}
+                  stroke={MAP_THEME_COLORS.sphereStroke}
+                  strokeWidth={1}
+                />
+              ) : (
+                <rect
+                  width={dimensions.width}
+                  height={dimensions.height}
+                  fill={MAP_THEME_COLORS.sphere}
+                  stroke={MAP_THEME_COLORS.sphereStroke}
+                />
+              )}
+
+              {graticuleLines && (
+                <path
+                  d={graticuleLines}
+                  fill="none"
+                  stroke={MAP_THEME_COLORS.graticule}
+                  strokeWidth={0.5}
+                  className="pointer-events-none"
+                />
+              )}
+
+              <g className="globe-countries">
+                {worldData.features.map((feat: any, idx: number) => {
+                  const countryId = String(feat.id || feat.properties?.id || idx).padStart(3, '0');
+                  const countryName = feat.properties?.name || '';
+                  const path = pathGenerator(feat);
+                  if (!path) return null;
+
+                  return (
+                    <path
+                      key={'c-' + countryId}
+                      d={path}
+                      fill={getFill(countryId, countryName)}
+                      stroke={MAP_THEME_COLORS.countryStroke}
+                      strokeWidth={0.5}
+                      className="cursor-pointer transition-[fill] duration-150 hover:brightness-125"
+                      onMouseEnter={() => {
+                        if (!isPointerDownRef.current && !hasDraggedRef.current) {
+                          setHoveredCountryId(countryId);
+                        }
+                      }}
+                      onClick={() => {
+                        if (!hasDraggedRef.current) {
+                          setSelectedCountryId(countryId);
+                        }
+                      }}
+                    />
+                  );
+                })}
+              </g>
+
+              {activePath && (
+                <path
+                  d={activePath}
+                  fill={getFill(activeId!, activeCountryName)}
+                  stroke={MAP_THEME_COLORS.highlightStroke}
+                  strokeWidth={1.8}
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  className="pointer-events-none drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]"
+                />
+              )}
+            </svg>
+
+            {badgePos && activeCountryName && (
+              <div
+                className="pointer-events-none absolute z-50 -translate-x-1/2 -translate-y-full mb-2 flex items-center gap-1.5 rounded-full border border-white/20 bg-[#101322]/95 px-3 py-1 text-xs text-white shadow-2xl backdrop-blur-xl whitespace-nowrap will-change-transform select-none"
+                style={{
+                  left: `${badgePos.x}px`,
+                  top: `${badgePos.y - 8}px`,
+                }}
+              >
+                <MapPin className="w-3.5 h-3.5 text-purple-400 fill-purple-400/20 shrink-0" />
+                <span className="font-semibold text-slate-100">{activeCountryName}</span>
+                <span className="text-white/30 font-light mx-0.5">|</span>
+                <span className="text-slate-300 font-mono text-[11px]">
+                  {activeTelemetry?.verifiedVisits && activeTelemetry.verifiedVisits > 0
+                    ? `${activeTelemetry.verifiedVisits.toLocaleString()} verified visits`
+                    : activeTelemetry?.metric?.tier || 'Active Global Node'}
+                </span>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
     </div>
   );
 }
